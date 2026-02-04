@@ -173,6 +173,10 @@
         .toast.info {
             background: linear-gradient(135deg, #3b82f6, #2563eb);
         }
+
+        .remote-badge {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans antialiased selection:bg-neon-purple selection:text-white">
@@ -196,6 +200,9 @@
         </div>
         
         <div class="flex items-center gap-4">
+            <button onclick="refreshRemoteDecks()" class="text-slate-400 hover:text-white transition-colors text-sm font-medium" title="Refresh Remote Decks">
+                <i class="fa-solid fa-rotate mr-1"></i> Sync
+            </button>
             <button onclick="showManager()" class="text-slate-400 hover:text-white transition-colors text-sm font-medium">
                 <i class="fa-solid fa-layer-group mr-1"></i> Decks
             </button>
@@ -209,7 +216,7 @@
     <main class="relative z-10 flex-grow flex items-center justify-center p-4 md:p-8">
         
         <!-- VIEW: HOME / START -->
-        <div id="view-home" class="w-full max-w-4xl animate-fade-in">
+        <div id="view-home" class="w-full max-w-5xl animate-fade-in">
             <div class="text-center mb-12">
                 <div class="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-neon-blue to-neon-purple shadow-2xl shadow-neon-blue/50 animate-pulse-slow">
                     <i class="fa-solid fa-brain text-4xl text-white"></i>
@@ -217,18 +224,48 @@
                 <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">Master Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple">Memory</span></h1>
                 <p class="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
                     Active recall is the most effective way to learn. 
-                    Drill through questions, rate your confidence, and let the algorithm schedule your reviews.
+                    Access your decks from anywhere with cloud sync.
                 </p>
             </div>
 
-            <!-- Deck Grid -->
-            <div id="deck-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Decks injected here -->
+            <!-- Quick Actions -->
+            <div class="flex justify-center gap-4 mb-8">
+                <button onclick="importFromGitHub()" class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
+                    <i class="fa-brands fa-github text-xl"></i>
+                    <span>Import from GitHub</span>
+                </button>
+                <button onclick="showManager()" class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
+                    <i class="fa-solid fa-folder-open text-xl"></i>
+                    <span>Manage Decks</span>
+                </button>
+            </div>
+
+            <!-- Section: Remote Decks -->
+            <div id="remote-decks-section" class="hidden mb-8">
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-cloud text-neon-blue"></i> Cloud Decks
+                </h3>
+                <div id="remote-deck-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Remote decks injected here -->
+                </div>
+            </div>
+
+            <!-- Section: Local Decks -->
+            <div id="local-decks-section" class="mb-8">
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-hard-drive text-slate-500"></i> Local Decks
+                </h3>
+                <div id="deck-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Local decks injected here -->
+                </div>
             </div>
 
             <div class="mt-12 text-center">
+                <button onclick="showSettings()" class="text-slate-500 hover:text-white text-sm underline mr-4">
+                    Configure Preset Decks
+                </button>
                 <button onclick="showManager()" class="text-slate-500 hover:text-white text-sm underline">
-                    Create or Import New Deck
+                    Import / Export
                 </button>
             </div>
         </div>
@@ -347,6 +384,31 @@
                 </div>
             </div>
 
+            <!-- Import Options -->
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div onclick="importFromGitHub()" class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="fa-brands fa-github text-2xl text-white"></i>
+                        <span class="font-bold text-white">GitHub URL</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Import from raw GitHub URL</p>
+                </div>
+                <div onclick="document.getElementById('file-input').click()" class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="fa-solid fa-file-arrow-up text-2xl text-neon-blue"></i>
+                        <span class="font-bold text-white">Upload JSON</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Import from local file</p>
+                </div>
+                <div onclick="showPresetConfig()" class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="fa-solid fa-gear text-2xl text-neon-purple"></i>
+                        <span class="font-bold text-white">Auto-Sync</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Configure preset remote decks</p>
+                </div>
+            </div>
+
             <div class="flex flex-col md:flex-row gap-6 h-full overflow-hidden">
                 <!-- Sidebar: Deck List -->
                 <div class="w-full md:w-1/3 glass-panel rounded-xl p-4 overflow-y-auto flex flex-col gap-2" id="manager-deck-list">
@@ -369,7 +431,10 @@
                                 <label class="text-xs text-slate-400 uppercase font-bold tracking-wider">Deck Name</label>
                                 <input type="text" id="edit-deck-name" class="custom-input text-xl font-bold mt-1 bg-transparent border-none p-0 focus:ring-0" placeholder="Deck Name">
                             </div>
-                            <div class="flex gap-2">
+                            <div class="flex gap-2" id="deck-actions">
+                                <button onclick="refreshCurrentDeck()" id="btn-refresh" class="hidden text-neon-blue hover:text-white p-2" title="Refresh from Remote">
+                                    <i class="fa-solid fa-rotate"></i>
+                                </button>
                                 <button onclick="deleteCurrentDeck()" class="text-red-400 hover:text-red-300 p-2" title="Delete Deck">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
@@ -379,14 +444,23 @@
                             </div>
                         </div>
 
-                        <!-- JSON Upload Area -->
-                        <div class="mb-6">
-                            <label class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-2 block">Import Questions from JSON</label>
-                            <div id="drop-zone" class="drop-zone rounded-xl p-6 text-center cursor-pointer">
+                        <!-- Remote Info -->
+                        <div id="remote-info" class="hidden mb-4 p-3 bg-neon-purple/10 border border-neon-purple/20 rounded-lg">
+                            <div class="flex items-center gap-2 text-sm text-neon-purple">
+                                <i class="fa-solid fa-cloud"></i>
+                                <span>Remote Source:</span>
+                                <a id="remote-url" href="#" target="_blank" class="underline truncate flex-grow"></a>
+                                <span id="remote-status" class="text-xs px-2 py-1 rounded bg-neon-purple/20">Synced</span>
+                            </div>
+                        </div>
+
+                        <!-- JSON Upload Area (for local decks) -->
+                        <div id="local-upload" class="mb-6 hidden">
+                            <label class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-2 block">Import More Questions</label>
+                            <div id="drop-zone" class="drop-zone rounded-xl p-4 text-center cursor-pointer">
                                 <input type="file" id="file-input" accept=".json" multiple class="hidden">
-                                <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
-                                <p class="text-sm text-slate-400">Drop JSON files here or click to browse</p>
-                                <p class="text-xs text-slate-500 mt-1">Supports: <code>correct</code> (index) or <code>answer</code> (text) formats</p>
+                                <i class="fa-solid fa-cloud-arrow-up text-xl text-slate-400 mb-1"></i>
+                                <p class="text-xs text-slate-400">Drop JSON files here</p>
                             </div>
                         </div>
 
@@ -402,6 +476,48 @@
                             <!-- Question items -->
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: PRESET CONFIG -->
+        <div id="view-preset-config" class="w-full max-w-2xl hidden animate-fade-in">
+            <div class="glass-panel rounded-2xl p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">Preset Remote Decks</h2>
+                    <button onclick="showHome()" class="text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+                
+                <p class="text-slate-400 mb-6">
+                    Add URLs to JSON files that will auto-load on startup. Perfect for syncing with GitHub.
+                </p>
+
+                <div id="preset-list" class="space-y-3 mb-6">
+                    <!-- Preset items -->
+                </div>
+
+                <div class="flex gap-2 mb-6">
+                    <input type="text" id="new-preset-name" class="custom-input flex-1" placeholder="Deck Name (e.g., Web Dev)">
+                    <input type="text" id="new-preset-url" class="custom-input flex-2" placeholder="Raw GitHub URL...">
+                    <button onclick="addPreset()" class="bg-neon-blue text-dark-900 font-bold px-4 py-2 rounded-lg">Add</button>
+                </div>
+
+                <div class="p-4 bg-dark-800 rounded-lg border border-dark-700">
+                    <h4 class="text-sm font-bold text-white mb-2">How to get the URL:</h4>
+                    <ol class="text-xs text-slate-400 space-y-1 list-decimal list-inside">
+                        <li>Upload your JSON to GitHub</li>
+                        <li>Click on the file</li>
+                        <li>Click <strong>Raw</strong> button</li>
+                        <li>Copy that URL (starts with raw.githubusercontent.com)</li>
+                    </ol>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button onclick="savePresetsAndLoad()" class="bg-neon-green text-dark-900 font-bold px-6 py-2 rounded-lg hover:bg-green-400">
+                        Save & Load Decks
+                    </button>
                 </div>
             </div>
         </div>
@@ -473,7 +589,21 @@
             easeBonus: 0.15
         };
 
+        // Default preset decks - EDIT THESE FOR YOUR GITHUB PAGES
+        const DEFAULT_PRESETS = [
+            // Example: Replace with your actual GitHub raw URLs
+            // {
+            //     name: "Web Development",
+            //     url: "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/web_questions.json"
+            // },
+            // {
+            //     name: "Operating Systems", 
+            //     url: "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/os_questions.json"
+            // }
+        ];
+
         let decks = [];
+        let presets = [];
         let activeDeckId = null;
         let sessionQueue = []; 
         let currentCardIndex = 0;
@@ -481,7 +611,12 @@
         let editingQuestionIndex = null;
 
         /* --- INITIALIZATION --- */
-        window.onload = () => {
+        window.onload = async () => {
+            // Load presets config
+            const savedPresets = localStorage.getItem('neurorecall_presets');
+            presets = savedPresets ? JSON.parse(savedPresets) : DEFAULT_PRESETS;
+
+            // Load local decks
             const saved = localStorage.getItem('neurorecall_decks');
             if (saved) {
                 decks = JSON.parse(saved);
@@ -493,6 +628,10 @@
             } else {
                 createDefaultDeck();
             }
+
+            // Load remote decks on startup
+            await loadPresetDecks();
+            
             renderHome();
             setupDragAndDrop();
         };
@@ -501,10 +640,15 @@
             localStorage.setItem('neurorecall_decks', JSON.stringify(decks));
         }
 
+        function savePresets() {
+            localStorage.setItem('neurorecall_presets', JSON.stringify(presets));
+        }
+
         function createDefaultDeck() {
             decks.push({
                 id: Date.now().toString(),
                 name: "Sample Deck",
+                isLocal: true,
                 questions: [
                     {
                         id: 'q1',
@@ -521,6 +665,172 @@
                 ]
             });
             saveToStorage();
+        }
+
+        /* --- PRESET/REMOTE DECK SYSTEM --- */
+        
+        async function loadPresetDecks() {
+            if (presets.length === 0) return;
+            
+            showToast("Loading remote decks...", "info");
+            
+            for (const preset of presets) {
+                try {
+                    await loadRemoteDeck(preset.name, preset.url, false);
+                } catch (err) {
+                    console.error("Failed to load preset:", preset.name, err);
+                }
+            }
+            
+            saveToStorage();
+            renderHome();
+        }
+
+        async function loadRemoteDeck(name, url, showNotifications = true) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const data = await response.json();
+                
+                // Check if deck already exists
+                const existingIndex = decks.findIndex(d => 
+                    d.remoteUrl === url || (d.name === name && !d.isLocal)
+                );
+                
+                const normalizedQuestions = normalizeQuestions(data);
+                
+                const deckData = {
+                    id: existingIndex >= 0 ? decks[existingIndex].id : Date.now().toString() + Math.random(),
+                    name: name,
+                    remoteUrl: url,
+                    isLocal: false,
+                    lastSynced: new Date().toISOString(),
+                    questions: normalizedQuestions
+                };
+                
+                if (existingIndex >= 0) {
+                    // Preserve due dates and progress for existing questions
+                    const oldDeck = decks[existingIndex];
+                    deckData.questions = mergeQuestions(oldDeck.questions, normalizedQuestions);
+                    decks[existingIndex] = deckData;
+                } else {
+                    decks.push(deckData);
+                }
+                
+                if (showNotifications) {
+                    showToast(`Loaded "${name}" with ${normalizedQuestions.length} questions`, "success");
+                }
+                
+                return deckData;
+                
+            } catch (err) {
+                if (showNotifications) {
+                    showToast(`Failed to load "${name}": ${err.message}`, "error");
+                }
+                throw err;
+            }
+        }
+
+        function mergeQuestions(oldQuestions, newQuestions) {
+            // Preserve user progress (dueDate, interval, ease) for questions that exist
+            const questionMap = new Map();
+            
+            oldQuestions.forEach(q => {
+                questionMap.set(q.question, q); // Use question text as key
+            });
+            
+            return newQuestions.map(newQ => {
+                const existing = questionMap.get(newQ.question);
+                if (existing) {
+                    // Preserve progress, update other fields
+                    return {
+                        ...newQ,
+                        id: existing.id,
+                        dueDate: existing.dueDate,
+                        interval: existing.interval,
+                        ease: existing.ease
+                    };
+                }
+                return newQ;
+            });
+        }
+
+        function normalizeQuestions(data) {
+            if (!Array.isArray(data)) {
+                // Try to extract from object format
+                data = data.questions || [];
+            }
+            
+            return data.map((q, idx) => {
+                // Find correct index
+                let correct = 0;
+                if (typeof q.correct === 'number') {
+                    correct = q.correct;
+                } else if (q.answer && q.options) {
+                    correct = q.options.findIndex(opt => 
+                        opt.toLowerCase().trim() === q.answer.toLowerCase().trim()
+                    );
+                    if (correct === -1) {
+                        // Try partial match
+                        correct = q.options.findIndex(opt => 
+                            opt.toLowerCase().includes(q.answer.toLowerCase()) ||
+                            q.answer.toLowerCase().includes(opt.toLowerCase())
+                        );
+                    }
+                    if (correct === -1) correct = 0;
+                }
+                
+                return {
+                    id: 'q_' + Date.now() + '_' + idx,
+                    question: q.question,
+                    options: q.options || [],
+                    correct: correct,
+                    explanation: q.explanation || q.answer || "No explanation provided",
+                    category: q.category || "General",
+                    code: q.code || null,
+                    dueDate: new Date(),
+                    interval: 0,
+                    ease: 2.5
+                };
+            });
+        }
+
+        async function refreshRemoteDecks() {
+            const remoteDecks = decks.filter(d => d.remoteUrl);
+            if (remoteDecks.length === 0) {
+                showToast("No remote decks to refresh", "info");
+                return;
+            }
+            
+            showToast("Refreshing remote decks...", "info");
+            
+            for (const deck of remoteDecks) {
+                try {
+                    await loadRemoteDeck(deck.name, deck.remoteUrl, false);
+                } catch (err) {
+                    console.error("Refresh failed for:", deck.name);
+                }
+            }
+            
+            saveToStorage();
+            renderHome();
+            showToast("All decks refreshed!", "success");
+        }
+
+        async function refreshCurrentDeck() {
+            if (!selectedManagerDeckId) return;
+            const deck = decks.find(d => d.id === selectedManagerDeckId);
+            if (!deck || !deck.remoteUrl) return;
+            
+            showToast("Refreshing...", "info");
+            try {
+                await loadRemoteDeck(deck.name, deck.remoteUrl, true);
+                renderEditor(selectedManagerDeckId);
+                renderManager();
+            } catch (err) {
+                // Error already shown
+            }
         }
 
         /* --- TOAST NOTIFICATIONS --- */
@@ -556,42 +866,147 @@
             renderManager();
         }
 
+        function showSettings() {
+            hideAllViews();
+            document.getElementById('view-preset-config').classList.remove('hidden');
+            renderPresetConfig();
+        }
+
+        function showPresetConfig() {
+            hideAllViews();
+            document.getElementById('view-preset-config').classList.remove('hidden');
+            renderPresetConfig();
+        }
+
         function hideAllViews() {
-            ['view-home', 'view-quiz', 'view-manager'].forEach(id => {
+            ['view-home', 'view-quiz', 'view-manager', 'view-preset-config'].forEach(id => {
                 document.getElementById(id).classList.add('hidden');
             });
         }
 
         /* --- HOME / DASHBOARD --- */
         function renderHome() {
-            const grid = document.getElementById('deck-grid');
-            grid.innerHTML = '';
+            const remoteGrid = document.getElementById('remote-deck-grid');
+            const localGrid = document.getElementById('deck-grid');
+            const remoteSection = document.getElementById('remote-decks-section');
+            const localSection = document.getElementById('local-decks-section');
+            
+            remoteGrid.innerHTML = '';
+            localGrid.innerHTML = '';
+            
+            const remoteDecks = decks.filter(d => !d.isLocal);
+            const localDecks = decks.filter(d => d.isLocal !== false);
+            
+            // Show/hide sections
+            remoteSection.classList.toggle('hidden', remoteDecks.length === 0);
+            localSection.classList.toggle('hidden', localDecks.length === 0);
+            
+            // Render remote decks
+            remoteDecks.forEach(deck => {
+                const card = createDeckCard(deck, true);
+                remoteGrid.appendChild(card);
+            });
+            
+            // Render local decks
+            localDecks.forEach(deck => {
+                const card = createDeckCard(deck, false);
+                localGrid.appendChild(card);
+            });
+        }
 
-            decks.forEach(deck => {
-                const dueCount = deck.questions.filter(q => new Date(q.dueDate) <= new Date()).length;
-                const total = deck.questions.length;
-                
-                const card = document.createElement('div');
-                card.className = 'glass-panel rounded-xl p-6 hover:bg-white/5 transition-all cursor-pointer border-l-4 border-neon-blue group relative overflow-hidden';
-                card.onclick = () => startSession(deck.id);
+        function createDeckCard(deck, isRemote) {
+            const dueCount = deck.questions.filter(q => new Date(q.dueDate) <= new Date()).length;
+            const total = deck.questions.length;
+            
+            const card = document.createElement('div');
+            card.className = 'glass-panel rounded-xl p-6 hover:bg-white/5 transition-all cursor-pointer border-l-4 group relative overflow-hidden ' + 
+                (isRemote ? 'border-neon-purple' : 'border-neon-blue');
+            card.onclick = () => startSession(deck.id);
 
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold text-white group-hover:text-neon-blue transition-colors">${deck.name}</h3>
-                        <span class="bg-dark-800 text-xs font-mono px-2 py-1 rounded text-slate-300">${total} cards</span>
+            const badge = isRemote ? 
+                `<span class="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 rounded-full remote-badge text-white"><i class="fa-solid fa-cloud mr-1"></i>CLOUD</span>` : '';
+            
+            const syncInfo = isRemote && deck.lastSynced ? 
+                `<div class="text-[10px] text-slate-500 mt-1">Synced: ${new Date(deck.lastSynced).toLocaleDateString()}</div>` : '';
+
+            card.innerHTML = `
+                ${badge}
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-xl font-bold text-white group-hover:text-neon-blue transition-colors pr-16">${deck.name}</h3>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                    <div>
+                        <span class="text-xs text-slate-500 uppercase font-bold">Due Now</span>
+                        <div class="text-2xl font-bold text-white">${dueCount}</div>
+                        ${syncInfo}
                     </div>
-                    <div class="flex items-center justify-between mt-4">
-                        <div>
-                            <span class="text-xs text-slate-500 uppercase font-bold">Due Now</span>
-                            <div class="text-2xl font-bold text-white">${dueCount}</div>
-                        </div>
-                        <button class="w-10 h-10 rounded-full bg-neon-blue/10 flex items-center justify-center text-neon-blue group-hover:bg-neon-blue group-hover:text-dark-900 transition-all">
+                    <div class="text-right">
+                        <span class="bg-dark-800 text-xs font-mono px-2 py-1 rounded text-slate-300">${total} cards</span>
+                        <button class="mt-2 w-10 h-10 rounded-full bg-neon-blue/10 flex items-center justify-center text-neon-blue group-hover:bg-neon-blue group-hover:text-dark-900 transition-all">
                             <i class="fa-solid fa-play ml-1"></i>
                         </button>
                     </div>
+                </div>
+            `;
+            return card;
+        }
+
+        /* --- PRESET CONFIG --- */
+        function renderPresetConfig() {
+            const list = document.getElementById('preset-list');
+            list.innerHTML = '';
+            
+            presets.forEach((preset, idx) => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center gap-3 p-3 bg-dark-800 rounded-lg border border-dark-700';
+                item.innerHTML = `
+                    <div class="flex-grow">
+                        <div class="font-bold text-white text-sm">${preset.name}</div>
+                        <div class="text-xs text-slate-500 truncate">${preset.url}</div>
+                    </div>
+                    <button onclick="removePreset(${idx})" class="text-red-400 hover:text-red-300 p-2">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
                 `;
-                grid.appendChild(card);
+                list.appendChild(item);
             });
+            
+            if (presets.length === 0) {
+                list.innerHTML = '<div class="text-center text-slate-500 py-4 italic">No presets configured. Add your GitHub URLs below.</div>';
+            }
+        }
+
+        function addPreset() {
+            const name = document.getElementById('new-preset-name').value.trim();
+            const url = document.getElementById('new-preset-url').value.trim();
+            
+            if (!name || !url) {
+                showToast("Please enter both name and URL", "error");
+                return;
+            }
+            
+            if (!url.includes('raw.githubusercontent.com')) {
+                showToast("Please use a raw GitHub URL (click 'Raw' on GitHub)", "error");
+                return;
+            }
+            
+            presets.push({ name, url });
+            document.getElementById('new-preset-name').value = '';
+            document.getElementById('new-preset-url').value = '';
+            
+            renderPresetConfig();
+            showToast("Preset added!", "success");
+        }
+
+        function removePreset(idx) {
+            presets.splice(idx, 1);
+            renderPresetConfig();
+        }
+
+        async function savePresetsAndLoad() {
+            savePresets();
+            await loadPresetDecks();
+            showHome();
         }
 
         /* --- QUIZ LOGIC --- */
@@ -612,12 +1027,6 @@
 
             currentCardIndex = 0;
             document.getElementById('stat-deck-name').innerText = deck.name;
-            
-            // Reset quiz view if it was replaced
-            if (!document.getElementById('options-container')) {
-                location.reload(); // Simple reset
-                return;
-            }
             
             hideAllViews();
             document.getElementById('view-quiz').classList.remove('hidden');
@@ -756,14 +1165,20 @@
             list.innerHTML = '';
             
             decks.forEach(deck => {
+                const isRemote = !deck.isLocal;
                 const item = document.createElement('div');
                 item.className = `p-3 rounded-lg cursor-pointer flex justify-between items-center ${selectedManagerDeckId === deck.id ? 'bg-neon-blue/20 border border-neon-blue/30' : 'hover:bg-white/5 border border-transparent'}`;
                 item.onclick = () => selectDeckForEdit(deck.id);
                 
+                const icon = isRemote ? '<i class="fa-solid fa-cloud text-neon-purple mr-2"></i>' : '<i class="fa-solid fa-hard-drive text-slate-500 mr-2"></i>';
+                
                 item.innerHTML = `
-                    <div>
-                        <div class="font-bold text-white text-sm">${deck.name}</div>
-                        <div class="text-xs text-slate-400">${deck.questions.length} questions</div>
+                    <div class="flex items-center flex-grow">
+                        ${icon}
+                        <div>
+                            <div class="font-bold text-white text-sm">${deck.name}</div>
+                            <div class="text-xs text-slate-400">${deck.questions.length} questions</div>
+                        </div>
                     </div>
                     ${selectedManagerDeckId === deck.id ? '<i class="fa-solid fa-chevron-right text-neon-blue"></i>' : ''}
                 `;
@@ -784,6 +1199,7 @@
                 const newDeck = {
                     id: Date.now().toString(),
                     name: name,
+                    isLocal: true,
                     questions: []
                 };
                 decks.push(newDeck);
@@ -807,11 +1223,22 @@
             document.getElementById('edit-deck-name').value = deck.name;
             document.getElementById('edit-q-count').innerText = deck.questions.length;
 
+            // Show/hide remote-specific UI
+            const isRemote = !deck.isLocal;
+            document.getElementById('btn-refresh').classList.toggle('hidden', !isRemote);
+            document.getElementById('local-upload').classList.toggle('hidden', isRemote);
+            document.getElementById('remote-info').classList.toggle('hidden', !isRemote);
+            
+            if (isRemote && deck.remoteUrl) {
+                document.getElementById('remote-url').href = deck.remoteUrl;
+                document.getElementById('remote-url').innerText = deck.remoteUrl;
+            }
+
             const qList = document.getElementById('edit-questions-list');
             qList.innerHTML = '';
 
             if (deck.questions.length === 0) {
-                qList.innerHTML = '<div class="text-center text-slate-500 py-8 italic">No questions yet. Import JSON or add manually!</div>';
+                qList.innerHTML = '<div class="text-center text-slate-500 py-8 italic">No questions yet.</div>';
                 return;
             }
 
@@ -824,10 +1251,11 @@
                         <div class="text-sm text-white font-medium truncate">${q.question}</div>
                         <div class="text-xs text-slate-500">${q.category || 'Uncategorized'} • Answer: ${correctLabel}</div>
                     </div>
+                    ${deck.isLocal ? `
                     <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onclick="editQuestion(${idx})" class="text-neon-blue hover:text-white p-1"><i class="fa-solid fa-pen"></i></button>
                         <button onclick="deleteQuestion(${idx})" class="text-red-400 hover:text-red-300 p-1"><i class="fa-solid fa-trash"></i></button>
-                    </div>
+                    </div>` : '<span class="text-xs text-slate-500"><i class="fa-solid fa-lock mr-1"></i>Remote</span>'}
                 `;
                 qList.appendChild(row);
             });
@@ -836,13 +1264,15 @@
         document.getElementById('edit-deck-name').addEventListener('input', (e) => {
             if (selectedManagerDeckId) {
                 const deck = decks.find(d => d.id === selectedManagerDeckId);
-                deck.name = e.target.value;
-                saveToStorage();
+                if (deck.isLocal) {
+                    deck.name = e.target.value;
+                    saveToStorage();
+                }
             }
         });
 
         function deleteCurrentDeck() {
-            if(confirm("Delete this entire deck? This cannot be undone.")) {
+            if(confirm("Delete this deck? Remote decks can be re-imported.")) {
                 decks = decks.filter(d => d.id !== selectedManagerDeckId);
                 selectedManagerDeckId = null;
                 saveToStorage();
@@ -853,7 +1283,19 @@
 
         function exportCurrentDeck() {
             const deck = decks.find(d => d.id === selectedManagerDeckId);
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(deck, null, 2));
+            const exportData = {
+                name: deck.name,
+                questions: deck.questions.map(q => ({
+                    question: q.question,
+                    options: q.options,
+                    correct: q.correct,
+                    explanation: q.explanation,
+                    category: q.category,
+                    code: q.code
+                }))
+            };
+            
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
             downloadAnchorNode.setAttribute("download", deck.name.replace(/\s+/g, '_') + ".json");
@@ -863,27 +1305,51 @@
             showToast("Deck exported!", "success");
         }
 
+        /* --- IMPORT FROM GITHUB URL --- */
+        async function importFromGitHub() {
+            const url = prompt("Enter raw GitHub URL:\n\nExample:\nhttps://raw.githubusercontent.com/user/repo/main/questions.json");
+            if (!url) return;
+            
+            if (!url.includes('raw.githubusercontent.com')) {
+                showToast("Please use the RAW URL (click 'Raw' on GitHub)", "error");
+                return;
+            }
+            
+            const name = prompt("Name for this deck:", "Imported Deck");
+            if (!name) return;
+            
+            try {
+                await loadRemoteDeck(name, url, true);
+                renderHome();
+                showManager();
+            } catch (err) {
+                // Error shown in function
+            }
+        }
+
         /* --- DRAG & DROP FILE UPLOAD --- */
         function setupDragAndDrop() {
             const dropZone = document.getElementById('drop-zone');
             const fileInput = document.getElementById('file-input');
 
-            dropZone.addEventListener('click', () => fileInput.click());
+            if (dropZone) {
+                dropZone.addEventListener('click', () => fileInput.click());
 
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropZone.classList.add('drag-over');
-            });
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('drag-over');
+                });
 
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('drag-over');
-            });
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.classList.remove('drag-over');
+                });
 
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('drag-over');
-                handleFiles(e.dataTransfer.files);
-            });
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('drag-over');
+                    handleFiles(e.dataTransfer.files);
+                });
+            }
 
             fileInput.addEventListener('change', (e) => {
                 handleFiles(e.target.files);
@@ -917,10 +1383,14 @@
 
         function processImportedData(data, filename) {
             const deck = decks.find(d => d.id === selectedManagerDeckId);
+            if (!deck.isLocal) {
+                showToast("Cannot modify remote deck. Create a local copy first.", "error");
+                return;
+            }
+            
             let importedCount = 0;
             let errors = [];
 
-            // Handle different JSON structures
             let questionsToImport = [];
 
             if (Array.isArray(data)) {
@@ -936,7 +1406,6 @@
 
             questionsToImport.forEach((q, idx) => {
                 try {
-                    // Validate required fields
                     if (!q.question || !q.options || !Array.isArray(q.options)) {
                         errors.push(`Item ${idx + 1}: Missing question or options`);
                         return;
@@ -947,25 +1416,17 @@
                         return;
                     }
 
-                    // Determine correct answer index
                     let correctIndex = -1;
 
                     if (typeof q.correct === 'number' && q.correct >= 0 && q.correct < q.options.length) {
-                        // Format 1: correct is index
                         correctIndex = q.correct;
                     } else if (q.answer) {
-                        // Format 2: answer is text (like your file)
-                        // Try exact match first
                         correctIndex = q.options.findIndex(opt => opt === q.answer);
-                        
-                        // Try case-insensitive trim match
                         if (correctIndex === -1) {
                             correctIndex = q.options.findIndex(opt => 
                                 opt.toLowerCase().trim() === q.answer.toLowerCase().trim()
                             );
                         }
-                        
-                        // Try includes match (for partial matches)
                         if (correctIndex === -1) {
                             correctIndex = q.options.findIndex(opt => 
                                 opt.toLowerCase().includes(q.answer.toLowerCase()) ||
@@ -979,7 +1440,6 @@
                         return;
                     }
 
-                    // Create normalized question
                     const newQ = {
                         id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
                         question: q.question,
@@ -1020,9 +1480,14 @@
 
         /* --- QUESTION MODAL LOGIC --- */
         function openQuestionModal(index = null) {
+            const deck = decks.find(d => d.id === selectedManagerDeckId);
+            if (!deck.isLocal) {
+                showToast("Cannot edit remote deck questions directly", "error");
+                return;
+            }
+            
             editingQuestionIndex = index;
             const modal = document.getElementById('modal-question');
-            const deck = decks.find(d => d.id === selectedManagerDeckId);
             
             document.getElementById('q-input-text').value = '';
             document.getElementById('q-input-category').value = '';
@@ -1079,7 +1544,6 @@
             const currentVal = select.value;
             
             select.innerHTML = '';
-            let validCount = 0;
             
             inputs.forEach((input, idx) => {
                 if(input.value.trim() !== '') {
@@ -1087,7 +1551,6 @@
                     opt.value = idx;
                     opt.text = `${String.fromCharCode(65+idx)}. ${input.value.substring(0, 50)}${input.value.length > 50 ? '...' : ''}`;
                     select.appendChild(opt);
-                    validCount++;
                 }
             });
 
