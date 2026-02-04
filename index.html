@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeuroRecall | Smart MCQ Drill</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -56,20 +59,23 @@
             color: #f8fafc;
             overflow-x: hidden;
         }
-        
+
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
+
         ::-webkit-scrollbar-track {
-            background: #1e293b; 
+            background: #1e293b;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #475569; 
+            background: #475569;
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #64748b; 
+            background: #64748b;
         }
 
         .glass-panel {
@@ -82,25 +88,29 @@
         .option-card {
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .option-card:hover:not(.disabled) {
             transform: translateX(8px);
             border-color: #38bdf8;
             background: rgba(56, 189, 248, 0.1);
         }
+
         .option-card.selected-correct {
             background: rgba(52, 211, 153, 0.15);
             border-color: #34d399;
             color: #34d399;
         }
+
         .option-card.selected-wrong {
             background: rgba(251, 113, 133, 0.15);
             border-color: #fb7185;
             color: #fb7185;
         }
-        
+
         .difficulty-btn {
             transition: transform 0.1s;
         }
+
         .difficulty-btn:active {
             transform: scale(0.95);
         }
@@ -113,6 +123,7 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.9em;
         }
+
         pre {
             background: #0f172a;
             padding: 16px;
@@ -131,6 +142,7 @@
             width: 100%;
             transition: all 0.2s;
         }
+
         .custom-input:focus {
             outline: none;
             border-color: #38bdf8;
@@ -141,6 +153,7 @@
             border: 2px dashed #334155;
             transition: all 0.3s ease;
         }
+
         .drop-zone.drag-over {
             border-color: #38bdf8;
             background: rgba(56, 189, 248, 0.1);
@@ -160,16 +173,20 @@
             opacity: 0;
             transition: all 0.3s ease;
         }
+
         .toast.show {
             transform: translateY(0);
             opacity: 1;
         }
+
         .toast.success {
             background: linear-gradient(135deg, #10b981, #059669);
         }
+
         .toast.error {
             background: linear-gradient(135deg, #ef4444, #dc2626);
         }
+
         .toast.info {
             background: linear-gradient(135deg, #3b82f6, #2563eb);
         }
@@ -179,12 +196,14 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col font-sans antialiased selection:bg-neon-purple selection:text-white">
 
     <!-- Background Ambient Glow -->
     <div class="fixed inset-0 z-0 pointer-events-none">
         <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-neon-blue/10 rounded-full blur-[120px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-neon-purple/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-neon-purple/10 rounded-full blur-[120px]">
+        </div>
     </div>
 
     <!-- Toast Container -->
@@ -193,17 +212,22 @@
     <!-- Navbar -->
     <nav class="relative z-10 w-full px-6 py-4 flex justify-between items-center border-b border-white/5 glass-panel">
         <div class="flex items-center gap-3 cursor-pointer" onclick="showHome()">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple flex items-center justify-center shadow-lg shadow-neon-blue/20">
+            <div
+                class="w-8 h-8 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple flex items-center justify-center shadow-lg shadow-neon-blue/20">
                 <i class="fa-solid fa-bolt text-white text-sm"></i>
             </div>
-            <span class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">NeuroRecall</span>
+            <span
+                class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">NeuroRecall</span>
         </div>
-        
+
         <div class="flex items-center gap-4">
-            <button onclick="refreshRemoteDecks()" class="text-slate-400 hover:text-white transition-colors text-sm font-medium" title="Refresh Remote Decks">
+            <button onclick="refreshRemoteDecks()"
+                class="text-slate-400 hover:text-white transition-colors text-sm font-medium"
+                title="Refresh Remote Decks">
                 <i class="fa-solid fa-rotate mr-1"></i> Sync
             </button>
-            <button onclick="showManager()" class="text-slate-400 hover:text-white transition-colors text-sm font-medium">
+            <button onclick="showManager()"
+                class="text-slate-400 hover:text-white transition-colors text-sm font-medium">
                 <i class="fa-solid fa-layer-group mr-1"></i> Decks
             </button>
             <a href="https://github.com" target="_blank" class="text-slate-400 hover:text-white transition-colors">
@@ -214,27 +238,32 @@
 
     <!-- Main Content Area -->
     <main class="relative z-10 flex-grow flex items-center justify-center p-4 md:p-8">
-        
+
         <!-- VIEW: HOME / START -->
         <div id="view-home" class="w-full max-w-5xl animate-fade-in">
             <div class="text-center mb-12">
-                <div class="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-neon-blue to-neon-purple shadow-2xl shadow-neon-blue/50 animate-pulse-slow">
+                <div
+                    class="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-neon-blue to-neon-purple shadow-2xl shadow-neon-blue/50 animate-pulse-slow">
                     <i class="fa-solid fa-brain text-4xl text-white"></i>
                 </div>
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">Master Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple">Memory</span></h1>
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">Master Your <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple">Memory</span>
+                </h1>
                 <p class="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
-                    Active recall is the most effective way to learn. 
+                    Active recall is the most effective way to learn.
                     Access your decks from anywhere with cloud sync.
                 </p>
             </div>
 
             <!-- Quick Actions -->
             <div class="flex justify-center gap-4 mb-8">
-                <button onclick="importFromGitHub()" class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
+                <button onclick="importFromGitHub()"
+                    class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
                     <i class="fa-brands fa-github text-xl"></i>
                     <span>Import from GitHub</span>
                 </button>
-                <button onclick="showManager()" class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
+                <button onclick="showManager()"
+                    class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
                     <i class="fa-solid fa-folder-open text-xl"></i>
                     <span>Manage Decks</span>
                 </button>
@@ -295,11 +324,12 @@
 
             <!-- Card -->
             <div class="glass-panel rounded-2xl shadow-2xl overflow-hidden flex flex-col min-h-[500px]">
-                
+
                 <!-- Question Area -->
                 <div class="flex-grow p-6 md:p-10 flex flex-col">
                     <div class="flex justify-between items-start mb-6">
-                        <span id="card-category" class="px-3 py-1 rounded-full text-xs font-bold bg-neon-blue/10 text-neon-blue border border-neon-blue/20">
+                        <span id="card-category"
+                            class="px-3 py-1 rounded-full text-xs font-bold bg-neon-blue/10 text-neon-blue border border-neon-blue/20">
                             General
                         </span>
                         <span id="card-type" class="text-xs text-slate-500 font-mono">
@@ -307,13 +337,16 @@
                         </span>
                     </div>
 
-                    <h2 id="question-text" class="text-xl md:text-2xl font-semibold leading-relaxed mb-8 text-slate-100">
+                    <h2 id="question-text"
+                        class="text-xl md:text-2xl font-semibold leading-relaxed mb-8 text-slate-100">
                         Loading question...
                     </h2>
 
                     <!-- Code Block -->
                     <div id="code-block" class="hidden mb-8 relative group">
-                        <div class="absolute top-2 right-2 text-xs text-slate-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity">Code Snippet</div>
+                        <div
+                            class="absolute top-2 right-2 text-xs text-slate-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                            Code Snippet</div>
                         <pre><code id="code-content" class="language-c"></code></pre>
                     </div>
 
@@ -324,7 +357,8 @@
                 </div>
 
                 <!-- Explanation / Feedback Area -->
-                <div id="explanation-area" class="hidden bg-dark-800/50 border-t border-white/5 p-6 md:p-10 animate-slide-up">
+                <div id="explanation-area"
+                    class="hidden bg-dark-800/50 border-t border-white/5 p-6 md:p-10 animate-slide-up">
                     <div class="flex items-start gap-4">
                         <div id="feedback-icon" class="mt-1 text-2xl">
                             <i class="fa-solid fa-circle-check text-neon-green"></i>
@@ -344,25 +378,30 @@
                         <div class="text-xs text-slate-500 font-mono">
                             Select an answer to reveal
                         </div>
-                        <button onclick="skipCard()" class="text-slate-400 hover:text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">
+                        <button onclick="skipCard()"
+                            class="text-slate-400 hover:text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">
                             Skip <span class="hidden md:inline">(Next)</span>
                         </button>
                     </div>
 
                     <div id="controls-difficulty" class="hidden grid grid-cols-4 gap-3">
-                        <button onclick="rateCard('again')" class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20">
+                        <button onclick="rateCard('again')"
+                            class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20">
                             <span class="font-bold text-sm">Again</span>
                             <span class="text-[10px] opacity-70 mt-1">&lt; 1m</span>
                         </button>
-                        <button onclick="rateCard('hard')" class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-400 hover:bg-orange-500/20">
+                        <button onclick="rateCard('hard')"
+                            class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-400 hover:bg-orange-500/20">
                             <span class="font-bold text-sm">Hard</span>
                             <span class="text-[10px] opacity-70 mt-1">2d</span>
                         </button>
-                        <button onclick="rateCard('good')" class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20">
+                        <button onclick="rateCard('good')"
+                            class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20">
                             <span class="font-bold text-sm">Good</span>
                             <span class="text-[10px] opacity-70 mt-1">4d</span>
                         </button>
-                        <button onclick="rateCard('easy')" class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 hover:bg-green-500/20">
+                        <button onclick="rateCard('easy')"
+                            class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 hover:bg-green-500/20">
                             <span class="font-bold text-sm">Easy</span>
                             <span class="text-[10px] opacity-70 mt-1">7d</span>
                         </button>
@@ -373,12 +412,13 @@
 
         <!-- VIEW: MANAGER (DECKS & EDITOR) -->
         <div id="view-manager" class="w-full max-w-6xl hidden animate-fade-in h-[80vh] flex flex-col">
-            
+
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-white">Deck Manager</h2>
                 <div class="flex gap-3">
                     <button onclick="showHome()" class="text-slate-400 hover:text-white px-4 py-2">Back</button>
-                    <button onclick="createNewDeck()" class="bg-neon-blue text-dark-900 font-bold px-4 py-2 rounded-lg hover:bg-sky-300 transition-colors">
+                    <button onclick="createNewDeck()"
+                        class="bg-neon-blue text-dark-900 font-bold px-4 py-2 rounded-lg hover:bg-sky-300 transition-colors">
                         <i class="fa-solid fa-plus mr-2"></i>New Deck
                     </button>
                 </div>
@@ -386,21 +426,24 @@
 
             <!-- Import Options -->
             <div class="grid md:grid-cols-3 gap-4 mb-6">
-                <div onclick="importFromGitHub()" class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
+                <div onclick="importFromGitHub()"
+                    class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
                     <div class="flex items-center gap-3 mb-2">
                         <i class="fa-brands fa-github text-2xl text-white"></i>
                         <span class="font-bold text-white">GitHub URL</span>
                     </div>
                     <p class="text-xs text-slate-400">Import from raw GitHub URL</p>
                 </div>
-                <div onclick="document.getElementById('file-input').click()" class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
+                <div onclick="document.getElementById('file-input').click()"
+                    class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
                     <div class="flex items-center gap-3 mb-2">
                         <i class="fa-solid fa-file-arrow-up text-2xl text-neon-blue"></i>
                         <span class="font-bold text-white">Upload JSON</span>
                     </div>
                     <p class="text-xs text-slate-400">Import from local file</p>
                 </div>
-                <div onclick="showPresetConfig()" class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
+                <div onclick="showPresetConfig()"
+                    class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
                     <div class="flex items-center gap-3 mb-2">
                         <i class="fa-solid fa-gear text-2xl text-neon-purple"></i>
                         <span class="font-bold text-white">Auto-Sync</span>
@@ -411,13 +454,15 @@
 
             <div class="flex flex-col md:flex-row gap-6 h-full overflow-hidden">
                 <!-- Sidebar: Deck List -->
-                <div class="w-full md:w-1/3 glass-panel rounded-xl p-4 overflow-y-auto flex flex-col gap-2" id="manager-deck-list">
+                <div class="w-full md:w-1/3 glass-panel rounded-xl p-4 overflow-y-auto flex flex-col gap-2"
+                    id="manager-deck-list">
                     <!-- Deck list items -->
                 </div>
 
                 <!-- Main: Editor / Details -->
-                <div class="w-full md:w-2/3 glass-panel rounded-xl p-6 overflow-y-auto relative" id="manager-editor-panel">
-                    
+                <div class="w-full md:w-2/3 glass-panel rounded-xl p-6 overflow-y-auto relative"
+                    id="manager-editor-panel">
+
                     <!-- Empty State for Editor -->
                     <div id="editor-empty" class="h-full flex flex-col items-center justify-center text-slate-500">
                         <i class="fa-solid fa-folder-open text-4xl mb-4 opacity-50"></i>
@@ -428,35 +473,44 @@
                     <div id="editor-content" class="hidden">
                         <div class="flex justify-between items-start mb-6 border-b border-white/10 pb-4">
                             <div class="w-full mr-4">
-                                <label class="text-xs text-slate-400 uppercase font-bold tracking-wider">Deck Name</label>
-                                <input type="text" id="edit-deck-name" class="custom-input text-xl font-bold mt-1 bg-transparent border-none p-0 focus:ring-0" placeholder="Deck Name">
+                                <label class="text-xs text-slate-400 uppercase font-bold tracking-wider">Deck
+                                    Name</label>
+                                <input type="text" id="edit-deck-name"
+                                    class="custom-input text-xl font-bold mt-1 bg-transparent border-none p-0 focus:ring-0"
+                                    placeholder="Deck Name">
                             </div>
                             <div class="flex gap-2" id="deck-actions">
-                                <button onclick="refreshCurrentDeck()" id="btn-refresh" class="hidden text-neon-blue hover:text-white p-2" title="Refresh from Remote">
+                                <button onclick="refreshCurrentDeck()" id="btn-refresh"
+                                    class="hidden text-neon-blue hover:text-white p-2" title="Refresh from Remote">
                                     <i class="fa-solid fa-rotate"></i>
                                 </button>
-                                <button onclick="deleteCurrentDeck()" class="text-red-400 hover:text-red-300 p-2" title="Delete Deck">
+                                <button onclick="deleteCurrentDeck()" class="text-red-400 hover:text-red-300 p-2"
+                                    title="Delete Deck">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
-                                <button onclick="exportCurrentDeck()" class="text-slate-400 hover:text-white p-2" title="Export JSON">
+                                <button onclick="exportCurrentDeck()" class="text-slate-400 hover:text-white p-2"
+                                    title="Export JSON">
                                     <i class="fa-solid fa-download"></i>
                                 </button>
                             </div>
                         </div>
 
                         <!-- Remote Info -->
-                        <div id="remote-info" class="hidden mb-4 p-3 bg-neon-purple/10 border border-neon-purple/20 rounded-lg">
+                        <div id="remote-info"
+                            class="hidden mb-4 p-3 bg-neon-purple/10 border border-neon-purple/20 rounded-lg">
                             <div class="flex items-center gap-2 text-sm text-neon-purple">
                                 <i class="fa-solid fa-cloud"></i>
                                 <span>Remote Source:</span>
                                 <a id="remote-url" href="#" target="_blank" class="underline truncate flex-grow"></a>
-                                <span id="remote-status" class="text-xs px-2 py-1 rounded bg-neon-purple/20">Synced</span>
+                                <span id="remote-status"
+                                    class="text-xs px-2 py-1 rounded bg-neon-purple/20">Synced</span>
                             </div>
                         </div>
 
                         <!-- JSON Upload Area (for local decks) -->
                         <div id="local-upload" class="mb-6 hidden">
-                            <label class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-2 block">Import More Questions</label>
+                            <label class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-2 block">Import
+                                More Questions</label>
                             <div id="drop-zone" class="drop-zone rounded-xl p-4 text-center cursor-pointer">
                                 <input type="file" id="file-input" accept=".json" multiple class="hidden">
                                 <i class="fa-solid fa-cloud-arrow-up text-xl text-slate-400 mb-1"></i>
@@ -466,7 +520,8 @@
 
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="font-bold text-white">Questions (<span id="edit-q-count">0</span>)</h3>
-                            <button onclick="openQuestionModal()" class="text-xs bg-dark-700 hover:bg-dark-600 text-white px-3 py-1.5 rounded transition-colors">
+                            <button onclick="openQuestionModal()"
+                                class="text-xs bg-dark-700 hover:bg-dark-600 text-white px-3 py-1.5 rounded transition-colors">
                                 <i class="fa-solid fa-plus mr-1"></i> Add Manually
                             </button>
                         </div>
@@ -489,7 +544,7 @@
                         <i class="fa-solid fa-xmark text-xl"></i>
                     </button>
                 </div>
-                
+
                 <p class="text-slate-400 mb-6">
                     Add URLs to JSON files that will auto-load on startup. Perfect for syncing with GitHub.
                 </p>
@@ -499,9 +554,11 @@
                 </div>
 
                 <div class="flex gap-2 mb-6">
-                    <input type="text" id="new-preset-name" class="custom-input flex-1" placeholder="Deck Name (e.g., Web Dev)">
+                    <input type="text" id="new-preset-name" class="custom-input flex-1"
+                        placeholder="Deck Name (e.g., Web Dev)">
                     <input type="text" id="new-preset-url" class="custom-input flex-2" placeholder="Raw GitHub URL...">
-                    <button onclick="addPreset()" class="bg-neon-blue text-dark-900 font-bold px-4 py-2 rounded-lg">Add</button>
+                    <button onclick="addPreset()"
+                        class="bg-neon-blue text-dark-900 font-bold px-4 py-2 rounded-lg">Add</button>
                 </div>
 
                 <div class="p-4 bg-dark-800 rounded-lg border border-dark-700">
@@ -515,7 +572,8 @@
                 </div>
 
                 <div class="mt-6 flex justify-end">
-                    <button onclick="savePresetsAndLoad()" class="bg-neon-green text-dark-900 font-bold px-6 py-2 rounded-lg hover:bg-green-400">
+                    <button onclick="savePresetsAndLoad()"
+                        class="bg-neon-green text-dark-900 font-bold px-6 py-2 rounded-lg hover:bg-green-400">
                         Save & Load Decks
                     </button>
                 </div>
@@ -525,7 +583,8 @@
     </main>
 
     <!-- MODAL: ADD/EDIT QUESTION -->
-    <div id="modal-question" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div id="modal-question"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
         <div class="glass-panel w-full max-w-2xl rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-bold text-white" id="modal-title">Add Question</h3>
@@ -537,17 +596,20 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs text-slate-400 uppercase font-bold mb-1">Question Text</label>
-                    <textarea id="q-input-text" class="custom-input h-20" placeholder="Enter the question..."></textarea>
+                    <textarea id="q-input-text" class="custom-input h-20"
+                        placeholder="Enter the question..."></textarea>
                 </div>
 
                 <div>
                     <label class="block text-xs text-slate-400 uppercase font-bold mb-1">Category</label>
-                    <input type="text" id="q-input-category" class="custom-input" placeholder="e.g., Algorithms, History">
+                    <input type="text" id="q-input-category" class="custom-input"
+                        placeholder="e.g., Algorithms, History">
                 </div>
 
                 <div>
                     <label class="block text-xs text-slate-400 uppercase font-bold mb-1">Code Snippet (Optional)</label>
-                    <textarea id="q-input-code" class="custom-input h-24 font-mono text-xs" placeholder="Paste code here..."></textarea>
+                    <textarea id="q-input-code" class="custom-input h-24 font-mono text-xs"
+                        placeholder="Paste code here..."></textarea>
                 </div>
 
                 <div>
@@ -555,7 +617,8 @@
                     <div id="q-options-container" class="space-y-2">
                         <!-- Dynamic Options -->
                     </div>
-                    <button onclick="addOptionInput()" class="mt-2 text-xs text-neon-blue hover:underline">+ Add Option</button>
+                    <button onclick="addOptionInput()" class="mt-2 text-xs text-neon-blue hover:underline">+ Add
+                        Option</button>
                 </div>
 
                 <div>
@@ -567,13 +630,16 @@
 
                 <div>
                     <label class="block text-xs text-slate-400 uppercase font-bold mb-1">Explanation</label>
-                    <textarea id="q-input-explanation" class="custom-input h-20" placeholder="Why is this the correct answer?"></textarea>
+                    <textarea id="q-input-explanation" class="custom-input h-20"
+                        placeholder="Why is this the correct answer?"></textarea>
                 </div>
             </div>
 
             <div class="mt-8 flex justify-end gap-3">
                 <button onclick="closeQuestionModal()" class="px-4 py-2 text-slate-400 hover:text-white">Cancel</button>
-                <button onclick="saveQuestion()" class="bg-neon-blue text-dark-900 font-bold px-6 py-2 rounded-lg hover:bg-sky-300">Save Question</button>
+                <button onclick="saveQuestion()"
+                    class="bg-neon-blue text-dark-900 font-bold px-6 py-2 rounded-lg hover:bg-sky-300">Save
+                    Question</button>
             </div>
         </div>
     </div>
@@ -581,7 +647,7 @@
     <script>
         /* --- STATE --- */
         const SETTINGS = {
-            again: 0.05, 
+            again: 0.05,
             hard: 2.0,
             good: 4.0,
             easy: 7.0,
@@ -592,10 +658,11 @@
         // Default preset decks - EDIT THESE FOR YOUR GITHUB PAGES
         const DEFAULT_PRESETS = [
             // Example: Replace with your actual GitHub raw URLs
-            // {
-            //     name: "Web Development",
-            //     url: "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/web_questions.json"
-            // },
+            {
+                name: "Computer Network",
+
+                url: "https://raw.https://github.com/whoopcat/Neuro-Recall/blob/e6d1d881d039d9cf32d82ba8e3ee1494fc979c4b/CompNet_questions.json.com/YOUR_USERNAME/YOUR_REPO/main/web_questions.json"
+            },
             // {
             //     name: "Operating Systems", 
             //     url: "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/os_questions.json"
@@ -605,7 +672,7 @@
         let decks = [];
         let presets = [];
         let activeDeckId = null;
-        let sessionQueue = []; 
+        let sessionQueue = [];
         let currentCardIndex = 0;
         let isAnswerRevealed = false;
         let editingQuestionIndex = null;
@@ -622,7 +689,7 @@
                 decks = JSON.parse(saved);
                 decks.forEach(d => {
                     d.questions.forEach(q => {
-                        if(q.dueDate) q.dueDate = new Date(q.dueDate);
+                        if (q.dueDate) q.dueDate = new Date(q.dueDate);
                     });
                 });
             } else {
@@ -631,7 +698,7 @@
 
             // Load remote decks on startup
             await loadPresetDecks();
-            
+
             renderHome();
             setupDragAndDrop();
         };
@@ -668,12 +735,12 @@
         }
 
         /* --- PRESET/REMOTE DECK SYSTEM --- */
-        
+
         async function loadPresetDecks() {
             if (presets.length === 0) return;
-            
+
             showToast("Loading remote decks...", "info");
-            
+
             for (const preset of presets) {
                 try {
                     await loadRemoteDeck(preset.name, preset.url, false);
@@ -681,7 +748,7 @@
                     console.error("Failed to load preset:", preset.name, err);
                 }
             }
-            
+
             saveToStorage();
             renderHome();
         }
@@ -690,16 +757,16 @@
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
+
                 const data = await response.json();
-                
+
                 // Check if deck already exists
-                const existingIndex = decks.findIndex(d => 
+                const existingIndex = decks.findIndex(d =>
                     d.remoteUrl === url || (d.name === name && !d.isLocal)
                 );
-                
+
                 const normalizedQuestions = normalizeQuestions(data);
-                
+
                 const deckData = {
                     id: existingIndex >= 0 ? decks[existingIndex].id : Date.now().toString() + Math.random(),
                     name: name,
@@ -708,7 +775,7 @@
                     lastSynced: new Date().toISOString(),
                     questions: normalizedQuestions
                 };
-                
+
                 if (existingIndex >= 0) {
                     // Preserve due dates and progress for existing questions
                     const oldDeck = decks[existingIndex];
@@ -717,13 +784,13 @@
                 } else {
                     decks.push(deckData);
                 }
-                
+
                 if (showNotifications) {
                     showToast(`Loaded "${name}" with ${normalizedQuestions.length} questions`, "success");
                 }
-                
+
                 return deckData;
-                
+
             } catch (err) {
                 if (showNotifications) {
                     showToast(`Failed to load "${name}": ${err.message}`, "error");
@@ -735,11 +802,11 @@
         function mergeQuestions(oldQuestions, newQuestions) {
             // Preserve user progress (dueDate, interval, ease) for questions that exist
             const questionMap = new Map();
-            
+
             oldQuestions.forEach(q => {
                 questionMap.set(q.question, q); // Use question text as key
             });
-            
+
             return newQuestions.map(newQ => {
                 const existing = questionMap.get(newQ.question);
                 if (existing) {
@@ -761,26 +828,26 @@
                 // Try to extract from object format
                 data = data.questions || [];
             }
-            
+
             return data.map((q, idx) => {
                 // Find correct index
                 let correct = 0;
                 if (typeof q.correct === 'number') {
                     correct = q.correct;
                 } else if (q.answer && q.options) {
-                    correct = q.options.findIndex(opt => 
+                    correct = q.options.findIndex(opt =>
                         opt.toLowerCase().trim() === q.answer.toLowerCase().trim()
                     );
                     if (correct === -1) {
                         // Try partial match
-                        correct = q.options.findIndex(opt => 
+                        correct = q.options.findIndex(opt =>
                             opt.toLowerCase().includes(q.answer.toLowerCase()) ||
                             q.answer.toLowerCase().includes(opt.toLowerCase())
                         );
                     }
                     if (correct === -1) correct = 0;
                 }
-                
+
                 return {
                     id: 'q_' + Date.now() + '_' + idx,
                     question: q.question,
@@ -802,9 +869,9 @@
                 showToast("No remote decks to refresh", "info");
                 return;
             }
-            
+
             showToast("Refreshing remote decks...", "info");
-            
+
             for (const deck of remoteDecks) {
                 try {
                     await loadRemoteDeck(deck.name, deck.remoteUrl, false);
@@ -812,7 +879,7 @@
                     console.error("Refresh failed for:", deck.name);
                 }
             }
-            
+
             saveToStorage();
             renderHome();
             showToast("All decks refreshed!", "success");
@@ -822,7 +889,7 @@
             if (!selectedManagerDeckId) return;
             const deck = decks.find(d => d.id === selectedManagerDeckId);
             if (!deck || !deck.remoteUrl) return;
-            
+
             showToast("Refreshing...", "info");
             try {
                 await loadRemoteDeck(deck.name, deck.remoteUrl, true);
@@ -845,7 +912,7 @@
                 </div>
             `;
             container.appendChild(toast);
-            
+
             setTimeout(() => toast.classList.add('show'), 10);
             setTimeout(() => {
                 toast.classList.remove('show');
@@ -890,23 +957,23 @@
             const localGrid = document.getElementById('deck-grid');
             const remoteSection = document.getElementById('remote-decks-section');
             const localSection = document.getElementById('local-decks-section');
-            
+
             remoteGrid.innerHTML = '';
             localGrid.innerHTML = '';
-            
+
             const remoteDecks = decks.filter(d => !d.isLocal);
             const localDecks = decks.filter(d => d.isLocal !== false);
-            
+
             // Show/hide sections
             remoteSection.classList.toggle('hidden', remoteDecks.length === 0);
             localSection.classList.toggle('hidden', localDecks.length === 0);
-            
+
             // Render remote decks
             remoteDecks.forEach(deck => {
                 const card = createDeckCard(deck, true);
                 remoteGrid.appendChild(card);
             });
-            
+
             // Render local decks
             localDecks.forEach(deck => {
                 const card = createDeckCard(deck, false);
@@ -917,16 +984,16 @@
         function createDeckCard(deck, isRemote) {
             const dueCount = deck.questions.filter(q => new Date(q.dueDate) <= new Date()).length;
             const total = deck.questions.length;
-            
+
             const card = document.createElement('div');
-            card.className = 'glass-panel rounded-xl p-6 hover:bg-white/5 transition-all cursor-pointer border-l-4 group relative overflow-hidden ' + 
+            card.className = 'glass-panel rounded-xl p-6 hover:bg-white/5 transition-all cursor-pointer border-l-4 group relative overflow-hidden ' +
                 (isRemote ? 'border-neon-purple' : 'border-neon-blue');
             card.onclick = () => startSession(deck.id);
 
-            const badge = isRemote ? 
+            const badge = isRemote ?
                 `<span class="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 rounded-full remote-badge text-white"><i class="fa-solid fa-cloud mr-1"></i>CLOUD</span>` : '';
-            
-            const syncInfo = isRemote && deck.lastSynced ? 
+
+            const syncInfo = isRemote && deck.lastSynced ?
                 `<div class="text-[10px] text-slate-500 mt-1">Synced: ${new Date(deck.lastSynced).toLocaleDateString()}</div>` : '';
 
             card.innerHTML = `
@@ -955,7 +1022,7 @@
         function renderPresetConfig() {
             const list = document.getElementById('preset-list');
             list.innerHTML = '';
-            
+
             presets.forEach((preset, idx) => {
                 const item = document.createElement('div');
                 item.className = 'flex items-center gap-3 p-3 bg-dark-800 rounded-lg border border-dark-700';
@@ -970,7 +1037,7 @@
                 `;
                 list.appendChild(item);
             });
-            
+
             if (presets.length === 0) {
                 list.innerHTML = '<div class="text-center text-slate-500 py-4 italic">No presets configured. Add your GitHub URLs below.</div>';
             }
@@ -979,21 +1046,21 @@
         function addPreset() {
             const name = document.getElementById('new-preset-name').value.trim();
             const url = document.getElementById('new-preset-url').value.trim();
-            
+
             if (!name || !url) {
                 showToast("Please enter both name and URL", "error");
                 return;
             }
-            
+
             if (!url.includes('raw.githubusercontent.com')) {
                 showToast("Please use a raw GitHub URL (click 'Raw' on GitHub)", "error");
                 return;
             }
-            
+
             presets.push({ name, url });
             document.getElementById('new-preset-name').value = '';
             document.getElementById('new-preset-url').value = '';
-            
+
             renderPresetConfig();
             showToast("Preset added!", "success");
         }
@@ -1013,7 +1080,7 @@
         function startSession(deckId) {
             activeDeckId = deckId;
             const deck = decks.find(d => d.id === deckId);
-            
+
             const now = new Date();
             sessionQueue = deck.questions
                 .map((q, idx) => ({ ...q, deckIndex: idx }))
@@ -1027,14 +1094,14 @@
 
             currentCardIndex = 0;
             document.getElementById('stat-deck-name').innerText = deck.name;
-            
+
             hideAllViews();
             document.getElementById('view-quiz').classList.remove('hidden');
             renderCard();
         }
 
         function endSession() {
-            if(confirm("End current session?")) {
+            if (confirm("End current session?")) {
                 showHome();
             }
         }
@@ -1059,10 +1126,10 @@
             document.getElementById('controls-initial').classList.remove('hidden');
             document.getElementById('controls-difficulty').classList.add('hidden');
             document.getElementById('options-container').innerHTML = '';
-            
+
             document.getElementById('card-category').innerText = card.category || 'General';
             document.getElementById('question-text').innerHTML = card.question;
-            
+
             const codeBlock = document.getElementById('code-block');
             if (card.code) {
                 codeBlock.classList.remove('hidden');
@@ -1075,7 +1142,7 @@
             card.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
                 btn.className = `option-card w-full text-left p-4 rounded-xl border border-dark-700 bg-dark-800/50 text-slate-300 font-medium relative overflow-hidden`;
-                btn.innerHTML = `<span class="inline-block w-6 font-mono text-slate-500 opacity-50">${String.fromCharCode(65+idx)}.</span> ${opt}`;
+                btn.innerHTML = `<span class="inline-block w-6 font-mono text-slate-500 opacity-50">${String.fromCharCode(65 + idx)}.</span> ${opt}`;
                 btn.onclick = () => handleAnswer(idx, btn, card);
                 optsContainer.appendChild(btn);
             });
@@ -1108,7 +1175,7 @@
 
             document.getElementById('explanation-text').innerText = card.explanation;
             document.getElementById('explanation-area').classList.remove('hidden');
-            
+
             document.getElementById('controls-initial').classList.add('hidden');
             document.getElementById('controls-difficulty').classList.remove('hidden');
             document.getElementById('controls-difficulty').classList.add('grid');
@@ -1141,7 +1208,7 @@
             const masterQ = deck.questions[card.deckIndex];
             masterQ.interval = interval;
             masterQ.ease = ease;
-            
+
             const dueDate = new Date();
             dueDate.setDate(dueDate.getDate() + interval);
             masterQ.dueDate = dueDate;
@@ -1163,15 +1230,15 @@
         function renderManager() {
             const list = document.getElementById('manager-deck-list');
             list.innerHTML = '';
-            
+
             decks.forEach(deck => {
                 const isRemote = !deck.isLocal;
                 const item = document.createElement('div');
                 item.className = `p-3 rounded-lg cursor-pointer flex justify-between items-center ${selectedManagerDeckId === deck.id ? 'bg-neon-blue/20 border border-neon-blue/30' : 'hover:bg-white/5 border border-transparent'}`;
                 item.onclick = () => selectDeckForEdit(deck.id);
-                
+
                 const icon = isRemote ? '<i class="fa-solid fa-cloud text-neon-purple mr-2"></i>' : '<i class="fa-solid fa-hard-drive text-slate-500 mr-2"></i>';
-                
+
                 item.innerHTML = `
                     <div class="flex items-center flex-grow">
                         ${icon}
@@ -1218,7 +1285,7 @@
         function renderEditor(deckId) {
             document.getElementById('editor-empty').classList.add('hidden');
             document.getElementById('editor-content').classList.remove('hidden');
-            
+
             const deck = decks.find(d => d.id === deckId);
             document.getElementById('edit-deck-name').value = deck.name;
             document.getElementById('edit-q-count').innerText = deck.questions.length;
@@ -1228,7 +1295,7 @@
             document.getElementById('btn-refresh').classList.toggle('hidden', !isRemote);
             document.getElementById('local-upload').classList.toggle('hidden', isRemote);
             document.getElementById('remote-info').classList.toggle('hidden', !isRemote);
-            
+
             if (isRemote && deck.remoteUrl) {
                 document.getElementById('remote-url').href = deck.remoteUrl;
                 document.getElementById('remote-url').innerText = deck.remoteUrl;
@@ -1272,7 +1339,7 @@
         });
 
         function deleteCurrentDeck() {
-            if(confirm("Delete this deck? Remote decks can be re-imported.")) {
+            if (confirm("Delete this deck? Remote decks can be re-imported.")) {
                 decks = decks.filter(d => d.id !== selectedManagerDeckId);
                 selectedManagerDeckId = null;
                 saveToStorage();
@@ -1294,7 +1361,7 @@
                     code: q.code
                 }))
             };
-            
+
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
@@ -1309,15 +1376,15 @@
         async function importFromGitHub() {
             const url = prompt("Enter raw GitHub URL:\n\nExample:\nhttps://raw.githubusercontent.com/user/repo/main/questions.json");
             if (!url) return;
-            
+
             if (!url.includes('raw.githubusercontent.com')) {
                 showToast("Please use the RAW URL (click 'Raw' on GitHub)", "error");
                 return;
             }
-            
+
             const name = prompt("Name for this deck:", "Imported Deck");
             if (!name) return;
-            
+
             try {
                 await loadRemoteDeck(name, url, true);
                 renderHome();
@@ -1387,7 +1454,7 @@
                 showToast("Cannot modify remote deck. Create a local copy first.", "error");
                 return;
             }
-            
+
             let importedCount = 0;
             let errors = [];
 
@@ -1423,12 +1490,12 @@
                     } else if (q.answer) {
                         correctIndex = q.options.findIndex(opt => opt === q.answer);
                         if (correctIndex === -1) {
-                            correctIndex = q.options.findIndex(opt => 
+                            correctIndex = q.options.findIndex(opt =>
                                 opt.toLowerCase().trim() === q.answer.toLowerCase().trim()
                             );
                         }
                         if (correctIndex === -1) {
-                            correctIndex = q.options.findIndex(opt => 
+                            correctIndex = q.options.findIndex(opt =>
                                 opt.toLowerCase().includes(q.answer.toLowerCase()) ||
                                 q.answer.toLowerCase().includes(opt.toLowerCase())
                             );
@@ -1463,11 +1530,11 @@
 
             saveToStorage();
             renderEditor(selectedManagerDeckId);
-            
+
             if (importedCount > 0) {
                 showToast(`Imported ${importedCount} questions from ${filename}`, "success");
             }
-            
+
             if (errors.length > 0) {
                 console.error("Import errors:", errors);
                 if (errors.length <= 3) {
@@ -1485,15 +1552,15 @@
                 showToast("Cannot edit remote deck questions directly", "error");
                 return;
             }
-            
+
             editingQuestionIndex = index;
             const modal = document.getElementById('modal-question');
-            
+
             document.getElementById('q-input-text').value = '';
             document.getElementById('q-input-category').value = '';
             document.getElementById('q-input-code').value = '';
             document.getElementById('q-input-explanation').value = '';
-            
+
             const optsContainer = document.getElementById('q-options-container');
             optsContainer.innerHTML = '';
             addOptionInput();
@@ -1506,7 +1573,7 @@
                 document.getElementById('q-input-category').value = q.category || '';
                 document.getElementById('q-input-code').value = q.code || '';
                 document.getElementById('q-input-explanation').value = q.explanation;
-                
+
                 optsContainer.innerHTML = '';
                 q.options.forEach(opt => addOptionInput(opt));
                 setTimeout(() => {
@@ -1533,7 +1600,7 @@
                 <button onclick="this.parentElement.remove(); updateCorrectSelect()" class="text-slate-500 hover:text-red-400 px-2"><i class="fa-solid fa-times"></i></button>
             `;
             container.appendChild(div);
-            
+
             div.querySelector('input').addEventListener('input', updateCorrectSelect);
             updateCorrectSelect();
         }
@@ -1542,19 +1609,19 @@
             const inputs = document.querySelectorAll('.option-input');
             const select = document.getElementById('q-input-correct');
             const currentVal = select.value;
-            
+
             select.innerHTML = '';
-            
+
             inputs.forEach((input, idx) => {
-                if(input.value.trim() !== '') {
+                if (input.value.trim() !== '') {
                     const opt = document.createElement('option');
                     opt.value = idx;
-                    opt.text = `${String.fromCharCode(65+idx)}. ${input.value.substring(0, 50)}${input.value.length > 50 ? '...' : ''}`;
+                    opt.text = `${String.fromCharCode(65 + idx)}. ${input.value.substring(0, 50)}${input.value.length > 50 ? '...' : ''}`;
                     select.appendChild(opt);
                 }
             });
 
-            if(currentVal && select.options[parseInt(currentVal)]) {
+            if (currentVal && select.options[parseInt(currentVal)]) {
                 select.value = currentVal;
             }
         }
@@ -1564,11 +1631,11 @@
             const category = document.getElementById('q-input-category').value;
             const code = document.getElementById('q-input-code').value;
             const explanation = document.getElementById('q-input-explanation').value;
-            
+
             const options = Array.from(document.querySelectorAll('.option-input'))
                 .map(i => i.value)
                 .filter(v => v.trim() !== '');
-            
+
             const correctSelect = document.getElementById('q-input-correct');
             const correct = parseInt(correctSelect.value);
 
@@ -1609,7 +1676,7 @@
         }
 
         function deleteQuestion(index) {
-            if(confirm("Delete this question?")) {
+            if (confirm("Delete this question?")) {
                 const deck = decks.find(d => d.id === selectedManagerDeckId);
                 deck.questions.splice(index, 1);
                 saveToStorage();
@@ -1620,4 +1687,5 @@
 
     </script>
 </body>
+
 </html>
