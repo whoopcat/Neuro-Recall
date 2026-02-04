@@ -1,0 +1,634 @@
+[
+  {
+    "question": "In the xv6 operating system, which file descriptors are opened by default for a process?",
+    "options": [
+      "0 (Stdin), 1 (Stdout)",
+      "0 (Stdin), 1 (Stdout), 2 (Stderr)",
+      "1 (Stdout), 2 (Stderr)",
+      "None, they must be opened manually"
+    ],
+    "answer": "0 (Stdin), 1 (Stdout), 2 (Stderr)",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "What happens to the memory address space of a child process immediately after a successful fork() call?",
+    "options": [
+      "It shares the exact same physical memory as the parent",
+      "It is a completely empty space waiting for exec()",
+      "It is an exact duplicate (copy) of the parent's memory",
+      "It maps directly to the kernel stack"
+    ],
+    "answer": "It is an exact duplicate (copy) of the parent's memory",
+    "category": "OS Processes"
+  },
+  {
+    "question": "Which system call is used to replace the current process memory with a new program from the file system?",
+    "options": [
+      "fork()",
+      "exec()",
+      "sbrk()",
+      "wait()"
+    ],
+    "answer": "exec()",
+    "category": "OS Processes"
+  },
+  {
+    "question": "In the context of the 'memdump' assignment, what does the pointer cast *(int*)p do?",
+    "options": [
+      "It converts the integer p into a pointer",
+      "It reads the next 1 byte at address p as an integer",
+      "It interprets the address p as holding an integer and reads 4 bytes",
+      "It moves the pointer p forward by 4 bytes"
+    ],
+    "answer": "It interprets the address p as holding an integer and reads 4 bytes",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "What is the primary function of the kernel in an Operating System?",
+    "options": [
+      "To compile user code into binary",
+      "To manage hardware resources and provide services to user programs",
+      "To provide a graphical user interface",
+      "To execute standard C libraries"
+    ],
+    "answer": "To manage hardware resources and provide services to user programs",
+    "category": "OS Introduction"
+  },
+  {
+    "question": "Which CPU mode allows execution of privileged instructions (like modifying page tables)?",
+    "options": [
+      "User Mode",
+      "Kernel Mode",
+      "Safe Mode",
+      "Hypervisor Mode"
+    ],
+    "answer": "Kernel Mode",
+    "category": "OS Architecture"
+  },
+  {
+    "question": "When a shell executes a command like 'ls | wc', how are the two processes connected?",
+    "options": [
+      "Through a temporary file on the disk",
+      "Through shared memory variables",
+      "Through a kernel buffer called a pipe",
+      "They are not connected, the shell runs them sequentially"
+    ],
+    "answer": "Through a kernel buffer called a pipe",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "What value does fork() return to the PARENT process?",
+    "options": [
+      "0",
+      "The Process ID (PID) of the child",
+      "-1",
+      "The address of the child's stack"
+    ],
+    "answer": "The Process ID (PID) of the child",
+    "category": "OS Processes"
+  },
+  {
+    "question": "What is a 'Zombie' process?",
+    "options": [
+      "A process that runs indefinitely in the background",
+      "A process that has exited but its parent has not yet called wait()",
+      "A process that has been killed by the user but refuses to die",
+      "A child process whose parent exited before it did"
+    ],
+    "answer": "A process that has exited but its parent has not yet called wait()",
+    "category": "OS Processes"
+  },
+  {
+    "question": "In a Monolithic Kernel architecture (like xv6 or Linux), where do file system and device driver services run?",
+    "options": [
+      "In User Space",
+      "In Kernel Space",
+      "In a separate Microkernel",
+      "On a separate processor"
+    ],
+    "answer": "In Kernel Space",
+    "category": "OS Architecture"
+  },
+  {
+    "question": "Why must strings in C (and in your lab assignments) be null-terminated ('\\0')?",
+    "options": [
+      "To tell functions like printf where the string ends",
+      "To prevent memory leaks",
+      "To ensure the string is aligned to 4 bytes",
+      "It is not required, only recommended"
+    ],
+    "answer": "To tell functions like printf where the string ends",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "What happens if a parent process does not call wait() for its children?",
+    "options": [
+      "The children are automatically killed",
+      "The children become Zombie processes",
+      "The OS crashes",
+      "The children consume 100% CPU"
+    ],
+    "answer": "The children become Zombie processes",
+    "category": "OS Processes"
+  },
+  {
+    "question": "Which register holds the address of the next instruction to be executed?",
+    "options": [
+      "Stack Pointer (SP)",
+      "Program Counter (PC)",
+      "Frame Pointer (FP)",
+      "Return Address (RA)"
+    ],
+    "answer": "Program Counter (PC)",
+    "category": "OS Architecture"
+  },
+  {
+    "question": "What is the correct syntax to read from Standard Input into a buffer in xv6?",
+    "options": [
+      "read(stdin, buf, size)",
+      "read(0, buf, size)",
+      "scanf(\"%s\", buf)",
+      "input(buf)"
+    ],
+    "answer": "read(0, buf, size)",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "What defines the interface between User Space and Kernel Space?",
+    "options": [
+      "System Calls",
+      "Library Calls",
+      "API endpoints",
+      "The Shell"
+    ],
+    "answer": "System Calls",
+    "category": "OS Introduction"
+  },
+  {
+    "question": "In the following code: `int x = 5; if(fork() == 0) { x++; } else { wait(0); printf(\"%d\", x); }` — what is printed by the parent?",
+    "options": [
+      "5",
+      "6",
+      "Random value",
+      "It causes a compilation error"
+    ],
+    "answer": "5",
+    "category": "OS Processes"
+  },
+  {
+    "question": "Why is it critical to close the write-end of a pipe in the reader process (e.g., `close(p[1])`) before reading?",
+    "options": [
+      "To save file descriptors",
+      "Because read() will wait indefinitely for more data (block) if any write-end remains open",
+      "To prevent the child process from overwriting the buffer",
+      "It is not critical, just good practice"
+    ],
+    "answer": "Because read() will wait indefinitely for more data (block) if any write-end remains open",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "In xv6, when `exec(path, argv)` is called successfully, what happens to the Return Address (RA) currently on the stack?",
+    "options": [
+      "It is pushed to the new stack",
+      "It is preserved in the CPU register",
+      "It is wiped/overwritten along with the entire memory image",
+      "It is returned to the parent"
+    ],
+    "answer": "It is wiped/overwritten along with the entire memory image",
+    "category": "OS Processes"
+  },
+  {
+    "question": "If you have `char *s = \"hello\";` and `char t[] = \"hello\";`, what is the difference between `sizeof(s)` and `sizeof(t)` on a 64-bit OS?",
+    "options": [
+      "Both are 6 bytes",
+      "s is 8 bytes (pointer size), t is 6 bytes (array size)",
+      "s is 6 bytes, t is 8 bytes",
+      "Both are 8 bytes"
+    ],
+    "answer": "s is 8 bytes (pointer size), t is 6 bytes (array size)",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "What specifically does the `wait(0)` system call retrieve from a zombie child?",
+    "options": [
+      "The child's heap memory",
+      "The child's exit status (exit code) and PID",
+      "The remaining CPU time of the child",
+      "The file descriptors opened by the child"
+    ],
+    "answer": "The child's exit status (exit code) and PID",
+    "category": "OS Processes"
+  },
+  {
+    "question": "In your `xargs` assignment, why did we need to `fork()` inside the loop for every line read?",
+    "options": [
+      "To parallelize the execution",
+      "Because `exec()` replaces the process image; if we didn't fork, xargs would disappear after the first command",
+      "To create a pipe for the next command",
+      "To prevent memory leaks"
+    ],
+    "answer": "Because `exec()` replaces the process image; if we didn't fork, xargs would disappear after the first command",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "If a parent process creates a pipe `p[2]` and then forks, how many total file descriptors referencing that pipe exist immediately after the fork?",
+    "options": [
+      "2 (Read and Write in Parent)",
+      "4 (Read/Write in Parent, Read/Write in Child)",
+      "2 (Read in Parent, Write in Child)",
+      "0 (They are closed automatically)"
+    ],
+    "answer": "4 (Read/Write in Parent, Read/Write in Child)",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "What is the specific role of the Trap Frame in an Operating System?",
+    "options": [
+      "To store the user's password",
+      "To save the user-space registers (state) when switching into Kernel Mode",
+      "To buffer data for pipe operations",
+      "To hold the page table logic"
+    ],
+    "answer": "To save the user-space registers (state) when switching into Kernel Mode",
+    "category": "OS Architecture"
+  },
+  {
+    "question": "Which of the following is NOT inherited by the child process after a fork()?",
+    "options": [
+      "Open file descriptors",
+      "Memory content (Stack/Heap)",
+      "The Process ID (PID)",
+      "Global variables"
+    ],
+    "answer": "The Process ID (PID)",
+    "category": "OS Processes"
+  },
+  {
+    "question": "In the `memdump` assignment, why did we use `(unsigned char)` when printing byte values?",
+    "options": [
+      "To prevent negative values (sign extension) when printing integer representations of bytes",
+      "It is required by the printf function",
+      "To make the memory alignment correct",
+      "To skip null terminators"
+    ],
+    "answer": "To prevent negative values (sign extension) when printing integer representations of bytes",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "If `exec()` fails (e.g., file not found), what happens next?",
+    "options": [
+      "The process crashes (Trap)",
+      "The process turns into a Zombie",
+      "It returns -1, and the code continues executing the lines after the exec() call",
+      "The OS reboots"
+    ],
+    "answer": "It returns -1, and the code continues executing the lines after the exec() call",
+    "category": "OS Processes"
+  },
+  {
+    "question": "What is the primary difference between a Monolithic Kernel (xv6/Linux) and a Microkernel?",
+    "options": [
+      "Microkernels run file systems and drivers in User Space; Monolithic runs them in Kernel Space",
+      "Monolithic kernels cannot multitask",
+      "Microkernels are faster due to fewer context switches",
+      "Monolithic kernels do not use virtual memory"
+    ],
+    "answer": "Microkernels run file systems and drivers in User Space; Monolithic runs them in Kernel Space",
+    "category": "OS Architecture"
+  },
+  {
+    "question": "In the context of `read(fd, buf, n)`, what does it mean if the function returns 0?",
+    "options": [
+      "An error occurred",
+      "End of File (EOF) or the write-end of the pipe is closed",
+      "The buffer is full",
+      "It is waiting for data"
+    ],
+    "answer": "End of File (EOF) or the write-end of the pipe is closed",
+    "category": "OS Code & Labs"
+  },
+  {
+    "question": "Why can't a user program directly execute the `RISC-V` instruction `satp` (write to page table register)?",
+    "options": [
+      "The instruction is too complex for user mode",
+      "It is a privileged instruction; attempting it in User Mode causes an Illegal Instruction Trap",
+      "User programs do not have access to the Stack Pointer",
+      "It would cause a stack overflow"
+    ],
+    "answer": "It is a privileged instruction; attempting it in User Mode causes an Illegal Instruction Trap",
+    "category": "OS Architecture"
+  },
+  {
+    "question": "When you run `ls | grep x`, the shell creates a pipe. Which process calls `pipe()`?",
+    "options": [
+      "The `ls` process",
+      "The `grep` process",
+      "The parent Shell process (before forking)",
+      " The Kernel process"
+    ],
+    "answer": "The parent Shell process (before forking)",
+    "category": "OS Code & Labs"
+  },
+  
+  {
+    "question": "What is the return value of the fork() system call in the child process?",
+    "options": ["The PID of the parent", "The PID of the child", "0", "-1"],
+    "answer": "0",
+    "category": "Syscalls"
+  },
+  {
+    "question": "Which system call is used to increase or decrease a process's data segment (heap) size?",
+    "options": ["malloc()", "sbrk()", "grow()", "alloc()"],
+    "answer": "sbrk()",
+    "category": "Memory Management"
+  },
+  {
+    "question": "In the xv6 file system, what is an 'inode'?",
+    "options": ["The name of a file", "A data structure that describes a file object", "A type of pipe", "The content of a directory"],
+    "answer": "A data structure that describes a file object",
+    "category": "File Systems"
+  },
+  {
+    "question": "If you run `ls` in the shell, what is the value of `argc` passed to main?",
+    "options": ["0", "1", "2", "Undefined"],
+    "answer": "1",
+    "category": "C Programming"
+  },
+  {
+    "question": "What happens if you execute `close(0);` at the start of your program?",
+    "options": ["The program crashes", "It closes Standard Input", "It closes Standard Output", "It closes Standard Error"],
+    "answer": "It closes Standard Input",
+    "category": "File Descriptors"
+  },
+  {
+    "question": "Which command is built-in to the shell because it must modify the shell's own state?",
+    "options": ["ls", "grep", "cd", "echo"],
+    "answer": "cd",
+    "category": "Shell Logic"
+  },
+  {
+    "question": "In the `primes` lab (concurrent primes sieve), why is it crucial to close write-end file descriptors in the parent?",
+    "options": ["To save memory", "So the child knows when the input stream has ended (EOF)", "To prevent race conditions", "It is not crucial"],
+    "answer": "So the child knows when the input stream has ended (EOF)",
+    "category": "Labs"
+  },
+  {
+    "question": "What is the specific RISC-V assembly instruction used to trigger a system call?",
+    "options": ["syscall", "trap", "ecall", "ret"],
+    "answer": "ecall",
+    "category": "Architecture"
+  },
+  {
+    "question": "When `open()` is called, which file descriptor number does the OS assign?",
+    "options": ["A random number", "The lowest-numbered unused descriptor", "Always 3", "The highest-numbered unused descriptor"],
+    "answer": "The lowest-numbered unused descriptor",
+    "category": "File Descriptors"
+  },
+  {
+    "question": "What does the `dup(oldfd)` system call do?",
+    "options": ["Renames a file", "Creates a copy of the file descriptor pointing to the same file/pipe", "Deletes the file descriptor", "Duplicates the file content on disk"],
+    "answer": "Creates a copy of the file descriptor pointing to the same file/pipe",
+    "category": "Syscalls"
+  },
+  {
+    "question": "In `struct dirent` (directory entry), what two pieces of information are stored?",
+    "options": ["File size and name", "Inode number and File name", "File permissions and owner", "Creation date and time"],
+    "answer": "Inode number and File name",
+    "category": "File Systems"
+  },
+  {
+    "question": "Why does the `pingpong` lab require two pipes?",
+    "options": ["One for backup", "Because pipes are unidirectional (one-way)", "To double the speed", "One for data, one for errors"],
+    "answer": "Because pipes are unidirectional (one-way)",
+    "category": "Labs"
+  },
+  {
+    "question": "What is the standard size of a memory page in xv6?",
+    "options": ["1024 bytes", "2048 bytes", "4096 bytes", "8192 bytes"],
+    "answer": "4096 bytes",
+    "category": "Memory Management"
+  },
+  {
+    "question": "What is the value of `argv[argc]` in a compliant C program?",
+    "options": ["A pointer to the last argument", "A garbage value", "NULL (0)", "The program name"],
+    "answer": "NULL (0)",
+    "category": "C Programming"
+  },
+  {
+    "question": "What does the `fstat(fd, &st)` system call do?",
+    "options": ["Reads data from a file", "Retrieves metadata (size, type) about the open file", "Changes file permissions", "Closes the file"],
+    "answer": "Retrieves metadata (size, type) about the open file",
+    "category": "Syscalls"
+  },
+  {
+    "question": "In the `find` lab, how do you distinguish a file from a directory?",
+    "options": ["Check the file extension", "Check `st.type` from the stat structure", "Try to `cd` into it", "Read the first byte"],
+    "answer": "Check `st.type` from the stat structure",
+    "category": "Labs"
+  },
+  {
+    "question": "What is a 'hard link' in a file system?",
+    "options": ["A shortcut file", "A second directory entry pointing to the same inode number", "A copy of the file", "A read-only file"],
+    "answer": "A second directory entry pointing to the same inode number",
+    "category": "File Systems"
+  },
+  {
+    "question": "When does the `unlink()` system call actually free the disk space of a file?",
+    "options": ["Immediately", "When the computer restarts", "When the link count reaches zero AND no processes have it open", "When the user empties the trash"],
+    "answer": "When the link count reaches zero AND no processes have it open",
+    "category": "File Systems"
+  },
+  {
+    "question": "In C, what is the difference between `char *s` and `char s[]` regarding `sizeof`?",
+    "options": ["No difference", "`char *s` gives pointer size (8), `char s[]` gives array size", "`char *s` gives array size, `char s[]` gives pointer size", "Both give the string length"],
+    "answer": "`char *s` gives pointer size (8), `char s[]` gives array size",
+    "category": "C Programming"
+  },
+  {
+    "question": "What is the role of the `init` process (PID 1)?",
+    "options": ["To manage memory", "To start the shell and adopt orphaned children", "To shut down the computer", "To handle network requests"],
+    "answer": "To start the shell and adopt orphaned children",
+    "category": "Processes"
+  },
+  {
+    "question": "If a parent process calls `wait(0)` and has no children, what does it return?",
+    "options": ["0", "1", "-1", "It hangs forever"],
+    "answer": "-1",
+    "category": "Syscalls"
+  },
+  {
+    "question": "Which register usually holds the return value of a function in RISC-V?",
+    "options": ["sp", "ra", "a0", "t0"],
+    "answer": "a0",
+    "category": "Architecture"
+  },
+  {
+    "question": "What does the `O_CREATE` flag do in the `open()` system call?",
+    "options": ["Opens a file for writing", "Creates the file if it does not exist", "Deletes the file and recreates it", "Errors if the file exists"],
+    "answer": "Creates the file if it does not exist",
+    "category": "Syscalls"
+  },
+  {
+    "question": "What does the `sleep(n)` system call unit represent in xv6?",
+    "options": ["Milliseconds", "Seconds", "Clock ticks", "Nanoseconds"],
+    "answer": "Clock ticks",
+    "category": "Syscalls"
+  },
+  {
+    "question": "In the `xargs` lab, why is `MAXARG` useful?",
+    "options": ["It limits the file size", "It defines the maximum number of arguments in the exec argv array", "It sets the max pipe size", "It limits the recursion depth"],
+    "answer": "It defines the maximum number of arguments in the exec argv array",
+    "category": "Labs"
+  },
+  {
+    "question": "What is a 'context switch'?",
+    "options": ["Changing variable names", "The CPU switching from running one process to another", "Switching from C to Assembly", "Moving a file to a new folder"],
+    "answer": "The CPU switching from running one process to another",
+    "category": "Processes"
+  },
+  {
+    "question": "Which memory section grows downwards?",
+    "options": ["Text", "Data", "Heap", "Stack"],
+    "answer": "Stack",
+    "category": "Memory Management"
+  },
+  {
+    "question": "Which memory section grows upwards?",
+    "options": ["Text", "Data", "Heap", "Stack"],
+    "answer": "Heap",
+    "category": "Memory Management"
+  },
+  {
+    "question": "What is the purpose of `user/usys.pl`?",
+    "options": ["It is the Perl script that compiles the kernel", "It generates assembly stubs for system calls", "It is the shell source code", "It manages user accounts"],
+    "answer": "It generates assembly stubs for system calls",
+    "category": "Build System"
+  },
+  {
+    "question": "What is the 'Trapframe' used for?",
+    "options": ["To catch bugs", "To save user registers when a trap/interrupt occurs", "To store the page table", "To hold pipe data"],
+    "answer": "To save user registers when a trap/interrupt occurs",
+    "category": "Architecture"
+  },
+  {
+    "question": "If you execute `ls > out.txt`, what happens to file descriptor 1?",
+    "options": ["It is closed", "It is replaced by a file descriptor for out.txt", "It remains connected to the console", "It becomes a pipe"],
+    "answer": "It is replaced by a file descriptor for out.txt",
+    "category": "Shell Logic"
+  },
+  {
+    "question": "What is the specific integer value of STDOUT_FILENO?",
+    "options": ["0", "1", "2", "3"],
+    "answer": "1",
+    "category": "File Descriptors"
+  },
+  {
+    "question": "In the `memdump` assignment, why cast a pointer to `(void*)` or `(char*)` before pointer arithmetic?",
+    "options": ["To make it faster", "Because pointer arithmetic depends on the data type size", "To hide the data", "It is not necessary"],
+    "answer": "Because pointer arithmetic depends on the data type size",
+    "category": "C Programming"
+  },
+  {
+    "question": "What does `atoi(\"123\")` return?",
+    "options": ["The string \"123\"", "The integer 123", "A pointer to the string", "The ascii value of 1"],
+    "answer": "The integer 123",
+    "category": "C Programming"
+  },
+  {
+    "question": "If `pipe(p)` is successful, what is stored in `p[1]`?",
+    "options": ["The read end", "The write end", "The process ID", "The buffer size"],
+    "answer": "The write end",
+    "category": "Syscalls"
+  },
+  {
+    "question": "What does the `kill(pid)` system call do in xv6?",
+    "options": ["Immediately destroys the process", "Sets a flag terminating the process at the next opportunity", "Pauses the process", "Resets the process"],
+    "answer": "Sets a flag terminating the process at the next opportunity",
+    "category": "Processes"
+  },
+  {
+    "question": "What is a 'Race Condition'?",
+    "options": ["Two processes running at top speed", "The outcome depends on the non-deterministic timing of threads/processes", "A condition where the CPU overheats", "A competition between OS schedulers"],
+    "answer": "The outcome depends on the non-deterministic timing of threads/processes",
+    "category": "Concurrency"
+  },
+  {
+    "question": "What is the purpose of the `volatile` keyword in C?",
+    "options": ["Makes the variable constant", "Tells the compiler not to optimize reads/writes to this variable", "Allocates memory on the heap", "Makes the variable global"],
+    "answer": "Tells the compiler not to optimize reads/writes to this variable",
+    "category": "C Programming"
+  },
+  {
+    "question": "In `ls -l`, what does the first character 'd' mean?",
+    "options": ["Data file", "Directory", "Device", "Deleted"],
+    "answer": "Directory",
+    "category": "File Systems"
+  },
+  {
+    "question": "What does the `mkdir` system call require?",
+    "options": ["The parent directory must already exist", "Root privileges", "An empty disk", "A file extension"],
+    "answer": "The parent directory must already exist",
+    "category": "Syscalls"
+  },
+  {
+    "question": "Why do we check `if(read(...) < 0)`?",
+    "options": ["To check for EOF", "To check for read errors", "To check if the buffer is full", "To check permissions"],
+    "answer": "To check for read errors",
+    "category": "Syscalls"
+  },
+  {
+    "question": "What is the difference between `ls` and `ls .`?",
+    "options": ["ls . is faster", "ls lists home, ls . lists current", "There is effectively no difference", "ls . shows hidden files"],
+    "answer": "There is effectively no difference",
+    "category": "Shell Logic"
+  },
+  {
+    "question": "What is the purpose of `make clean`?",
+    "options": ["To fix code bugs", "To remove compiled binaries and object files to force a full rebuild", "To format the code", "To run tests"],
+    "answer": "To remove compiled binaries and object files to force a full rebuild",
+    "category": "Build System"
+  },
+  {
+    "question": "How many bits is a `long` in standard 64-bit RISC-V?",
+    "options": ["16", "32", "64", "128"],
+    "answer": "64",
+    "category": "C Programming"
+  },
+  {
+    "question": "If you `fork()` inside a loop that runs 3 times, how many total processes are created (including original)?",
+    "options": ["3", "4", "8", "6"],
+    "answer": "8",
+    "category": "Processes"
+  },
+  {
+    "question": "What is an Orphan Process?",
+    "options": ["A process with no children", "A child whose parent has terminated", "A process that cannot be killed", "A process with no memory"],
+    "answer": "A child whose parent has terminated",
+    "category": "Processes"
+  },
+  {
+    "question": "What mechanism allows the OS to regain control from a running user program?",
+    "options": ["The user program yields voluntarily", "Hardware Interrupts (Timer)", "The compiler inserts stop codes", "The administrator presses a button"],
+    "answer": "Hardware Interrupts (Timer)",
+    "category": "Architecture"
+  },
+  {
+    "question": "What does `wc -l` count?",
+    "options": ["Letters", "Lines", "Long words", "Last modified time"],
+    "answer": "Lines",
+    "category": "Tools"
+  },
+  {
+    "question": "In the `find` lab, why do we use `strcpy` instead of `s = t`?",
+    "options": ["Because strings are arrays and cannot be assigned directly", "strcpy is faster", "To save memory", "To change the pointer address"],
+    "answer": "Because strings are arrays and cannot be assigned directly",
+    "category": "C Programming"
+  },
+  {
+    "question": "What is the maximum number of arguments in xv6 `exec` (MAXARG)?",
+    "options": ["16", "32", "64", "128"],
+    "answer": "32",
+    "category": "Syscalls"
+  }
+
+]

@@ -1,0 +1,552 @@
+[
+  {
+    "question": "In an Ethernet II frame, which field allows the receiver to determine which Upper Layer Protocol (ULP) to hand the data to (e.g., IPv4 vs. ARP)?",
+    "options": [
+      "The Frame Check Sequence (FCS) field",
+      "The EtherType field (located at byte offset 12)",
+      "The Source MAC Address OUI",
+      "The Preamble/Start of Frame Delimiter"
+    ],
+    "answer": "The EtherType field (located at byte offset 12)",
+    "category": "Lab 1 - Network Fundamentals"
+  },
+  {
+    "question": "You are analyzing a Hex dump in Wireshark. You see the sequence '08 06' immediately following the Source MAC address. What does this indicate?",
+    "options": [
+      "The packet is an IPv4 packet",
+      "The packet is an ARP packet",
+      "The packet is an IPv6 packet",
+      "The packet is an STP BPDU"
+    ],
+    "answer": "The packet is an ARP packet",
+    "category": "Lab 1 - Network Fundamentals"
+  },
+  {
+    "question": "Which of the following correctly describes the encapsulation process when a web browser sends a request?",
+    "options": [
+      "Data -> Packet -> Segment -> Frame -> Bits",
+      "Data -> Segment -> Packet -> Frame -> Bits",
+      "Bits -> Frame -> Packet -> Segment -> Data",
+      "Data -> Frame -> Packet -> Segment -> Bits"
+    ],
+    "answer": "Data -> Segment -> Packet -> Frame -> Bits",
+    "category": "Lab 1 - Network Fundamentals"
+  },
+  {
+    "question": "A switch receives a frame with a Destination MAC address of FF:FF:FF:FF:FF:FF. How does the switch handle this frame?",
+    "options": [
+      "It drops the frame immediately to prevent a broadcast storm",
+      "It forwards the frame out of the specific port mapped to that MAC",
+      "It floods the frame out all ports except the ingress port",
+      "It sends the frame to the default gateway only"
+    ],
+    "answer": "It floods the frame out all ports except the ingress port",
+    "category": "Lab 2 - Switching"
+  },
+  {
+    "question": "You issue the command 'show ip interface brief' on a switch. You see 'Interface Vlan1: Status Up, Protocol Down'. What is the most likely cause?",
+    "options": [
+      "The interface has been administratively shut down",
+      "No ports assigned to VLAN 1 are currently active/connected",
+      "The switch has not been configured with a default gateway",
+      "The Vlan1 interface has a duplicate IP address"
+    ],
+    "answer": "No ports assigned to VLAN 1 are currently active/connected",
+    "category": "Lab 2 - Switching"
+  },
+  {
+    "question": "In the switch boot sequence, where is the first piece of software loaded from?",
+    "options": [
+      "The IOS from Flash memory",
+      "The startup-config from NVRAM",
+      "The bootstrap program from ROM",
+      "The running-config from RAM"
+    ],
+    "answer": "The bootstrap program from ROM",
+    "category": "Lab 2 - Switching"
+  },
+  {
+    "question": "If a PC is connected to a switch using a crossover cable instead of a straight-through cable, and Auto-MDIX is disabled, what will be the interface state?",
+    "options": [
+      "Status Up, Protocol Up",
+      "Status Up, Protocol Down",
+      "Status Down, Protocol Down",
+      "Status Admin Down, Protocol Down"
+    ],
+    "answer": "Status Down, Protocol Down",
+    "category": "Lab 2 - Switching"
+  },
+  {
+    "question": "When a switch learns a source MAC address, where is this information stored initially?",
+    "options": [
+      "NVRAM (Non-Volatile RAM)",
+      "Flash Memory",
+      "RAM (MAC Address Table)",
+      "ROM (Read Only Memory)"
+    ],
+    "answer": "RAM (MAC Address Table)",
+    "category": "Lab 2 - Switching"
+  },
+  {
+    "question": "Which command would you use to view the configuration register on a Cisco router to determine if it will ignore the startup-config on boot?",
+    "options": [
+      "show startup-config",
+      "show version",
+      "show flash",
+      "show running-config"
+    ],
+    "answer": "show version",
+    "category": "Lab 3 - Routing"
+  },
+  {
+    "question": "A router interface is configured with 'ip address 192.168.1.1 255.255.255.0' but the 'show ip route' command does not list this network. What is the most likely reason?",
+    "options": [
+      "Routing has not been enabled globally",
+      "The interface is in the 'shutdown' state",
+      "The router needs a static route to its own interface",
+      "The subnet mask is incorrect"
+    ],
+    "answer": "The interface is in the 'shutdown' state",
+    "category": "Lab 3 - Routing"
+  },
+  {
+    "question": "In the output of 'show ip route', what does the code 'L' represent?",
+    "options": [
+      "Legacy: A route learned via RIP",
+      "Local: The specific /32 host address of the router's interface",
+      "Link: A directly connected network segment",
+      "Loopback: A virtual interface for management"
+    ],
+    "answer": "Local: The specific /32 host address of the router's interface",
+    "category": "Lab 3 - Routing"
+  },
+  {
+    "question": "You attempt to save your router configuration using 'copy running-config startup-config' but get an error. Which component failure would cause this?",
+    "options": [
+      "Corrupted Flash Memory",
+      "Failed NVRAM",
+      "Full RAM",
+      "Missing ROM Monitor"
+    ],
+    "answer": "Failed NVRAM",
+    "category": "Lab 3 - Routing"
+  },
+  {
+    "question": "What is the primary function of the 'no ip domain-lookup' command on a Cisco device?",
+    "options": [
+      "To prevent the router from acting as a DNS server",
+      "To stop the router from attempting to resolve mistyped commands as hostnames",
+      "To block all DNS traffic passing through the router",
+      "To speed up the boot process by skipping DNS checks"
+    ],
+    "answer": "To stop the router from attempting to resolve mistyped commands as hostnames",
+    "category": "Lab 3 - Routing"
+  },
+  {
+    "question": "Switch A is configured with 'switchport mode dynamic auto'. Switch B is connected to it and configured with 'switchport mode dynamic auto'. What is the result?",
+    "options": [
+      "A trunk link is formed",
+      "An access link is formed",
+      "The port goes into error-disable state",
+      "The link flaps between trunk and access"
+    ],
+    "answer": "An access link is formed",
+    "category": "Lab 4a - VLANs & Trunking"
+  },
+  {
+    "question": "What happens to a frame belonging to the Native VLAN when it traverses an 802.1Q trunk link?",
+    "options": [
+      "It is tagged with VLAN ID 1",
+      "It is tagged with the Native VLAN ID",
+      "It is sent untagged",
+      "It is dropped unless 'switchport trunk allow native' is configured"
+    ],
+    "answer": "It is sent untagged",
+    "category": "Lab 4a - VLANs & Trunking"
+  },
+  {
+    "question": "You see the console error '%CDP-4-NATIVE_VLAN_MISMATCH'. What is the immediate consequence of this error on the network traffic?",
+    "options": [
+      "The trunk link will immediately shut down",
+      "Traffic on the Native VLAN may leak between VLANs or be blackholed",
+      "All VLAN traffic will stop flowing across the trunk",
+      "The switches will automatically renegotiate to find a matching VLAN"
+    ],
+    "answer": "Traffic on the Native VLAN may leak between VLANs or be blackholed",
+    "category": "Lab 4a - VLANs & Trunking"
+  },
+  {
+    "question": "Where is the VLAN database (vlan.dat) stored on a Cisco switch?",
+    "options": [
+      "In RAM, alongside the running-config",
+      "In NVRAM, alongside the startup-config",
+      "In Flash memory",
+      "In ROM"
+    ],
+    "answer": "In Flash memory",
+    "category": "Lab 4a - VLANs & Trunking"
+  },
+  {
+    "question": "Which command effectively deletes all VLAN configurations and resets the VTP domain on a switch?",
+    "options": [
+      "erase startup-config",
+      "delete flash:vlan.dat",
+      "no vlan 1-4094",
+      "clear vlan database"
+    ],
+    "answer": "delete flash:vlan.dat",
+    "category": "Lab 4a - VLANs & Trunking"
+  },
+  {
+    "question": "When configuring Router-on-a-Stick, you receive an error when trying to assign an IP address to the sub-interface. What step was likely missed?",
+    "options": [
+      "The physical interface was not administratively enabled",
+      "The 'encapsulation dot1q <vlan-id>' command was not issued first",
+      "The 'ip routing' command was not issued globally",
+      "The sub-interface ID does not match the VLAN ID"
+    ],
+    "answer": "The 'encapsulation dot1q <vlan-id>' command was not issued first",
+    "category": "Lab 4b - Inter-VLAN Routing"
+  },
+  {
+    "question": "On a Layer 3 switch, you have created VLAN 10 and VLAN 20 SVIs, but traffic is not routing between them. What is the most common configuration oversight?",
+    "options": [
+      "The SVIs are shut down",
+      "The global command 'ip routing' was not entered",
+      "The physical ports are not trunking",
+      "The VLANs do not exist in the database"
+    ],
+    "answer": "The global command 'ip routing' was not entered",
+    "category": "Lab 4b - Inter-VLAN Routing"
+  },
+  {
+    "question": "You need to convert a physical port on a Layer 3 switch to act exactly like a router interface. Which command is required?",
+    "options": [
+      "switchport mode routed",
+      "no switchport",
+      "ip routing",
+      "encapsulation dot1q"
+    ],
+    "answer": "no switchport",
+    "category": "Lab 4b - Inter-VLAN Routing"
+  },
+  {
+    "question": "In a Router-on-a-Stick configuration, what must be true about the physical interface connected to the switch?",
+    "options": [
+      "It must be assigned an IP address on the Native VLAN",
+      "It must be enabled (no shutdown) but have no IP address assigned directly",
+      "It must be configured with 'encapsulation dot1q'",
+      "It must be a Layer 2 switchport"
+    ],
+    "answer": "It must be enabled (no shutdown) but have no IP address assigned directly",
+    "category": "Lab 4b - Inter-VLAN Routing"
+  },
+  {
+    "question": "Which of the following is a limitation of Legacy Inter-VLAN routing compared to Router-on-a-Stick?",
+    "options": [
+      "It requires a physical router interface for every VLAN",
+      "It requires a more expensive router license",
+      "It does not support Layer 3 switching",
+      "It limits the number of hosts per VLAN to 254"
+    ],
+    "answer": "It requires a physical router interface for every VLAN",
+    "category": "Lab 4b - Inter-VLAN Routing"
+  },
+  {
+    "question": "PC-A wants to ping PC-B (on the same subnet). PC-A knows PC-B's IP but not its MAC. What destination MAC address is used in the ARP Request?",
+    "options": [
+      "00:00:00:00:00:00",
+      "FF:FF:FF:FF:FF:FF",
+      "The Default Gateway's MAC",
+      "PC-B's IP address converted to Hex"
+    ],
+    "answer": "FF:FF:FF:FF:FF:FF",
+    "category": "Lab 5 - ARP"
+  },
+  {
+    "question": "PC-B sends an ARP Reply back to PC-A. What kind of transmission is this?",
+    "options": [
+      "Broadcast",
+      "Multicast",
+      "Unicast",
+      "Anycast"
+    ],
+    "answer": "Unicast",
+    "category": "Lab 5 - ARP"
+  },
+  {
+    "question": "If a host sends a packet to a destination IP on a remote network, whose MAC address does the host resolve via ARP?",
+    "options": [
+      "The destination host's MAC address",
+      "The switch's management MAC address",
+      "The Default Gateway's MAC address",
+      "The DNS server's MAC address"
+    ],
+    "answer": "The Default Gateway's MAC address",
+    "category": "Lab 5 - ARP"
+  },
+  {
+    "question": "You issue 'arp -d *' on a Windows PC. What is the result?",
+    "options": [
+      "It displays the current ARP table",
+      "It deletes the entire ARP cache",
+      "It sends a gratuitous ARP probe",
+      "It disables the ARP protocol on the NIC"
+    ],
+    "answer": "It deletes the entire ARP cache",
+    "category": "Lab 5 - ARP"
+  },
+  {
+    "question": "In Wireshark, you see an ARP packet with Opcode 2. What does this signify?",
+    "options": [
+      "ARP Request",
+      "ARP Reply",
+      "RARP Request",
+      "RARP Reply"
+    ],
+    "answer": "ARP Reply",
+    "category": "Lab 5 - ARP"
+  },
+  {
+    "question": "Using VLSM, you need a subnet for a Point-to-Point WAN link between two routers. Which prefix length is most efficient?",
+    "options": [
+      "/28",
+      "/29",
+      "/30",
+      "/31"
+    ],
+    "answer": "/30",
+    "category": "Project - VLSM"
+  },
+  {
+    "question": "How many usable host IP addresses are available in a /27 subnet?",
+    "options": [
+      "32",
+      "30",
+      "16",
+      "14"
+    ],
+    "answer": "30",
+    "category": "Project - VLSM"
+  },
+  {
+    "question": "You are given the network 192.168.10.0/24. You need to create a subnet for 50 hosts. Which mask should you use?",
+    "options": [
+      "/25",
+      "/26",
+      "/27",
+      "/28"
+    ],
+    "answer": "/26",
+    "category": "Project - VLSM"
+  },
+  {
+    "question": "Which of the following IP addresses is a valid host address in the 192.168.1.0/30 network?",
+    "options": [
+      "192.168.1.0",
+      "192.168.1.1",
+      "192.168.1.3",
+      "192.168.1.4"
+    ],
+    "answer": "192.168.1.1",
+    "category": "Project - VLSM"
+  },
+  {
+    "question": "In the Team Project, why must you order subnet requirements from largest to smallest when assigning VLSM blocks?",
+    "options": [
+      "To prevent address overlap and fragmentation of the address space",
+      "It is a requirement of the OSPF routing protocol",
+      "The routers cannot handle small subnets before large ones",
+      "To ensure the Gateway IP is always the first address"
+    ],
+    "answer": "To prevent address overlap and fragmentation of the address space",
+    "category": "Project - VLSM"
+  },
+  {
+    "question": "A Layer 2 switch is functioning normally. It receives a frame with Source MAC A and Destination MAC B. MAC B is NOT in the MAC address table. What does the switch do?",
+    "options": [
+      "It adds MAC B to the table and forwards the frame",
+      "It drops the frame and sends an ICMP unreachable message",
+      "It floods the frame out all ports except the ingress port",
+      "It forwards the frame to the default gateway"
+    ],
+    "answer": "It floods the frame out all ports except the ingress port",
+    "category": "Lab 2 - Switching"
+  },
+  {
+    "question": "Which command allows you to view the mapping of IP addresses to MAC addresses on a Cisco Router?",
+    "options": [
+      "show mac address-table",
+      "show ip arp",
+      "show ip interface brief",
+      "show protocols"
+    ],
+    "answer": "show ip arp",
+    "category": "Lab 5 - ARP"
+  },
+  {
+    "question": "What is the specific function of the Preamble in an Ethernet frame?",
+    "options": [
+      "It identifies the source and destination",
+      "It provides clock synchronization for the receiver",
+      "It performs error detection using CRC",
+      "It identifies the Upper Layer Protocol"
+    ],
+    "answer": "It provides clock synchronization for the receiver",
+    "category": "Lab 1 - Network Fundamentals"
+  },
+  {
+    "question": "You configure 'switchport mode trunk' on one end of a link and 'switchport mode dynamic desirable' on the other. What is the result?",
+    "options": [
+      "The link becomes a trunk",
+      "The link becomes an access port",
+      "The link fails due to mode mismatch",
+      "The link defaults to half-duplex"
+    ],
+    "answer": "The link becomes a trunk",
+    "category": "Lab 4a - VLANs & Trunking"
+  },
+  {
+    "question": "Which component of an Ethernet Frame is NOT captured by Wireshark?",
+    "options": [
+      "The Destination MAC Address",
+      "The EtherType",
+      "The Preamble and FCS (typically stripped by NIC)",
+      "The Payload Data"
+    ],
+    "answer": "The Preamble and FCS (typically stripped by NIC)",
+    "category": "Lab 1 - Network Fundamentals"
+  },
+  {
+    "question": "If you manually set the speed on a switch port to 100Mbps but leave the duplex as 'auto', what behavior might occur if the other side is 'auto/auto'?",
+    "options": [
+      "The link will negotiate to 100/Full",
+      "The link will default to 100/Half (Duplex Mismatch)",
+      "The link will fail to come up entirely",
+      "The link will run at 10Mbps"
+    ],
+    "answer": "The link will default to 100/Half (Duplex Mismatch)",
+    "category": "Lab 2 - Switching"
+  },
+  {
+    "question": "Why is the command 'no shutdown' required on new router interfaces but not typically on switch ports?",
+    "options": [
+      "Switches do not have operating systems",
+      "Router interfaces are administratively down by default to prevent accidental routing",
+      "Switches rely on VTP to manage port status",
+      "Routers do not support Plug-and-Play"
+    ],
+    "answer": "Router interfaces are administratively down by default to prevent accidental routing",
+    "category": "Lab 3 - Routing"
+  },
+  {
+    "question": "Which field in the IPv4 header is used to prevent packets from looping endlessly in a network?",
+    "options": [
+      "Header Checksum",
+      "Identification",
+      "Time to Live (TTL)",
+      "Differentiated Services"
+    ],
+    "answer": "Time to Live (TTL)",
+    "category": "Lab 1 - Network Fundamentals"
+  },
+  {
+    "question": "You are verifying a trunk link. You see 'Status: trunking', 'Native VLAN: 99'. However, the remote switch has 'Native VLAN: 1'. What protocol will likely report an error?",
+    "options": [
+      "OSPF",
+      "CDP (Cisco Discovery Protocol) or STP",
+      "ARP",
+      "DHCP"
+    ],
+    "answer": "CDP (Cisco Discovery Protocol) or STP",
+    "category": "Lab 4a - VLANs & Trunking"
+  },
+  {
+    "question": "In a Hex dump, the bytes '45 00' at the start of the IP header indicate what?",
+    "options": [
+      "Version 4, Header Length 20 bytes",
+      "Version 4, Header Length 5 bytes",
+      "Version 6, Flow Label 0",
+      "ARP Request"
+    ],
+    "answer": "Version 4, Header Length 20 bytes",
+    "category": "Lab 1 - Network Fundamentals"
+  },
+  {
+    "question": "Which command displays the detailed layer 1 and layer 2 status of a specific interface, including errors and encapsulation type?",
+    "options": [
+      "show ip interface brief",
+      "show interfaces <interface_id>",
+      "show ip route",
+      "show running-config"
+    ],
+    "answer": "show interfaces <interface_id>",
+    "category": "Lab 2 - Switching"
+  },
+  {
+    "question": "If a Router-on-a-Stick sub-interface is configured with the wrong VLAN ID in the 'encapsulation dot1q' command, what is the result?",
+    "options": [
+      "The sub-interface will simply stay down",
+      "The router will route traffic to the wrong VLAN or drop it",
+      "The physical interface will shut down",
+      "The router will automatically correct the VLAN ID using CDP"
+    ],
+    "answer": "The router will route traffic to the wrong VLAN or drop it",
+    "category": "Lab 4b - Inter-VLAN Routing"
+  },
+  {
+    "question": "Which address is used by a host to determine if a destination IP is on the local network or a remote network?",
+    "options": [
+      "The Destination MAC",
+      "The Subnet Mask",
+      "The Default Gateway IP",
+      "The DNS Server IP"
+    ],
+    "answer": "The Subnet Mask",
+    "category": "Project - VLSM"
+  },
+  {
+    "question": "What is the purpose of the 'service password-encryption' command?",
+    "options": [
+      "It encrypts the enable secret with MD5",
+      "It encrypts all plaintext passwords in the running-config (Type 7)",
+      "It requires all users to use SSH instead of Telnet",
+      "It prevents password recovery"
+    ],
+    "answer": "It encrypts all plaintext passwords in the running-config (Type 7)",
+    "category": "Lab 2 - Switching"
+  },
+  {
+    "question": "When connecting two routers via serial cables (legacy), one side must provide the clocking signal. Which command achieves this?",
+    "options": [
+      "speed 64000",
+      "clock rate 64000",
+      "bandwidth 64",
+      "encapsulation ppp"
+    ],
+    "answer": "clock rate 64000",
+    "category": "Lab 3 - Routing"
+  },
+  {
+    "question": "You need to access the Privileged EXEC mode from User EXEC mode. Which command do you use?",
+    "options": [
+      "configure terminal",
+      "enable",
+      "login",
+      "crypto key generate"
+    ],
+    "answer": "enable",
+    "category": "Lab 2 - Switching"
+  },
+  {
+    "question": "What is the maximum payload size (MTU) of a standard Ethernet frame?",
+    "options": [
+      "64 bytes",
+      "128 bytes",
+      "1500 bytes",
+      "1518 bytes"
+    ],
+    "answer": "1500 bytes",
+    "category": "Lab 1 - Network Fundamentals"
+  }
+]

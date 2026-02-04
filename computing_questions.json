@@ -1,0 +1,396 @@
+[
+  
+  {
+    "type": "text",
+    "category": "Algorithms",
+    "question": "Which of the following Big-O notations represents the most efficient (fastest) time complexity for a large input size n?",
+    "code": null,
+    "options": [
+      "O(n^2)",
+      "O(n)",
+      "O(log n)",
+      "O(n!)"
+    ],
+    "correct": 2,
+    "explanation": "O(log n) implies the execution time grows very slowly compared to the input size (e.g., binary search), whereas O(n) is linear and O(n^2) is quadratic."
+  },
+  {
+    "type": "text",
+    "category": "Algorithms",
+    "question": "In a flowchart, which shape is used to represent a \"Decision\" (e.g., an IF-ELSE condition)?",
+    "code": null,
+    "options": [
+      "Rectangle",
+      "Oval",
+      "Diamond",
+      "Parallelogram"
+    ],
+    "correct": 2,
+    "explanation": "A diamond shape indicates a decision point where the flow splits based on a Yes/No or True/False condition."
+  },
+  {
+    "type": "text",
+    "category": "Algorithms",
+    "question": "Which of the following is a strict requirement for performing a Binary Search?",
+    "code": null,
+    "options": [
+      "The list must contain integers only",
+      "The list must be sorted/ordered",
+      "The list must be small (less than 100 items)",
+      "The list must not contain duplicate values"
+    ],
+    "correct": 1,
+    "explanation": "Binary search relies on dividing the search interval in half, which is only possible if the data is already sorted."
+  },
+  {
+    "type": "text",
+    "category": "Algorithms",
+    "question": "If you have a nested loop where the outer loop runs n times and the inner loop runs n times, what is the time complexity?",
+    "code": null,
+    "options": [
+      "O(n)",
+      "O(log n)",
+      "O(n^2)",
+      "O(1)"
+    ],
+    "correct": 2,
+    "explanation": "The total number of operations is n * n, which results in a quadratic time complexity of O(n^2)."
+  },
+  {
+    "type": "text",
+    "category": "Algorithms",
+    "question": "What is the time complexity of a sequential (linear) search in the worst-case scenario?",
+    "code": null,
+    "options": [
+      "O(1)",
+      "O(n)",
+      "O(log n)",
+      "O(n^2)"
+    ],
+    "correct": 1,
+    "explanation": "In the worst case (the item is at the end or not in the list), the algorithm must check every single element, resulting in O(n)."
+  },
+  {
+    "type": "text",
+    "category": "Database Design",
+    "question": "In an Entity-Relationship (ER) diagram, what does a diamond shape represent?",
+    "code": null,
+    "options": [
+      "An Entity",
+      "An Attribute",
+      "A Relationship",
+      "A Primary Key"
+    ],
+    "correct": 2,
+    "explanation": "Diamonds represent relationships that connect entities (rectangles) in an ER diagram."
+  },
+  {
+    "type": "text",
+    "category": "Database Design",
+    "question": "In the relational model, what is a \"Tuple\"?",
+    "code": null,
+    "options": [
+      "A column in a table",
+      "The name of the table",
+      "A row in a table (record)",
+      "The domain of valid values"
+    ],
+    "correct": 2,
+    "explanation": "In relational database terminology, a tuple refers to a single row or record within a table."
+  },
+  {
+    "type": "text",
+    "category": "Database Design",
+    "question": "If an employee can manage only one department, and a department has only one manager, what is the cardinality of this relationship?",
+    "code": null,
+    "options": [
+      "One-to-One (1:1)",
+      "One-to-Many (1:N)",
+      "Many-to-One (N:1)",
+      "Many-to-Many (M:N)"
+    ],
+    "correct": 0,
+    "explanation": "Since one entity instance is associated with exactly one instance of the other entity, it is a One-to-One relationship."
+  },
+  {
+    "type": "text",
+    "category": "Database Design",
+    "question": "When converting an ER diagram to a Relational Schema, how do you handle a Many-to-Many (M:N) relationship?",
+    "code": null,
+    "options": [
+      "Add the primary key of Table A into Table B",
+      "Create a new \"join table\" composed of primary keys from both entity sets",
+      "Merge both entities into a single large table",
+      "You cannot implement M:N relationships in a database"
+    ],
+    "correct": 1,
+    "explanation": "M:N relationships require a separate intersection (or join) table that contains the primary keys from both connecting tables."
+  },
+  {
+    "type": "text",
+    "category": "Database Design",
+    "question": "Which attribute uniquely identifies each entity in an entity set and cannot contain NULL values?",
+    "code": null,
+    "options": [
+      "Foreign Key",
+      "Composite Key",
+      "Primary Key",
+      "Candidate Attribute"
+    ],
+    "correct": 2,
+    "explanation": "The Primary Key provides a unique identifier for every record in a table and must always have a value."
+  },
+  {
+    "type": "text",
+    "category": "SQL",
+    "question": "Which SQL statement is used to remove a table entirely from the database?",
+    "code": null,
+    "options": [
+      "DELETE TABLE",
+      "REMOVE TABLE",
+      "DROP TABLE",
+      "ERASE TABLE"
+    ],
+    "correct": 2,
+    "explanation": "DROP TABLE deletes the table definition and all its data. DELETE is used to remove specific rows."
+  },
+  {
+    "type": "text",
+    "category": "SQL",
+    "question": "Review the following SQL query. What does this query return?",
+    "code": "SELECT * FROM Students WHERE age > 20;",
+    "options": [
+      "Only the names of students older than 20",
+      "All columns for students older than 20",
+      "All columns for students exactly 20 years old",
+      "The total count of students older than 20"
+    ],
+    "correct": 1,
+    "explanation": "The asterisk (*) selects all columns, and the WHERE clause filters for records where age is strictly greater than 20."
+  },
+  {
+    "type": "text",
+    "category": "SQL",
+    "question": "What is the purpose of a FOREIGN KEY in SQL?",
+    "code": null,
+    "options": [
+      "To uniquely identify a record in the current table",
+      "To calculate mathematical values",
+      "To link two tables together by referring to the Primary Key of another table",
+      "To allow NULL values in a column"
+    ],
+    "correct": 2,
+    "explanation": "A Foreign Key establishes a relationship between two tables by referencing the Primary Key of the parent table."
+  },
+  {
+    "type": "text",
+    "category": "SQL",
+    "question": "If you want to retrieve data from two tables (e.g., Students and Enrolled) simultaneously based on a matching ID, which operation do you use?",
+    "code": null,
+    "options": [
+      "SPLIT",
+      "JOIN (or listing both tables in FROM with a WHERE condition)",
+      "ATTACH",
+      "MERGE"
+    ],
+    "correct": 1,
+    "explanation": "A JOIN operation combines rows from two or more tables based on a related column between them."
+  },
+  {
+    "type": "text",
+    "category": "SQL",
+    "question": "What is a \"Nested Query\"?",
+    "code": null,
+    "options": [
+      "A query that deletes data",
+      "A query that uses a WHILE loop",
+      "A SELECT statement used inside a WHERE clause of another query",
+      "A query that joins more than 3 tables"
+    ],
+    "correct": 2,
+    "explanation": "A nested query (or subquery) is a query nested inside another SQL query, typically within a WHERE clause to filter results."
+  },
+  {
+    "type": "text",
+    "category": "Security",
+    "question": "Which component of the CIA Triad ensures that information is correct and has not been manipulated/altered?",
+    "code": null,
+    "options": [
+      "Confidentiality",
+      "Integrity",
+      "Availability",
+      "Authorization"
+    ],
+    "correct": 1,
+    "explanation": "Integrity involves maintaining the accuracy and trustworthiness of data over its entire lifecycle."
+  },
+  {
+    "type": "text",
+    "category": "Security",
+    "question": "Which type of malware disguises itself as a desirable/useful program but performs harmful effects?",
+    "code": null,
+    "options": [
+      "Virus",
+      "Worm",
+      "Trojan Horse",
+      "Ransomware"
+    ],
+    "correct": 2,
+    "explanation": "A Trojan Horse appears to be legitimate software to trick users into loading and executing it."
+  },
+  {
+    "type": "text",
+    "category": "Security",
+    "question": "What is the main difference between Symmetric and Asymmetric encryption?",
+    "code": null,
+    "options": [
+      "Symmetric is slower than Asymmetric",
+      "Symmetric uses the same key for encryption/decryption; Asymmetric uses different keys",
+      "Asymmetric is only used for emails",
+      "Symmetric keys are public; Asymmetric keys are always private"
+    ],
+    "correct": 1,
+    "explanation": "Symmetric encryption uses a single shared key, while Asymmetric uses a pair of keys (public and private)."
+  },
+  {
+    "type": "text",
+    "category": "Security",
+    "question": "In RSA Public Key encryption, if Alice wants to send a confidential message to Bob, which key should she use to encrypt the message?",
+    "code": null,
+    "options": [
+      "Alice's Private Key",
+      "Alice's Public Key",
+      "Bob's Private Key",
+      "Bob's Public Key"
+    ],
+    "correct": 3,
+    "explanation": "To ensure only Bob can read the message, Alice must encrypt it with Bob's Public Key, so only Bob's Private Key can decrypt it."
+  },
+  {
+    "type": "text",
+    "category": "Security",
+    "question": "A \"Man-in-the-Middle\" attack is best described as:",
+    "code": null,
+    "options": [
+      "Flooding a server with traffic to make it unavailable (DoS)",
+      "An attacker intercepting communication between a user and a server",
+      "Sending emails to trick users into revealing passwords (Phishing)",
+      "Encrypting a victim's files and demanding payment"
+    ],
+    "correct": 1,
+    "explanation": "A Man-in-the-Middle attack involves an attacker secretly relaying and possibly altering the communication between two parties who believe they are communicating directly."
+  },
+  {
+    "type": "text",
+    "category": "Security",
+    "question": "What is a 'Botnet'?",
+    "code": null,
+    "options": [
+      "A software used to encrypt data",
+      "A large network of compromised computers controlled remotely",
+      "A firewall that blocks traffic",
+      "A type of antivirus software"
+    ],
+    "correct": 1,
+    "explanation": "A Botnet is a large network of compromised computers (zombies) that communicate to commit malicious acts like DDoS or spam."
+  },
+  {
+    "type": "text",
+    "category": "Security",
+    "question": "Which of the following best describes 'Two Factor Authentication' (2FA)?",
+    "code": null,
+    "options": [
+      "Using two different passwords",
+      "Using a password and a physical token (or OTP)",
+      "Logging in twice",
+      "Encrypting the connection twice"
+    ],
+    "correct": 1,
+    "explanation": "2FA uses a combination of something you know (password) and something you have (digital token or one-time password)."
+  },
+  {
+    "type": "text",
+    "category": "Algorithms",
+    "question": "What is the definition of an 'Algorithm'?",
+    "code": null,
+    "options": [
+      "A physical hardware component",
+      "A finite sequence of rules/instructions for carrying out a calculation",
+      "A programming language",
+      "A database query"
+    ],
+    "correct": 1,
+    "explanation": "An algorithm is defined as a finite sequence of rules or instructions for carrying out a calculation or procedure."
+  },
+  {
+    "type": "text",
+    "category": "Algorithms",
+    "question": "In the Selection Sort algorithm, what is the time complexity in the worst-case scenario?",
+    "code": null,
+    "options": [
+      "O(n)",
+      "O(n log n)",
+      "O(n^2)",
+      "O(1)"
+    ],
+    "correct": 2,
+    "explanation": "Selection sort uses nested loops (finding the minimum and swapping), resulting in a quadratic time complexity of O(n^2)."
+  },
+  {
+    "type": "text",
+    "category": "Database Design",
+    "question": "Which shape in an ER diagram represents an 'Entity Set'?",
+    "code": null,
+    "options": [
+      "Diamond",
+      "Oval",
+      "Rectangle",
+      "Line"
+    ],
+    "correct": 2,
+    "explanation": "In standard ER notation, a rectangle is used to represent an Entity Set (a collection of similar entities)."
+  },
+  {
+    "type": "text",
+    "category": "Database Design",
+    "question": "What is the primary function of a 'Foreign Key'?",
+    "code": null,
+    "options": [
+      "To uniquely identify the current row",
+      "To store large text data",
+      "To link two tables together",
+      "To encrypt the table data"
+    ],
+    "correct": 2,
+    "explanation": "A Foreign Key is a field in one table that refers to the Primary Key in another table, used to link the two tables together."
+  },
+  {
+    "type": "text",
+    "category": "SQL",
+    "question": "Which operator is used in a SQL WHERE clause to combine multiple conditions where BOTH must be true?",
+    "code": null,
+    "options": [
+      "OR",
+      "NOT",
+      "AND",
+      "XOR"
+    ],
+    "correct": 2,
+    "explanation": "The AND operator is used in the WHERE clause to filter records where all specified conditions are true."
+  },
+  {
+    "type": "text",
+    "category": "SQL",
+    "question": "What does the SQL statement 'SELECT * FROM Students;' do?",
+    "code": "SELECT * FROM Students;",
+    "options": [
+      "Selects the 'name' column from Students",
+      "Selects all fields (columns) from the Students table",
+      "Deletes the Students table",
+      "Counts the number of students"
+    ],
+    "correct": 1,
+    "explanation": "The asterisk (*) is a wildcard character that selects all fields (columns) available in the specified table."
+  }
+
+]

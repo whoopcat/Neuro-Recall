@@ -1,0 +1,344 @@
+[
+  {
+    "question": "In the TCP/IP model used in INF1005, which description best captures how the Internet and transport layers cooperate when a browser loads an HTML page containing many images and scripts?",
+    "options": [
+      "The Internet layer guarantees ordered, reliable delivery of each HTTP response stream, while the transport layer performs best-effort packet routing based on IP addresses.",
+      "The Internet layer performs best-effort routing of IP packets between client and server, while the transport layer (TCP) provides reliable, ordered delivery of the byte stream used by HTTP.",
+      "The Internet layer resolves domain names into IP addresses, while the transport layer multiplexes multiple DNS queries into one TCP connection.",
+      "The Internet layer parses HTTP headers and forwards them to the browser, while the transport layer manages caching decisions for each embedded resource."
+    ],
+    "answer": "The Internet layer performs best-effort routing of IP packets between client and server, while the transport layer (TCP) provides reliable, ordered delivery of the byte stream used by HTTP.",
+    "category": "Internet & TCP/IP"
+  },
+  {
+    "question": "A company moves its website to a new hosting provider without changing the domain name. Immediately afterwards, some users reach the new server while others are still sent to the old one. Which explanation aligns most closely with the DNS behaviour discussed in INF1005?",
+    "options": [
+      "Intermediate routers still have outdated routing tables that point HTTP traffic to the old autonomous system.",
+      "Client browsers cache HTTP response headers and thus continue to reuse the previous TCP connection to the old host.",
+      "Recursive DNS resolvers and client machines still have cached mappings from the domain name to the old IP address until the cache entries expire.",
+      "The new provider is using IPv6 while the old provider used IPv4, so dual‑stack clients randomly alternate between the two addresses."
+    ],
+    "answer": "Recursive DNS resolvers and client machines still have cached mappings from the domain name to the old IP address until the cache entries expire.",
+    "category": "DNS & Names"
+  },
+  {
+    "question": "Which scenario best illustrates the distinction between the Internet and the World Wide Web as described in INF1005?",
+    "options": [
+      "A user sends an email using SMTP over TCP, while another user browses a website using HTTP over TCP.",
+      "A user visits an HTTP site, while another user visits the same site via HTTPS.",
+      "A browser receives a 404 Not Found error from a web server, while another server returns 500 Internal Server Error.",
+      "One user accesses a site over Wi‑Fi, while another uses a wired Ethernet connection to the same site."
+    ],
+    "answer": "A user sends an email using SMTP over TCP, while another user browses a website using HTTP over TCP.",
+    "category": "Internet vs Web"
+  },
+  {
+    "question": "From an HTML5 semantic markup perspective, which use of structure elements is most appropriate for a blog home page that lists multiple post summaries?",
+    "options": [
+      "Wrap all post summaries in a single <section> and use multiple <div> elements inside it, without headings or semantic elements.",
+      "Use one <article> element per post summary, each with its own heading and optional <header> and <footer>, all contained within a <main> element.",
+      "Place each post summary in a <nav> element because readers navigate between posts.",
+      "Use a single <article> element around the entire page and multiple <section> elements for each post summary."
+    ],
+    "answer": "Use one <article> element per post summary, each with its own heading and optional <header> and <footer>, all contained within a <main> element.",
+    "category": "HTML5 Semantics"
+  },
+  {
+    "question": "According to INF1005’s discussion of HTML5 semantics, which statement about <main>, <section>, and <article> is most accurate?",
+    "options": [
+      "<main> can appear multiple times on a page as long as each instance contains different thematic content.",
+      "<section> is intended only for visual grouping and should be used whenever you would otherwise use a <div>.",
+      "<article> is suitable for self-contained pieces of content that could be independently reused or syndicated, while <section> groups related content within a page, and only one <main> should exist per document.",
+      "All three elements are functionally identical and their choice has no impact on accessibility or document outline."
+    ],
+    "answer": "<article> is suitable for self-contained pieces of content that could be independently reused or syndicated, while <section> groups related content within a page, and only one <main> should exist per document.",
+    "category": "HTML5 Semantics"
+  },
+  {
+    "question": "An HTML5 page includes an <img> element for a decorative flourish that conveys no information. Considering the accessibility guidance in INF1005, how should the alt attribute be used?",
+    "options": [
+      "Omit the alt attribute entirely so that screen readers ignore the image.",
+      "Provide a detailed description of the visual appearance in alt so that users know what is being displayed.",
+      "Use alt=\"\" (an empty string) to indicate that the image is purely decorative and should be skipped by assistive technologies.",
+      "Set alt=\"decorative\" so that screen readers announce the word “decorative” instead of describing the image."
+    ],
+    "answer": "Use alt=\"\" (an empty string) to indicate that the image is purely decorative and should be skipped by assistive technologies.",
+    "category": "Accessibility"
+  },
+  {
+    "question": "A developer adds the following to the <head> of an HTML5 document:\n\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n\nBased on INF1005, which explanation best describes the combined effect of these tags?",
+    "options": [
+      "They configure HTTP caching and compression and therefore do not affect character encoding or layout.",
+      "They ensure the browser interprets the document as HTML5 and enable cookies for JavaScript code.",
+      "They specify the character encoding as UTF‑8 and instruct the browser to size the layout viewport to the device width, improving behaviour on mobile devices.",
+      "They enable DNS prefetching and select the appropriate content delivery network for static assets."
+    ],
+    "answer": "They specify the character encoding as UTF‑8 and instruct the browser to size the layout viewport to the device width, improving behaviour on mobile devices.",
+    "category": "HTML5 Document Setup"
+  },
+  {
+    "question": "INF1005 emphasises external CSS for maintainability. Which example best demonstrates this advantage in a multi-page site?",
+    "options": [
+      "Each page embeds unique <style> blocks in the <body> to adjust layout independently.",
+      "Most formatting is applied using inline style attributes on individual elements for maximum control.",
+      "A global stylesheet is linked from all pages, and a site-wide redesign is implemented by editing that single CSS file without touching the HTML.",
+      "Each page links to its own separate CSS file, even when all pages share the same design."
+    ],
+    "answer": "A global stylesheet is linked from all pages, and a site-wide redesign is implemented by editing that single CSS file without touching the HTML.",
+    "category": "CSS & Maintainability"
+  },
+  {
+    "question": "According to INF1005’s explanation of HTTP and caching, when will a browser most likely receive a 304 Not Modified response for a JavaScript file?",
+    "options": [
+      "When the browser is not authorised to access the script and the server denies permission.",
+      "When the browser sends a conditional GET with caching headers indicating it has a cached copy, and the server determines that the cached copy is still valid.",
+      "When the browser uses HTTP/2 but the server only supports HTTP/1.1 and must downgrade the connection.",
+      "When the browser posts a form to update user settings and the server decides to move the script permanently."
+    ],
+    "answer": "When the browser sends a conditional GET with caching headers indicating it has a cached copy, and the server determines that the cached copy is still valid.",
+    "category": "HTTP & Caching"
+  },
+  {
+    "question": "INF1005 contrasts traditional LAMP architectures with the JAM stack. For a content-heavy site that fetches data from third-party APIs, which description best characterises the JAM stack approach?",
+    "options": [
+      "Pages are generated dynamically on the server with PHP and a local MySQL database in response to every request.",
+      "Static markup is prebuilt and served from a CDN, while JavaScript running in the browser calls remote APIs to fetch or update data as needed.",
+      "All content is stored in the browser’s localStorage, eliminating the need for servers or APIs.",
+      "Server-side Node.js code generates HTML on each request using React, while the client loads only CSS files."
+    ],
+    "answer": "Static markup is prebuilt and served from a CDN, while JavaScript running in the browser calls remote APIs to fetch or update data as needed.",
+    "category": "Web Stacks"
+  },
+  {
+    "question": "Which design goal of the early ARPANET most directly explains why the Internet can continue operating even when individual networks fail?",
+    "options": [
+      "Compatibility with existing telephone circuit switching",
+      "Strict centralised control by a single backbone provider",
+      "Survivability through decentralised, packet-switched routing",
+      "Guaranteed bandwidth reservation for each connection"
+    ],
+    "answer": "Survivability through decentralised, packet-switched routing",
+    "category": "Internet History"
+  },
+  {
+    "question": "Packet switching, as described in the INF1005 materials, was introduced partly to address which specific limitation of circuit-switched networks?",
+    "options": [
+      "The inability to multiplex multiple users on the same physical link",
+      "The high latency of DNS resolution across geographically distant networks",
+      "Inefficient use of bandwidth because a dedicated path is reserved even when a user is silent",
+      "The requirement that all hosts share a common application-layer protocol"
+    ],
+    "answer": "Inefficient use of bandwidth because a dedicated path is reserved even when a user is silent",
+    "category": "Networking Concepts"
+  },
+  {
+    "question": "On January 1, 1983, a key event occurred in ARPANET that directly influenced the modern Internet architecture. What was this event?",
+    "options": [
+      "The introduction of the first graphical web browser",
+      "The adoption of TCP/IP across all of ARPANET",
+      "The creation of the World Wide Web by Tim Berners‑Lee",
+      "The launch of the first commercial Internet Service Provider"
+    ],
+    "answer": "The adoption of TCP/IP across all of ARPANET",
+    "category": "Internet History"
+  },
+  {
+    "question": "Tim Berners‑Lee’s original web proposal at CERN combined several ideas that still define the Web today. Which set of components best captures this as presented in INF1005?",
+    "options": [
+      "SMTP for messaging, FTP for file transfer, and POP for retrieval",
+      "URLs to identify resources, HTTP to transfer them, HTML to represent them, and browsers/servers to handle requests and responses",
+      "DNS for name resolution, IP for addressing, and routers for forwarding",
+      "CSS for styling, JavaScript for logic, and XML for data interchange"
+    ],
+    "answer": "URLs to identify resources, HTTP to transfer them, HTML to represent them, and browsers/servers to handle requests and responses",
+    "category": "Web History"
+  },
+  {
+    "question": "Which statement best explains the historical relationship between HTML and XHTML as covered in the INF1005 HTML overview?",
+    "options": [
+      "XHTML completely replaced HTML and remains the only valid web markup standard today.",
+      "XHTML 1.0 attempted to enforce stricter XML-based rules on HTML documents, but work on XHTML 2.0 stalled and was eventually abandoned in favour of HTML5.",
+      "XHTML was created primarily to support server-side scripting languages and is not usable in modern browsers.",
+      "HTML was derived from XHTML after browsers rejected strict XML syntax."
+    ],
+    "answer": "XHTML 1.0 attempted to enforce stricter XML-based rules on HTML documents, but work on XHTML 2.0 stalled and was eventually abandoned in favour of HTML5.",
+    "category": "HTML History"
+  },
+  {
+    "question": "Which of the following is NOT one of the three main aims of HTML5 described in the INF1005 notes?",
+    "options": [
+      "Specify unambiguously how browsers should deal with invalid markup",
+      "Provide an open, non‑proprietary programming framework via JavaScript for rich web applications",
+      "Be backward compatible with the existing web",
+      "Eliminate the need for CSS by integrating all presentation into HTML elements"
+    ],
+    "answer": "Eliminate the need for CSS by integrating all presentation into HTML elements",
+    "category": "HTML5 Goals"
+  },
+  {
+    "question": "Historically, which problem did HTML5’s semantic elements (like <header>, <nav>, <main>, <section>, <article>, <footer>) specifically aim to address?",
+    "options": [
+      "The lack of support for multi-threading in JavaScript",
+      "Excessive reliance on non-semantic <div> elements that made structure unclear for machines and assistive technologies",
+      "Incompatibility between IPv4 and IPv6 addresses",
+      "The inability of HTTP to send binary data"
+    ],
+    "answer": "Excessive reliance on non-semantic <div> elements that made structure unclear for machines and assistive technologies",
+    "category": "HTML5 Semantics"
+  },
+  {
+    "question": "According to the INF1005 materials, which of the following best characterises the role of the World Wide Web Consortium (W3C) in the evolution of web technologies?",
+    "options": [
+      "It operates the physical routers and links that make up the global Internet backbone.",
+      "It standardises web technologies such as HTML and CSS and coordinates the development of open web specifications.",
+      "It assigns IP addresses and manages the root DNS servers.",
+      "It provides the only official implementations of web browsers."
+    ],
+    "answer": "It standardises web technologies such as HTML and CSS and coordinates the development of open web specifications.",
+    "category": "Web Standards"
+  },
+  {
+    "question": "In HTTP’s evolution as described in INF1005, which factor most contributed to the need for richer request and response headers?",
+    "options": [
+      "The switch from IPv4 to IPv6 addressing on all web servers",
+      "The introduction of WebSockets for persistent connections",
+      "The growing need to convey metadata such as caching directives, content types, encodings, and authentication information",
+      "The deprecation of the GET method in favour of POST for all requests"
+    ],
+    "answer": "The growing need to convey metadata such as caching directives, content types, encodings, and authentication information",
+    "category": "HTTP Concepts"
+  },
+  {
+    "question": "Which event in the history of web browsers is most closely associated with the rapid but chaotic introduction of new tags and features such as early CSS and JavaScript?",
+    "options": [
+      "The release of HTML5 as a W3C Recommendation in 2014",
+      "The transition from IPv4 to IPv6 in 2011",
+      "The mid‑1990s “browser wars” between Netscape Navigator and Microsoft Internet Explorer",
+      "The introduction of Node.js and server-side JavaScript"
+    ],
+    "answer": "The mid‑1990s “browser wars” between Netscape Navigator and Microsoft Internet Explorer",
+    "category": "Browser History"
+  },
+  {
+    "question": "Which key difference between Internet and WWW emphasised in INF1005 is captured correctly below?",
+    "options": [
+      "The Internet is limited to HTTP traffic, while the Web supports any protocol over IP.",
+      "The Internet refers to the global, packet-switched network infrastructure, while the Web is an application running on top of it using HTTP, URLs, and HTML.",
+      "The Internet is a proprietary system maintained by a single organisation, while the Web is fully decentralised.",
+      "The Web existed before the Internet and later migrated onto TCP/IP."
+    ],
+    "answer": "The Internet refers to the global, packet-switched network infrastructure, while the Web is an application running on top of it using HTTP, URLs, and HTML.",
+    "category": "Internet vs Web"
+  },
+  {
+    "question": "In the CSS history discussed in the lecture, which motivation best explains why the W3C adopted CSS in the mid‑1990s?",
+    "options": [
+      "To move all layout responsibility from browsers to routers",
+      "To separate presentation from structure, allowing HTML to focus on semantics while CSS handles visual styling",
+      "To enable web pages to be rendered only on desktop operating systems",
+      "To replace JavaScript entirely for interactive behaviour"
+    ],
+    "answer": "To separate presentation from structure, allowing HTML to focus on semantics while CSS handles visual styling",
+    "category": "CSS History"
+  },
+  {
+    "question": "Which statement about CSS2.1 and CSS3 matches the INF1005 description?",
+    "options": [
+      "CSS2.1 was abandoned in favour of CSS3, which is a single monolithic specification covering all features.",
+      "CSS3 introduced a modular approach where related features are grouped into separate modules that can evolve at different speeds.",
+      "CSS3 removed backwards compatibility with earlier CSS versions to simplify browser implementation.",
+      "CSS2.1 and CSS3 are completely unrelated; CSS3 is a separate styling language that browsers interpret differently."
+    ],
+    "answer": "CSS3 introduced a modular approach where related features are grouped into separate modules that can evolve at different speeds.",
+    "category": "CSS Versions"
+  },
+  {
+    "question": "From the Bootstrap introduction in INF1005, which early problem in CSS layout did frameworks like Bootstrap originally aim to solve?",
+    "options": [
+      "DNS resolution delays for static assets",
+      "Difficulty creating consistent, responsive, grid-based layouts across browsers using floats and manual positioning",
+      "Inability of HTTP to compress CSS files efficiently",
+      "Lack of support for Unicode character sets in older browsers"
+    ],
+    "answer": "Difficulty creating consistent, responsive, grid-based layouts across browsers using floats and manual positioning",
+    "category": "Bootstrap Motivation"
+  },
+  {
+    "question": "Which benefit of using a CSS framework such as Bootstrap is emphasised in INF1005?",
+    "options": [
+      "Bootstrap automatically rewrites all HTML to conform to the latest W3C validator rules.",
+      "Bootstrap eliminates the need to understand the CSS box model.",
+      "Bootstrap provides a comprehensive set of predefined classes for grid layout, typography, components, and utilities, speeding up creation of attractive, consistent UIs.",
+      "Bootstrap replaces the need for external JavaScript libraries by implementing all logic in CSS only."
+    ],
+    "answer": "Bootstrap provides a comprehensive set of predefined classes for grid layout, typography, components, and utilities, speeding up creation of attractive, consistent UIs.",
+    "category": "Bootstrap Concepts"
+  },
+  {
+    "question": "Historically, which of the following is true about JavaScript’s standardisation according to the INF1005 JavaScript lecture?",
+    "options": [
+      "JavaScript was standardised as ECMAScript by Ecma International, and ES6 introduced major features like classes, arrow functions, and promises.",
+      "JavaScript has never been standardised and each browser implements its own incompatible dialect.",
+      "JavaScript was originally defined as a subset of Java and has kept strict typing since its first version.",
+      "ECMAScript only covers DOM APIs and event handling, not the language syntax itself."
+    ],
+    "answer": "JavaScript was standardised as ECMAScript by Ecma International, and ES6 introduced major features like classes, arrow functions, and promises.",
+    "category": "JavaScript History"
+  },
+  {
+    "question": "Which aspect of Web 2.0, discussed in INF1005, most directly explains the increased importance of client-side JavaScript?",
+    "options": [
+      "The requirement that all websites must be fully static with no user interaction",
+      "The shift towards interactive, user-generated content and richer in-browser applications, moving more logic from server to client",
+      "The replacement of TCP with UDP for all web traffic",
+      "The deprecation of HTML in favour of XML-only layouts"
+    ],
+    "answer": "The shift towards interactive, user-generated content and richer in-browser applications, moving more logic from server to client",
+    "category": "Web 2.0"
+  },
+  {
+    "question": "According to INF1005, which is a key disadvantage of client-side scripting that must be considered when designing a web application?",
+    "options": [
+      "Client-side scripts cannot manipulate the DOM of the current page.",
+      "There is no guarantee that JavaScript is enabled or supported, so critical functionality must not depend solely on it.",
+      "Client-side scripts always execute faster than server-side scripts, which can overload the client CPU.",
+      "Client-side scripts are executed on the server first and then transferred to the client."
+    ],
+    "answer": "There is no guarantee that JavaScript is enabled or supported, so critical functionality must not depend solely on it.",
+    "category": "Client-side Scripting"
+  },
+  {
+    "question": "From the DOM discussion in INF1005, which description best captures what the Document Object Model provides to JavaScript?",
+    "options": [
+      "A binary representation of the HTML that cannot be accessed directly",
+      "A tree-like object representation of the HTML document, with nodes and methods for selecting and modifying elements",
+      "A specialised SQL-like query language for server-side data retrieval",
+      "A replacement for HTTP that allows direct socket communication from the browser"
+    ],
+    "answer": "A tree-like object representation of the HTML document, with nodes and methods for selecting and modifying elements",
+    "category": "DOM Concepts"
+  },
+  {
+    "question": "Which flow best describes the use of W3C’s HTML validator for server-side pages as explained in Lab 04?",
+    "options": [
+      "Upload the raw PHP or ASP.NET source file directly, since the validator executes it on the server.",
+      "Run the page on localhost to generate HTML, view the page source, copy the resulting HTML, and paste it into the validator’s “Direct Input” tab.",
+      "Send the server’s compiled binary to the validator, which decompiles it into HTML.",
+      "Use the validator’s DNS lookup to inspect HTTP headers without viewing HTML."
+    ],
+    "answer": "Run the page on localhost to generate HTML, view the page source, copy the resulting HTML, and paste it into the validator’s “Direct Input” tab.",
+    "category": "HTML Validation"
+  },
+  {
+    "question": "In the accessibility lab using axe, which pattern most closely matches how issues should be handled?",
+    "options": [
+      "Ignore all warnings and only fix errors that cause the browser to crash.",
+      "Treat validator output as sufficient for accessibility and skip axe results.",
+      "Use axe to detect issues such as missing landmarks or contrast problems, read the “Learn more” guidance for each issue, and iteratively update the HTML until all critical issues are resolved.",
+      "Rely solely on browser zoom levels to address all accessibility concerns."
+    ],
+    "answer": "Use axe to detect issues such as missing landmarks or contrast problems, read the “Learn more” guidance for each issue, and iteratively update the HTML until all critical issues are resolved.",
+    "category": "Accessibility Testing"
+  }
+]
+

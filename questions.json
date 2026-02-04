@@ -1,0 +1,1666 @@
+[
+  {
+    "type": "text",
+    "question": "What is the standard return type of the main() function in C?",
+    "code": null,
+    "options": [
+      "void",
+      "int",
+      "float",
+      "char"
+    ],
+    "correct": 1,
+    "explanation": "The standard return type is int. Returning 0 typically indicates success."
+  },
+  {
+    "type": "code",
+    "question": "What is the output of this pointer arithmetic?",
+    "code": "#include <stdio.h>\n\nint main() {\n    int arr[] = {10, 20, 30, 40};\n    int *ptr = arr;\n    printf(\"%d\", *(ptr + 2));\n    return 0;\n}",
+    "options": [
+      "12",
+      "20",
+      "30",
+      "40"
+    ],
+    "correct": 2,
+    "explanation": "ptr points to index 0. (ptr + 2) points to index 2. Dereferencing it gives the value 30."
+  },
+  {
+    "type": "code",
+    "question": "What happens in this conditional assignment?",
+    "code": "#include <stdio.h>\n\nint main() {\n    int x = 0;\n    if (x = 5)\n        printf(\"True %d\", x);\n    else\n        printf(\"False %d\", x);\n    return 0;\n}",
+    "options": [
+      "True 5",
+      "False 0",
+      "True 0",
+      "Compiler Error"
+    ],
+    "correct": 0,
+    "explanation": "The expression (x = 5) performs assignment, not comparison. It evaluates to 5, which is non-zero (True)."
+  },
+  {
+    "type": "code",
+    "question": "What is the output involving the static variable?",
+    "code": "#include <stdio.h>\n\nvoid func() {\n    static int i = 5;\n    printf(\"%d \", i++);\n}\n\nint main() {\n    func();\n    func();\n    return 0;\n}",
+    "options": [
+      "5 5",
+      "5 6",
+      "6 7",
+      "Garbage Value"
+    ],
+    "correct": 1,
+    "explanation": "Static variables are initialized only once. First call prints 5 then increments to 6. Second call starts at 6."
+  },
+  {
+    "type": "code",
+    "question": "What does this macro output? (Watch out for order of operations!)",
+    "code": "#include <stdio.h>\n#define MULT(a, b) a * b\n\nint main() {\n    int result = MULT(2 + 3, 4);\n    printf(\"%d\", result);\n    return 0;\n}",
+    "options": [
+      "20",
+      "14",
+      "24",
+      "10"
+    ],
+    "correct": 1,
+    "explanation": "The macro expands literally to: 2 + 3 * 4. Multiplication happens first: 3 * 4 = 12, then 2 + 12 = 14."
+  },
+  {
+    "type": "code",
+    "question": "What output does this string manipulation produce?",
+    "code": "#include <string.h>\n#include <stdio.h>\n\nint main() {\n    char s1[10] = \"Hi\";\n    char s2[] = \"There\";\n    strcat(s1, s2);\n    printf(\"%d\", strlen(s1));\n    return 0;\n}",
+    "options": [
+      "2",
+      "5",
+      "7",
+      "8"
+    ],
+    "correct": 2,
+    "explanation": "strcat appends 'There' (5 chars) to 'Hi' (2 chars). Result is 'HiThere'. strlen counts characters excluding the null terminator."
+  },
+  {
+    "type": "code",
+    "question": "Predict the output of this struct pointer access.",
+    "code": "#include <stdio.h>\n\nstruct Data { int val; };\n\nint main() {\n    struct Data d = {100};\n    struct Data *p = &d;\n    printf(\"%d\", (*p).val);\n    return 0;\n}",
+    "options": [
+      "100",
+      "Garbage",
+      "Address of val",
+      "Compiler Error"
+    ],
+    "correct": 0,
+    "explanation": "Operator precedence! Use (*p).val or p->val to access the member."
+  },
+  {
+    "type": "code",
+    "question": "What is the output of this nested loop?",
+    "code": "#include <stdio.h>\n\nint main() {\n    int a[2][2] = {{1, 2}, {3, 4}};\n    printf(\"%d\", a[1][0]);\n    return 0;\n}",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "correct": 2,
+    "explanation": "a[1] accesses the second row {3, 4}. a[1][0] accesses the first element of that row, which is 3."
+  },
+  {
+    "type": "code",
+    "question": "What does this pointer subtraction output?",
+    "code": "#include <stdio.h>\n\nint main() {\n    int arr[] = {10, 20, 30, 40, 50};\n    int *ptr1 = arr;\n    int *ptr2 = &arr[3];\n    printf(\"%ld\", ptr2 - ptr1);\n    return 0;\n}",
+    "options": [
+      "12",
+      "3",
+      "30",
+      "4"
+    ],
+    "correct": 1,
+    "explanation": "Pointer subtraction returns the number of *elements* between the two pointers, not bytes. Index 3 - Index 0 = 3."
+  },
+  {
+    "type": "code",
+    "question": "What output does this function call produce?",
+    "code": "#include <stdio.h>\n\nvoid modify(int a) {\n    a = 99;\n}\n\nint main() {\n    int x = 10;\n    modify(x);\n    printf(\"%d\", x);\n    return 0;\n}",
+    "options": [
+      "10",
+      "99",
+      "0",
+      "Compiler Error"
+    ],
+    "correct": 0,
+    "explanation": "C passes arguments by value. The function 'modify' receives a copy of 'x'. Changing the copy does not affect the original 'x' in main."
+  },
+  {
+    "type": "code",
+    "question": "What does this ASCII arithmetic print?",
+    "code": "#include <stdio.h>\n\nint main() {\n    char c = 'A' + 2;\n    printf(\"%c\", c);\n    return 0;\n}",
+    "options": [
+      "67",
+      "C",
+      "A2",
+      "B"
+    ],
+    "correct": 1,
+    "explanation": "'A' is ASCII 65. 65 + 2 = 67. ASCII 67 corresponds to the character 'C'."
+  },
+  {
+    "type": "text",
+    "question": "Which operator is used to get the memory address of a variable?",
+    "code": null,
+    "options": [
+      "*",
+      "&",
+      "->",
+      "."
+    ],
+    "correct": 1,
+    "explanation": "The ampersand (&) is the address-of operator. (*) is the dereference operator."
+  },
+  {
+    "type": "text",
+    "question": "Which function is used to release memory allocated by malloc?",
+    "code": null,
+    "options": [
+      "delete()",
+      "remove()",
+      "free()",
+      "dealloc()"
+    ],
+    "correct": 2,
+    "explanation": "free() is the standard library function used to deallocate memory allocated on the heap."
+  },
+  {
+    "type": "text",
+    "question": "In a Linked List, what does the last node's 'next' pointer usually point to?",
+    "code": null,
+    "options": [
+      "The head node",
+      "The previous node",
+      "NULL",
+      "Garbage value"
+    ],
+    "correct": 2,
+    "explanation": "In a singly linked list, the last node points to NULL to indicate the end of the list."
+  },
+  {
+    "type": "text",
+    "question": "Which file mode should be used to add data to the end of an existing file without erasing it?",
+    "code": null,
+    "options": [
+      "\"w\"",
+      "\"r\"",
+      "\"a\"",
+      "\"w+\""
+    ],
+    "correct": 2,
+    "explanation": "\"a\" stands for Append mode. \"w\" creates a new file or overwrites an existing one."
+  },
+  {
+    "type": "text",
+    "question": "What keyword is used to create a user-defined alias for an existing data type?",
+    "code": null,
+    "options": [
+      "struct",
+      "union",
+      "typedef",
+      "def"
+    ],
+    "correct": 2,
+    "explanation": "typedef allows you to give a new name to a type, e.g., typedef unsigned long ulong;"
+  },
+  {
+    "type": "text",
+    "question": "What is the correct syntax to declare a pointer to an integer?",
+    "code": null,
+    "options": [
+      "int &ptr;",
+      "ptr *int;",
+      "int *ptr;",
+      "int ptr;"
+    ],
+    "correct": 2,
+    "explanation": "The asterisk (*) goes before the variable name to declare it as a pointer."
+  },
+  {
+    "type": "text",
+    "question": "Which header file is required to use printf() and scanf()?",
+    "code": null,
+    "options": [
+      "stdlib.h",
+      "stdio.h",
+      "string.h",
+      "conio.h"
+    ],
+    "correct": 1,
+    "explanation": "stdio.h stands for Standard Input Output header."
+  },
+  {
+    "type": "text",
+    "question": "What is the value of an uninitialized local variable in C?",
+    "code": null,
+    "options": [
+      "0",
+      "NULL",
+      "Garbage / Indeterminate",
+      "1"
+    ],
+    "correct": 2,
+    "explanation": "Local variables are stored on the stack and are not automatically cleared. They contain whatever random data was at that memory address."
+  },
+  {
+    "type": "text",
+    "question": "If you allocate an array of 10 integers using malloc, what is the return type?",
+    "code": null,
+    "options": [
+      "int array[]",
+      "int",
+      "void*",
+      "int*"
+    ],
+    "correct": 2,
+    "explanation": "malloc always returns a void* (generic pointer), which is typically cast to the specific type pointer (like int*) by the programmer."
+  },
+  {
+    "type": "text",
+    "question": "What character is automatically added to the end of a C string literal?",
+    "code": null,
+    "options": [
+      "\\n",
+      "\\t",
+      "\\0",
+      "\\end"
+    ],
+    "correct": 2,
+    "explanation": "C strings are null-terminated, meaning they always end with the null character \\0."
+  },
+  {
+    "type": "text",
+    "question": "Which operator is used to access the memory address of a variable?",
+    "code": null,
+    "options": [
+      "*",
+      "&",
+      "->",
+      "#"
+    ],
+    "correct": 1,
+    "explanation": "The ampersand (&) is the 'Address-of' operator."
+  },
+  {
+    "type": "text",
+    "question": "What is the index of the first element in a C array?",
+    "code": null,
+    "options": [
+      "1",
+      "0",
+      "-1",
+      "It depends on the compiler"
+    ],
+    "correct": 1,
+    "explanation": "C arrays are zero-indexed, meaning the first element is always at index 0."
+  },
+  {
+    "type": "text",
+    "question": "Which character is used to terminate a C string?",
+    "code": null,
+    "options": [
+      "\\n (Newline)",
+      "\\t (Tab)",
+      "\\0 (Null)",
+      "\\e (End)"
+    ],
+    "correct": 2,
+    "explanation": "Strings in C are null-terminated sequences of characters, ending with \\0."
+  },
+  {
+    "type": "text",
+    "question": "What is the standard return type of the main() function in C?",
+    "code": null,
+    "options": [
+      "void",
+      "int",
+      "float",
+      "char"
+    ],
+    "correct": 1,
+    "explanation": "The standard return type is int. Returning 0 typically indicates success."
+  },
+  {
+    "type": "code",
+    "question": "What is the output of this pointer arithmetic?",
+    "code": "#include <stdio.h>\n\nint main() {\n    int arr[] = {10, 20, 30, 40};\n    int *ptr = arr;\n    printf(\"%d\", *(ptr + 2));\n    return 0;\n}",
+    "options": [
+      "12",
+      "20",
+      "30",
+      "40"
+    ],
+    "correct": 2,
+    "explanation": "ptr points to index 0. (ptr + 2) points to index 2. Dereferencing it gives the value 30."
+  },
+  {
+    "type": "code",
+    "question": "What happens in this conditional assignment?",
+    "code": "#include <stdio.h>\n\nint main() {\n    int x = 0;\n    if (x = 5)\n        printf(\"True %d\", x);\n    else\n        printf(\"False %d\", x);\n    return 0;\n}",
+    "options": [
+      "True 5",
+      "False 0",
+      "True 0",
+      "Compiler Error"
+    ],
+    "correct": 0,
+    "explanation": "The expression (x = 5) performs assignment, not comparison. It evaluates to 5, which is non-zero (True)."
+  },
+  {
+    "type": "code",
+    "question": "What is the output involving the static variable?",
+    "code": "void func() {\n    static int i = 5;\n    printf(\"%d \", i++);\n}\n\nint main() {\n    func();\n    func();\n    return 0;\n}",
+    "options": [
+      "5 5",
+      "5 6",
+      "6 7",
+      "Garbage Value"
+    ],
+    "correct": 1,
+    "explanation": "Static variables are initialized only once. First call prints 5 then increments to 6. Second call starts at 6."
+  },
+  {
+    "type": "code",
+    "question": "What does this macro output? (Watch out for order of operations!)",
+    "code": "#define MULT(a, b) a * b\n\nint main() {\n    int result = MULT(2 + 3, 4);\n    printf(\"%d\", result);\n    return 0;\n}",
+    "options": [
+      "20",
+      "14",
+      "24",
+      "10"
+    ],
+    "correct": 1,
+    "explanation": "The macro expands literally to: 2 + 3 * 4. Multiplication happens first: 3 * 4 = 12, then 2 + 12 = 14."
+  },
+  {
+    "type": "code",
+    "question": "What output does this string manipulation produce?",
+    "code": "#include <string.h>\n#include <stdio.h>\n\nint main() {\n    char s1[10] = \"Hi\";\n    char s2[] = \"There\";\n    strcat(s1, s2);\n    printf(\"%d\", strlen(s1));\n    return 0;\n}",
+    "options": [
+      "2",
+      "5",
+      "7",
+      "8"
+    ],
+    "correct": 2,
+    "explanation": "strcat appends 'There' (5 chars) to 'Hi' (2 chars). Result is 'HiThere'. strlen counts characters excluding the null terminator."
+  },
+  {
+    "type": "code",
+    "question": "Predict the output of this struct pointer access.",
+    "code": "struct Data { int val; };\n\nint main() {\n    struct Data d = {100};\n    struct Data *p = &d;\n    printf(\"%d\", *p.val);\n}",
+    "options": [
+      "100",
+      "Garbage",
+      "Address of val",
+      "Compiler Error"
+    ],
+    "correct": 3,
+    "explanation": "Operator precedence! '.' has higher precedence than '*'. It tries to access p.val (which doesn't exist because p is a pointer) before dereferencing. Correct syntax is (*p).val or p->val."
+  },
+  {
+    "type": "code",
+    "question": "What is the output of this nested loop?",
+    "code": "int main() {\n    int a[2][2] = {{1, 2}, {3, 4}};\n    printf(\"%d\", a[1][0]);\n    return 0;\n}",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "correct": 2,
+    "explanation": "a[1] accesses the second row {3, 4}. a[1][0] accesses the first element of that row, which is 3."
+  },
+  {
+    "type": "code",
+    "question": "What does this pointer subtraction output?",
+    "code": "int main() {\n    int arr[] = {10, 20, 30, 40, 50};\n    int *ptr1 = arr;\n    int *ptr2 = &arr[3];\n    printf(\"%ld\", ptr2 - ptr1);\n}",
+    "options": [
+      "12",
+      "3",
+      "30",
+      "4"
+    ],
+    "correct": 1,
+    "explanation": "Pointer subtraction returns the number of *elements* between the two pointers, not bytes. Index 3 - Index 0 = 3."
+  },
+  {
+    "type": "code",
+    "question": "What output does this function call produce?",
+    "code": "void modify(int a) {\n    a = 99;\n}\n\nint main() {\n    int x = 10;\n    modify(x);\n    printf(\"%d\", x);\n}",
+    "options": [
+      "10",
+      "99",
+      "0",
+      "Compiler Error"
+    ],
+    "correct": 0,
+    "explanation": "C passes arguments by value. The function 'modify' receives a copy of 'x'. Changing the copy does not affect the original 'x' in main."
+  },
+  {
+    "type": "code",
+    "question": "What does this ASCII arithmetic print?",
+    "code": "int main() {\n    char c = 'A' + 2;\n    printf(\"%c\", c);\n}",
+    "options": [
+      "67",
+      "C",
+      "A2",
+      "B"
+    ],
+    "correct": 1,
+    "explanation": "'A' is ASCII 65. 65 + 2 = 67. ASCII 67 corresponds to the character 'C'."
+  },
+  {
+    "type": "text",
+    "question": "Which operator is used to get the memory address of a variable?",
+    "code": null,
+    "options": [
+      "*",
+      "&",
+      "->",
+      "."
+    ],
+    "correct": 1,
+    "explanation": "The ampersand (&) is the address-of operator. (*) is the dereference operator."
+  },
+  {
+    "type": "text",
+    "question": "Which function is used to release memory allocated by malloc?",
+    "code": null,
+    "options": [
+      "delete()",
+      "remove()",
+      "free()",
+      "dealloc()"
+    ],
+    "correct": 2,
+    "explanation": "free() is the standard library function used to deallocate memory allocated on the heap."
+  },
+  {
+    "type": "text",
+    "question": "In a Linked List, what does the last node's 'next' pointer usually point to?",
+    "code": null,
+    "options": [
+      "The head node",
+      "The previous node",
+      "NULL",
+      "Garbage value"
+    ],
+    "correct": 2,
+    "explanation": "In a singly linked list, the last node points to NULL to indicate the end of the list."
+  },
+  {
+    "type": "text",
+    "question": "Which file mode should be used to add data to the end of an existing file without erasing it?",
+    "code": null,
+    "options": [
+      "\"w\"",
+      "\"r\"",
+      "\"a\"",
+      "\"w+\""
+    ],
+    "correct": 2,
+    "explanation": "\"a\" stands for Append mode. \"w\" creates a new file or overwrites an existing one."
+  },
+  {
+    "type": "text",
+    "question": "What keyword is used to create a user-defined alias for an existing data type?",
+    "code": null,
+    "options": [
+      "struct",
+      "union",
+      "typedef",
+      "def"
+    ],
+    "correct": 2,
+    "explanation": "typedef allows you to give a new name to a type, e.g., typedef unsigned long ulong;"
+  },
+  {
+    "type": "text",
+    "question": "What is the correct syntax to declare a pointer to an integer?",
+    "code": null,
+    "options": [
+      "int &ptr;",
+      "ptr *int;",
+      "int *ptr;",
+      "int ptr;"
+    ],
+    "correct": 2,
+    "explanation": "The asterisk (*) goes before the variable name to declare it as a pointer."
+  },
+  {
+    "type": "text",
+    "question": "Which header file is required to use printf() and scanf()?",
+    "code": null,
+    "options": [
+      "stdlib.h",
+      "stdio.h",
+      "string.h",
+      "conio.h"
+    ],
+    "correct": 1,
+    "explanation": "stdio.h stands for Standard Input Output header."
+  },
+  {
+    "type": "text",
+    "question": "What is the value of an uninitialized local variable in C?",
+    "code": null,
+    "options": [
+      "0",
+      "NULL",
+      "Garbage / Indeterminate",
+      "1"
+    ],
+    "correct": 2,
+    "explanation": "Local variables are stored on the stack and are not automatically cleared. They contain whatever random data was at that memory address."
+  },
+  {
+    "type": "text",
+    "question": "If you allocate an array of 10 integers using malloc, what is the return type?",
+    "code": null,
+    "options": [
+      "int array[]",
+      "int",
+      "void*",
+      "int*"
+    ],
+    "correct": 2,
+    "explanation": "malloc always returns a void* (generic pointer), which is typically cast to the specific type pointer (like int*) by the programmer."
+  },
+  {
+    "type": "text",
+    "question": "What character is automatically added to the end of a C string literal?",
+    "code": null,
+    "options": [
+      "\\n",
+      "\\t",
+      "\\0",
+      "\\end"
+    ],
+    "correct": 2,
+    "explanation": "C strings are null-terminated, meaning they always end with the null character \\0."
+  },
+  {
+    "type": "text",
+    "question": "What is the standard return type of the main() function in C?",
+    "code": null,
+    "options": [
+      "void",
+      "int",
+      "float",
+      "char"
+    ],
+    "correct": 1,
+    "explanation": "The standard return type is int. Returning 0 typically indicates success."
+  },
+  {
+    "type": "text",
+    "question": "Which operator is used to access the memory address of a variable?",
+    "code": null,
+    "options": [
+      "*",
+      "&",
+      "->",
+      "#"
+    ],
+    "correct": 1,
+    "explanation": "The ampersand (&) is the 'Address-of' operator."
+  },
+  {
+    "type": "text",
+    "question": "What is the index of the first element in a C array?",
+    "code": null,
+    "options": [
+      "1",
+      "0",
+      "-1",
+      "It depends on the compiler"
+    ],
+    "correct": 1,
+    "explanation": "C arrays are zero-indexed, meaning the first element is always at index 0."
+  },
+  {
+    "type": "text",
+    "question": "Which character is used to terminate a C string?",
+    "code": null,
+    "options": [
+      "\\n (Newline)",
+      "\\t (Tab)",
+      "\\0 (Null)",
+      "\\e (End)"
+    ],
+    "correct": 2,
+    "explanation": "Strings in C are null-terminated sequences of characters, ending with \\0."
+  },
+  {
+    "type": "text",
+    "question": "What does a pointer variable store?",
+    "code": null,
+    "options": [
+      "An integer value",
+      "A floating-point value",
+      "A memory address",
+      "A character"
+    ],
+    "correct": 2,
+    "explanation": "A pointer is a variable that stores the memory address of another variable."
+  },
+  {
+    "type": "text",
+    "question": "Which keyword is used to define a structure?",
+    "code": null,
+    "options": [
+      "class",
+      "object",
+      "struct",
+      "record"
+    ],
+    "correct": 2,
+    "explanation": "The 'struct' keyword is used to define a user-defined data type that groups related variables."
+  },
+  {
+    "type": "text",
+    "question": "What is a 'void pointer' (void *)?",
+    "code": null,
+    "options": [
+      "A pointer to nothing (NULL)",
+      "A generic pointer that can point to any data type",
+      "A pointer that returns no value",
+      "An invalid pointer"
+    ],
+    "correct": 1,
+    "explanation": "A void pointer is a generic pointer type that has no associated data type, allowing it to point to anything."
+  },
+  {
+    "type": "text",
+    "question": "Where are local variables (variables inside a function) stored?",
+    "code": null,
+    "options": [
+      "Heap",
+      "Stack",
+      "Hard Drive",
+      "Registry"
+    ],
+    "correct": 1,
+    "explanation": "Local variables are stored on the Stack. Dynamic memory (malloc) uses the Heap."
+  },
+  {
+    "type": "text",
+    "question": "Which function is used to open a file in C?",
+    "code": null,
+    "options": [
+      "open()",
+      "file_open()",
+      "fopen()",
+      "start()"
+    ],
+    "correct": 2,
+    "explanation": "fopen() is the standard library function used to open a file and return a FILE pointer."
+  },
+  {
+    "type": "text",
+    "question": "What is the purpose of the 'free()' function?",
+    "code": null,
+    "options": [
+      "To clear the screen",
+      "To delete a variable",
+      "To deallocate dynamic memory",
+      "To close a file"
+    ],
+    "correct": 2,
+    "explanation": "free() releases memory that was previously allocated using malloc, calloc, or realloc."
+  },
+  {
+    "type": "text",
+    "question": "Which operator is used to access members of a structure using a pointer?",
+    "code": null,
+    "options": [
+      ". (Dot)",
+      "-> (Arrow)",
+      "* (Star)",
+      "& (Ampersand)"
+    ],
+    "correct": 1,
+    "explanation": "The arrow operator (->) is used to access struct members via a pointer. The dot (.) is used for direct access."
+  },
+  {
+    "type": "text",
+    "question": "What is the size of a 'char' data type in C?",
+    "code": null,
+    "options": [
+      "1 byte",
+      "2 bytes",
+      "4 bytes",
+      "8 bytes"
+    ],
+    "correct": 0,
+    "explanation": "The C standard guarantees that a char is exactly 1 byte."
+  },
+  {
+    "type": "text",
+    "question": "What symbol starts a preprocessor directive?",
+    "code": null,
+    "options": [
+      "@",
+      "$",
+      "#",
+      "%"
+    ],
+    "correct": 2,
+    "explanation": "Preprocessor directives (like #include and #define) always start with the hash symbol (#)."
+  },
+  {
+    "type": "text",
+    "question": "What is a 'Linked List'?",
+    "code": null,
+    "options": [
+      "An array of pointers",
+      "A linear data structure where elements point to the next element",
+      "A database file",
+      "A type of loop"
+    ],
+    "correct": 1,
+    "explanation": "A Linked List consists of nodes where each node contains data and a pointer to the next node."
+  },
+  {
+    "type": "text",
+    "question": "Which logical operator represents 'AND'?",
+    "code": null,
+    "options": [
+      "&",
+      "&&",
+      "||",
+      "!"
+    ],
+    "correct": 1,
+    "explanation": "&& is the Logical AND operator. & is the Bitwise AND operator."
+  },
+  {
+    "type": "text",
+    "question": "What does the 'sizeof' operator do?",
+    "code": null,
+    "options": [
+      "Returns the memory address",
+      "Returns the size of a variable or type in bytes",
+      "Returns the length of a string",
+      "Returns the value of a pointer"
+    ],
+    "correct": 1,
+    "explanation": "sizeof returns the storage size of an expression or data type in bytes."
+  },
+  {
+    "type": "text",
+    "question": "What is the difference between '=' and '=='?",
+    "code": null,
+    "options": [
+      "They are the same",
+      "'=' is comparison, '==' is assignment",
+      "'=' is assignment, '==' is comparison",
+      "Both are comparison operators"
+    ],
+    "correct": 2,
+    "explanation": "'=' assigns a value to a variable. '==' checks if two values are equal."
+  },
+  {
+    "type": "text",
+    "question": "What is the purpose of the 'break' statement inside a loop?",
+    "code": null,
+    "options": [
+      "To restart the loop",
+      "To skip the current iteration",
+      "To exit the loop immediately",
+      "To crash the program"
+    ],
+    "correct": 2,
+    "explanation": "break terminates the loop immediately. continue skips the current iteration."
+  },
+  {
+    "type": "text",
+    "question": "Which standard stream represents the keyboard input?",
+    "code": null,
+    "options": [
+      "stdout",
+      "stderr",
+      "stdin",
+      "stdlog"
+    ],
+    "correct": 2,
+    "explanation": "stdin (Standard Input) usually corresponds to the keyboard."
+  },
+  {
+    "type": "text",
+    "question": "What is the default value of a global variable if not initialized?",
+    "code": null,
+    "options": [
+      "Garbage value",
+      "0 (Zero)",
+      "1",
+      "NULL"
+    ],
+    "correct": 1,
+    "explanation": "Global (and static) variables are automatically initialized to zero. Local variables contain garbage."
+  },
+  {
+    "type": "text",
+    "question": "What keyword is used to create an alias for a data type, such as creating 'Student' for 'struct student'?",
+    "code": null,
+    "options": [
+      "alias",
+      "define",
+      "typedef",
+      "struct"
+    ],
+    "correct": 2,
+    "explanation": "The 'typedef' keyword allows user-defined data types to be declared, enhancing program readability."
+  },
+  {
+    "type": "text",
+    "question": "What value does 'strcmp(s1, s2)' return if the two strings are identical?",
+    "code": null,
+    "options": [
+      "1",
+      "-1",
+      "0",
+      "A non-zero integer"
+    ],
+    "correct": 2,
+    "explanation": "The strcmp function returns 0 if s1 is equal to s2."
+  },
+  {
+    "type": "text",
+    "question": "Which constant is used with 'fseek' to set the file position pointer relative to the beginning of the file?",
+    "code": null,
+    "options": [
+      "SEEK_CUR",
+      "SEEK_END",
+      "SEEK_SET",
+      "SEEK_BEGIN"
+    ],
+    "correct": 2,
+    "explanation": "SEEK_SET is the constant used to define the new position relative to the beginning of the file."
+  },
+  {
+    "type": "text",
+    "question": "What happens if 'malloc' fails to allocate the requested memory?",
+    "code": null,
+    "options": [
+      "It returns a pointer to valid memory anyway",
+      "It returns NULL",
+      "The program crashes immediately",
+      "It automatically frees other memory"
+    ],
+    "correct": 1,
+    "explanation": "If not enough memory is available, the malloc pointer has the special value NULL."
+  },
+  {
+    "type": "text",
+    "question": "When using 'fprintf', what is the first argument required?",
+    "code": null,
+    "options": [
+      "The format string",
+      "The pointer to the FILE stream",
+      "The data to be written",
+      "The file name"
+    ],
+    "correct": 1,
+    "explanation": "The first argument of fprintf is the pointer to the FILE stream (e.g., fprintf(f, ...))."
+  },
+  {
+    "type": "code",
+    "question": "What is the result of the following pointer arithmetic if 'ptr' is an integer pointer at address 1000 and sizeof(int) is 4?",
+    "code": "ptr += 2;",
+    "options": [
+      "1002",
+      "1004",
+      "1008",
+      "1016"
+    ],
+    "correct": 2,
+    "explanation": "When an integer is added to a pointer, the pointer is incremented by that integer times the size of the object (1000 + 2 * 4 = 1008)."
+  },
+  {
+    "type": "text",
+    "question": "Which function reads a line of text from a stream and allows you to specify a maximum size to prevent buffer overflow?",
+    "code": null,
+    "options": [
+      "scanf",
+      "gets",
+      "fgets",
+      "fgetc"
+    ],
+    "correct": 2,
+    "explanation": "fgets inputs characters from the stream until a newline or end-of-file is encountered, or until n-1 bytes are read."
+  },
+  {
+    "type": "text",
+    "question": "What is the scope of a variable declared outside of any function?",
+    "code": null,
+    "options": [
+      "Block scope",
+      "File scope (Global)",
+      "Function scope",
+      "Local scope"
+    ],
+    "correct": 1,
+    "explanation": "An identifier declared outside any function has file scope and is accessible from its declaration until the end of the file."
+  },
+  {
+    "type": "code",
+    "question": "In a linked list, what is the value of 'next' for the last node in the list?",
+    "code": null,
+    "options": [
+      "The address of the head node",
+      "The address of the previous node",
+      "NULL",
+      "A random garbage value"
+    ],
+    "correct": 2,
+    "explanation": "By convention, the link pointer in the last node points to NULL to indicate the end of the list."
+  },
+  {
+    "type": "text",
+    "question": "Which header file must be included to use functions like 'malloc' and 'free'?",
+    "code": null,
+    "options": [
+      "<stdio.h>",
+      "<string.h>",
+      "<stdlib.h>",
+      "<math.h>"
+    ],
+    "correct": 2,
+    "explanation": "The <stdlib.h> header contains miscellaneous functions including memory allocation functions like malloc and free."
+  },
+  {
+    "type": "text",
+    "question": "Which function from <ctype.h> checks if a character is an alphabetic letter?",
+    "code": null,
+    "options": [
+      "isnum()",
+      "isletter()",
+      "isalpha()",
+      "check_alpha()"
+    ],
+    "correct": 2,
+    "explanation": "The isalpha() function returns a true value if the character is a letter and 0 otherwise."
+  },
+  {
+    "type": "text",
+    "question": "When inserting a new node at the beginning of a linked list, what is the first step to prevent losing the list?",
+    "code": null,
+    "options": [
+      "Set head = new_node",
+      "Set new_node->next = head",
+      "Free the head node",
+      "Set new_node->next = NULL"
+    ],
+    "correct": 1,
+    "explanation": "You must first link the new node to the old head (new_node->next = head) before updating the head pointer, otherwise the rest of the list is lost."
+  },
+  {
+    "type": "text",
+    "question": "Which constant is used with 'fseek' to move the file position relative to the current position?",
+    "code": null,
+    "options": [
+      "SEEK_SET",
+      "SEEK_END",
+      "SEEK_CUR",
+      "SEEK_NOW"
+    ],
+    "correct": 2,
+    "explanation": "SEEK_CUR sets the reference position to the current position of the file pointer."
+  },
+  {
+    "type": "text",
+    "question": "Which function copies a specific number of characters from one string to another?",
+    "code": null,
+    "options": [
+      "strcpy()",
+      "strncpy()",
+      "strcat()",
+      "strncat()"
+    ],
+    "correct": 1,
+    "explanation": "strncpy(s1, s2, n) copies at most n characters of string s2 into array s1."
+  },
+  {
+    "type": "text",
+    "question": "What is the result of 'sizeof(char)' in C?",
+    "code": null,
+    "options": [
+      "1",
+      "2",
+      "4",
+      "Depends on the compiler"
+    ],
+    "correct": 0,
+    "explanation": "The sizeof operator returns the number of bytes required to hold a type. sizeof(char) evaluates to 1."
+  },
+  {
+    "type": "text",
+    "question": "What arguments does the 'calloc' function require?",
+    "code": null,
+    "options": [
+      "Total size in bytes",
+      "Number of elements and size of each element",
+      "Pointer to memory and new size",
+      "Number of elements only"
+    ],
+    "correct": 1,
+    "explanation": "calloc requires two arguments: the number of elements and the size of each element (e.g., calloc(n, sizeof(int)))."
+  },
+  {
+    "type": "text",
+    "question": "Which function is used to convert an uppercase letter to lowercase?",
+    "code": null,
+    "options": [
+      "islower()",
+      "touppercase()",
+      "tolower()",
+      "strlwr()"
+    ],
+    "correct": 2,
+    "explanation": "If c is an uppercase letter, tolower(c) returns c as a lowercase letter."
+  },
+  {
+    "type": "code",
+    "question": "What is the correct syntax to access the 'roll' member of a structure using a pointer 's'?",
+    "code": "typedef struct { int roll; } Student;\nStudent *s;",
+    "options": [
+      "s.roll",
+      "s->roll",
+      "*s.roll",
+      "s::roll"
+    ],
+    "correct": 1,
+    "explanation": "The arrow operator (->) is used to de-reference a pointer to a structure and access its members."
+  },
+  {
+    "type": "text",
+    "question": "What happens if you fail to de-allocate memory created with malloc?",
+    "code": null,
+    "options": [
+      "Buffer Overflow",
+      "Memory Leak",
+      "Segmentation Fault",
+      "Syntax Error"
+    ],
+    "correct": 1,
+    "explanation": "Failure to de-allocate memory is called a memory leak. A leaking program uses up more and more memory over time."
+  },
+  {
+    "type": "code",
+    "question": "Which statement correctly defines a pointer to a function that takes two integers and returns an integer?",
+    "code": null,
+    "options": [
+      "int *func(int, int);",
+      "int (func)(int, int);",
+      "int func(int, int);",
+      "int *(func)(int, int);"
+    ],
+    "correct": 1,
+    "explanation": "The parentheses (*func) are necessary to bind the asterisk to the function name, declaring it as a pointer to a function rather than a function returning a pointer."
+  },
+  {
+    "type": "code",
+    "question": "In the following linked list deletion code, what critical step is missing?",
+    "code": "Node *current = head;\nhead = head->next;\n// Missing step",
+    "options": [
+      "current = NULL;",
+      "free(current);",
+      "head = NULL;",
+      "current->next = NULL;"
+    ],
+    "correct": 1,
+    "explanation": "When removing a node (especially one created with malloc), you must explicitly free() the memory to avoid memory leaks."
+  },
+  {
+    "type": "text",
+    "question": "What specific error allows a program to run but crash unpredictably later due to memory corruption?",
+    "code": null,
+    "options": [
+      "Syntax Error",
+      "Linker Error",
+      "Buffer Overflow",
+      "Type Mismatch"
+    ],
+    "correct": 2,
+    "explanation": "Buffer overflow happens when writing data past the end of an allocated array, corrupting adjacent memory without necessarily causing an immediate crash."
+  },
+  {
+    "type": "text",
+    "question": "Which function checks if a character is a white-space character (space, newline, tab, etc.)?",
+    "code": null,
+    "options": [
+      "isblank()",
+      "isspace()",
+      "iswhite()",
+      "isempty()"
+    ],
+    "correct": 1,
+    "explanation": "isspace returns true for space, newline, form feed, carriage return, vertical tab, and horizontal tab."
+  },
+  {
+    "type": "text",
+    "question": "What is the correct argument order for the fwrite function?",
+    "code": null,
+    "options": [
+      "fwrite(ptr, count, size, stream)",
+      "fwrite(ptr, size, count, stream)",
+      "fwrite(stream, ptr, size, count)",
+      "fwrite(size, count, ptr, stream)"
+    ],
+    "correct": 1,
+    "explanation": "The prototype is size_t fwrite(const void *ptr, size_t size, size_t count, FILE *stream)."
+  },
+  {
+    "type": "code",
+    "question": "Given int *p;, what does *p++ do?",
+    "code": null,
+    "options": [
+      "Increments the value pointed to by p",
+      "Increments the pointer p, then returns the value at the new address",
+      "Returns the value at the current address, then increments the pointer p",
+      "Returns the value at the current address, then increments that value"
+    ],
+    "correct": 2,
+    "explanation": "Due to operator precedence (post-increment ++ vs dereference *), the expression returns the value at the current address and then moves the pointer to the next address."
+  },
+  {
+    "type": "text",
+    "question": "Which format specifier is used to print a pointer address in hexadecimal?",
+    "code": null,
+    "options": [
+      "%d",
+      "%x",
+      "%p",
+      "%u"
+    ],
+    "correct": 2,
+    "explanation": "%p is the standard format specifier for printing pointer addresses."
+  },
+  {
+    "type": "code",
+    "question": "What happens if you attempt to free memory that was not allocated by malloc/calloc?",
+    "code": "int x;\nint *p = &x;\nfree(p);",
+    "options": [
+      "It frees the stack memory",
+      "It does nothing",
+      "It causes undefined behavior (often a crash)",
+      "It sets p to NULL"
+    ],
+    "correct": 2,
+    "explanation": "free must only be used on pointers returned by malloc, calloc, or realloc. Passing a stack address or non-heap pointer is undefined behavior."
+  },
+  {
+    "type": "text",
+    "question": "Which fseek origin allows you to move the file pointer relative to the end of the file?",
+    "code": null,
+    "options": [
+      "SEEK_SET",
+      "SEEK_CUR",
+      "SEEK_EOF",
+      "SEEK_END"
+    ],
+    "correct": 3,
+    "explanation": "SEEK_END sets the position relative to the end of the file."
+  },
+  {
+    "type": "code",
+    "question": "In a linked list, if you have a pointer node_ptr, what does node_ptr->next->data access?",
+    "code": null,
+    "options": [
+      "The data of the current node",
+      "The address of the next node",
+      "The data of the node after the next node",
+      "The data of the node following the one pointed to by node_ptr"
+    ],
+    "correct": 3,
+    "explanation": "It accesses the next pointer of the current node, follows it to the subsequent node, and retrieves that node's data member."
+  },
+  {
+    "type": "text",
+    "question": "What is the primary difference between r+ and a+ modes?",
+    "code": null,
+    "options": [
+      "r+ overwrites files; a+ does not",
+      "r+ allows reading anywhere; a+ forces all writes to be at the end",
+      "r+ creates a file if missing; a+ requires the file to exist",
+      "There is no difference"
+    ],
+    "correct": 1,
+    "explanation": "a+ opens for reading and appending. Writing operations in a+ always happen at the end of the file, regardless of fseek."
+  },
+  {
+    "type": "code",
+    "question": "What does realloc(ptr, 0) typically achieve (assuming ptr is not NULL)?",
+    "code": null,
+    "options": [
+      "It resizes the block to 0 bytes (effectively freeing it)",
+      "It returns a NULL pointer error",
+      "It does nothing",
+      "It allocates a new block of 0 bytes"
+    ],
+    "correct": 0,
+    "explanation": "Calling realloc with size 0 is equivalent to calling free(ptr)."
+  },
+  {
+    "type": "text",
+    "question": "Why must malloc's return value be cast (e.g., (int *)malloc(...)) in C++ but is optional in C?",
+    "code": null,
+    "options": [
+      "C++ does not support void *",
+      "C allows implicit conversion from void * to other pointer types; C++ does not",
+      "malloc returns int * in C++",
+      "It is required in both languages"
+    ],
+    "correct": 1,
+    "explanation": "malloc returns void *. In C, void * implicitly converts to any pointer type. In C++, explicit casting is required."
+  },
+  {
+    "type": "code",
+    "question": "What is the output of printf(\"%d\", *&x) if x = 5?",
+    "code": null,
+    "options": [
+      "The address of x",
+      "5",
+      "Garbage value",
+      "Compiler Error"
+    ],
+    "correct": 1,
+    "explanation": "The operators * and & cancel each other out. &x gets the address, and * dereferences it back to the value."
+  },
+  {
+    "type": "text",
+    "question": "Which function works equivalent to printf but writes the output into a string buffer instead of stdout?",
+    "code": null,
+    "options": [
+      "fprint",
+      "sprint",
+      "sprintf",
+      "string_printf"
+    ],
+    "correct": 2,
+    "explanation": "sprintf is equivalent to printf except the output is stored in the array (string buffer) instead of printed to the screen."
+  },
+  {
+    "type": "code",
+    "question": "Given struct { int a; int b; } arr[5];, how do you access member b of the third element?",
+    "code": null,
+    "options": [
+      "arr.b[2]",
+      "arr[2].b",
+      "arr->b[2]",
+      "arr[2]->b"
+    ],
+    "correct": 1,
+    "explanation": "arr[2] accesses the third structure in the array. The dot operator . is used to access member b of that structure."
+  },
+  {
+    "type": "text",
+    "question": "When using scanf(\"%s\", buf), what causes it to stop reading?",
+    "code": null,
+    "options": [
+      "Only the newline character",
+      "Any white-space character (space, tab, newline)",
+      "The end of the buffer size",
+      "A specific delimiter"
+    ],
+    "correct": 1,
+    "explanation": "scanf(\"%s\") stops reading at the first white-space character, which is why it cannot read sentences with spaces."
+  },
+  {
+    "type": "code",
+    "question": "What is the logic error in this code?",
+    "code": "int p;\np = 10;",
+    "options": [
+      "Syntax error",
+      "Type mismatch",
+      "Dereferencing an uninitialized pointer",
+      "Memory leak"
+    ],
+    "correct": 2,
+    "explanation": "The pointer p is declared but not initialized to point to a valid memory address. Dereferencing it is undefined behavior."
+  },
+  {
+    "type": "text",
+    "question": "In the context of fseek, what does the offset parameter represent?",
+    "code": null,
+    "options": [
+      "The line number to move to",
+      "The number of bytes to move from the origin",
+      "The number of blocks to move",
+      "The memory address to jump to"
+    ],
+    "correct": 1,
+    "explanation": "fseek uses a long integer offset specifying the number of bytes to move relative to the origin."
+  },
+  {
+    "type": "code",
+    "question": "If int a[3] = {1};, what is the value of a[1]?",
+    "code": null,
+    "options": [
+      "1",
+      "0",
+      "Garbage",
+      "Undefined"
+    ],
+    "correct": 1,
+    "explanation": "When an array is partially initialized, all remaining elements are implicitly initialized to zero."
+  },
+  {
+    "type": "text",
+    "question": "Which function is used to check if a specific bit is set?",
+    "code": null,
+    "options": [
+      "check_bit()",
+      "& (Bitwise AND)",
+      "| (Bitwise OR)",
+      "^ (Bitwise XOR)"
+    ],
+    "correct": 1,
+    "explanation": "To check if the Nth bit is set, you use the Bitwise AND operator: if (x & (1 << N))."
+  },
+  {
+    "type": "code",
+    "question": "What is the result of ptr after ptr = (int *)malloc(10 * sizeof(int)) if allocation fails?",
+    "code": null,
+    "options": [
+      "A pointer to 0 bytes",
+      "NULL",
+      "A pointer to garbage",
+      "Program termination"
+    ],
+    "correct": 1,
+    "explanation": "If malloc cannot allocate the requested memory, it returns NULL."
+  },
+  {
+    "type": "text",
+    "question": "What does calloc take as its second argument?",
+    "code": null,
+    "options": [
+      "The number of elements",
+      "The size of each element in bytes",
+      "The pointer to the array",
+      "The initialization value"
+    ],
+    "correct": 1,
+    "explanation": "calloc takes two arguments: the number of elements and the size of each element (calloc(n, size))."
+  },
+  {
+    "type": "code",
+    "question": "Which line correctly declares a pointer func to a function taking int and returning void?",
+    "code": null,
+    "options": [
+      "void func(int);",
+      "void (func)(int);",
+      "void (func)(int);",
+      "void func(int);"
+    ],
+    "correct": 1,
+    "explanation": "The syntax void (*func)(int) declares func as a pointer to a function that takes an int and returns void."
+  },
+  {
+    "type": "code",
+    "question": "What is the output of printf(\"%d\", sizeof(char *)); on a standard 64-bit system?",
+    "code": null,
+    "options": [
+      "1",
+      "4",
+      "8",
+      "Depends on the char size"
+    ],
+    "correct": 2,
+    "explanation": "On a 64-bit system, memory addresses are 64 bits wide, so a pointer (char *, int *, etc.) typically occupies 8 bytes."
+  },
+  {
+    "type": "text",
+    "question": "Which function allows you to push a character back into the input stream?",
+    "code": null,
+    "options": [
+      "push()",
+      "ungetc()",
+      "rewind()",
+      "back()"
+    ],
+    "correct": 1,
+    "explanation": "ungetc(int char, FILE *stream) pushes the character char back onto the specified stream."
+  },
+  {
+    "type": "code",
+    "question": "How do you correctly free a 2D array allocated as an array of pointers?",
+    "code": null,
+    "options": [
+      "free(array);",
+      "free(array[0]); free(array);",
+      "Loop through rows and free each, then free the main array pointer",
+      "free(array[0][0]);"
+    ],
+    "correct": 2,
+    "explanation": "Since each row was allocated separately, you must loop through and free each row pointer before freeing the main array pointer."
+  },
+  {
+    "type": "text",
+    "question": "What is the purpose of rewind(FILE *stream)?",
+    "code": null,
+    "options": [
+      "It closes and reopens the file",
+      "It sets the file position indicator to the beginning of the file",
+      "It erases the file content",
+      "It moves the file pointer back by one byte"
+    ],
+    "correct": 1,
+    "explanation": "rewind(stream) is equivalent to fseek(stream, 0, SEEK_SET)."
+  },
+  {
+    "type": "code",
+    "question": "If s is a struct variable and p is a pointer to it, which expressions are equivalent?",
+    "code": null,
+    "options": [
+      "s->a and p.a",
+      "s.a and p->a",
+      "s->a and p->a",
+      "s.a and p.a"
+    ],
+    "correct": 1,
+    "explanation": "The dot operator is used for variables (s.a) and the arrow operator is used for pointers (p->a)."
+  },
+  {
+    "type": "text",
+    "question": "What happens if you assign a pointer to a local variable to a global pointer and then exit the function?",
+    "code": null,
+    "options": [
+      "The global pointer becomes NULL",
+      "The global pointer becomes a dangling pointer",
+      "The local variable's life is extended",
+      "Compiler Error"
+    ],
+    "correct": 1,
+    "explanation": "The local variable is destroyed when the function exits. The global pointer now points to invalid stack memory (Dangling Pointer)."
+  },
+  {
+    "type": "code",
+    "question": "What does sizeof(\"Hello\") return?",
+    "code": null,
+    "options": [
+      "5",
+      "6",
+      "4",
+      "8"
+    ],
+    "correct": 1,
+    "explanation": "It returns 6 because it includes the 5 characters plus the implicit null terminator \\0."
+  },
+  {
+    "type": "text",
+    "question": "Which logical operator reverses the truth value of its operand?",
+    "code": null,
+    "options": [
+      "~",
+      "!",
+      "&",
+      "^"
+    ],
+    "correct": 1,
+    "explanation": "! is the logical NOT operator. ~ is the bitwise NOT operator."
+  },
+  {
+    "type": "code",
+    "question": "Given int x = 5, y = 2; float z = x / y;, what is the value of z?",
+    "code": null,
+    "options": [
+      "2.5",
+      "2.0",
+      "3.0",
+      "2"
+    ],
+    "correct": 1,
+    "explanation": "Since both operands x and y are integers, integer division occurs first, resulting in 2. This 2 is then cast to float 2.0."
+  },
+  {
+    "type": "text",
+    "question": "What must be done to a pointer before passing it to free()?",
+    "code": null,
+    "options": [
+      "It must be set to NULL",
+      "It must be dereferenced",
+      "It must have been allocated by malloc/calloc/realloc",
+      "It must be cast to void *"
+    ],
+    "correct": 2,
+    "explanation": "You can only free memory that was allocated dynamically on the heap."
+  }, 
+  {
+    "type": "text",
+    "question": "Which function from <ctype.h> checks if a character is either a letter or a digit?",
+    "code": null,
+    "options": [
+      "isdigit()",
+      "isalpha()",
+      "isalnum()",
+      "isalphanum()"
+    ],
+    "correct": 2,
+    "explanation": "isalnum() returns true if the character is either a letter (alpha) or a digit (num)."
+  },
+  {
+    "type": "code",
+    "question": "What is the purpose of (void *) casting in malloc?",
+    "code": "int *p = (void *)malloc(10);",
+    "options": [
+      "It is required syntax in C",
+      "It is bad practice in C but required in C++",
+      "It clears the memory",
+      "It is required to avoid warnings in C"
+    ],
+    "correct": 1,
+    "explanation": "In C, void * is automatically promoted to any pointer type. Explicit casting is redundant in C but required in C++."
+  },
+  {
+    "type": "text",
+    "question": "Which function reads formatted input from a file stream?",
+    "code": null,
+    "options": [
+      "scanf",
+      "gets",
+      "fscanf",
+      "fprint"
+    ],
+    "correct": 2,
+    "explanation": "fscanf reads formatted input from a specified stream."
+  },
+  {
+    "type": "code",
+    "question": "In pointer arithmetic, if p is int* pointing to address 1000, what is p - 1?",
+    "code": null,
+    "options": [
+      "999",
+      "996 (assuming int is 4 bytes)",
+      "992 (assuming int is 8 bytes)",
+      "Compiler Error"
+    ],
+    "correct": 1,
+    "explanation": "Subtracting 1 from a pointer decrements the address by 1 * sizeof(type). If int is 4 bytes, 1000 - 4 = 996."
+  },
+  {
+    "type": "text",
+    "question": "What does the break statement do inside a switch case?",
+    "code": null,
+    "options": [
+      "Stops the program",
+      "Exits the switch block",
+      "Jumps to the default case",
+      "Restarts the switch"
+    ],
+    "correct": 1,
+    "explanation": "break prevents 'fall-through' by exiting the switch block immediately."
+  },
+  {
+    "type": "code",
+    "question": "What is the correct way to declare a constant pointer to an integer?",
+    "code": null,
+    "options": [
+      "const int *p;",
+      "int const *p;",
+      "int * const p;",
+      "const int const p;"
+    ],
+    "correct": 2,
+    "explanation": "int * const p means p is a constant pointer (the address it holds cannot change), but the integer it points to can change."
+  },
+  {
+    "type": "text",
+    "question": "Which function returns the length of a string excluding the null terminator?",
+    "code": null,
+    "options": [
+      "sizeof()",
+      "length()",
+      "strlen()",
+      "strsize()"
+    ],
+    "correct": 2,
+    "explanation": "strlen calculates the length of the string up to, but not including, the terminating null character."
+  },
+  {
+    "type": "code",
+    "question": "What happens if malloc is called with size 0?",
+    "code": "malloc(0);",
+    "options": [
+      "Returns NULL or a unique pointer that can be freed",
+      "Crash",
+      "Compilation Error",
+      "Allocates 1 byte"
+    ],
+    "correct": 0,
+    "explanation": "The behavior is implementation-defined; it typically returns either NULL or a unique pointer that can be passed to free."
+  },
+  {
+    "type": "text",
+    "question": "What does strcat(dest, src) return?",
+    "code": null,
+    "options": [
+      "Void",
+      "The length of the new string",
+      "A pointer to dest",
+      "A pointer to src"
+    ],
+    "correct": 2,
+    "explanation": "strcat returns the pointer to the destination string (dest)."
+  },
+  {
+    "type": "code",
+    "question": "If ptr is a pointer to a struct, ptr->member is equivalent to:",
+    "code": null,
+    "options": [
+      "ptr.member",
+      "(ptr).member",
+      "(ptr.member)",
+      "&ptr.member"
+    ],
+    "correct": 1,
+    "explanation": "The arrow operator -> dereferences the pointer and then accesses the member, equivalent to (*ptr).member."
+  }
+]
