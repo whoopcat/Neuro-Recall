@@ -30,1618 +30,373 @@
                             purple: '#818cf8',
                             green: '#34d399',
                             red: '#fb7185',
-                            yellow: '#facc15'
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-out',
-                        'slide-up': 'slideUp 0.5s ease-out',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
                         }
                     }
                 }
             }
         }
     </script>
-
     <style>
-        body {
-            background-color: #0f172a;
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .option-card {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .option-card:hover:not(.disabled) {
-            transform: translateX(8px);
-            border-color: #38bdf8;
-            background: rgba(56, 189, 248, 0.1);
-        }
-
-        .option-card.selected-correct {
-            background: rgba(52, 211, 153, 0.15);
-            border-color: #34d399;
-            color: #34d399;
-        }
-
-        .option-card.selected-wrong {
-            background: rgba(251, 113, 133, 0.15);
-            border-color: #fb7185;
-            color: #fb7185;
-        }
-
-        .difficulty-btn {
-            transition: transform 0.1s;
-        }
-
-        .difficulty-btn:active {
-            transform: scale(0.95);
-        }
-
-        code {
-            background: #0f172a;
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: #facc15;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9em;
-        }
-
-        pre {
-            background: #0f172a;
-            padding: 16px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            overflow-x: auto;
-            margin: 1rem 0;
-        }
-
-        .custom-input {
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: white;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            width: 100%;
-            transition: all 0.2s;
-        }
-
-        .custom-input:focus {
-            outline: none;
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
-        }
-
-        .drop-zone {
-            border: 2px dashed #334155;
-            transition: all 0.3s ease;
-        }
-
-        .drop-zone.drag-over {
-            border-color: #38bdf8;
-            background: rgba(56, 189, 248, 0.1);
-            transform: scale(1.02);
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 16px 24px;
-            border-radius: 12px;
-            color: white;
-            font-weight: 500;
-            z-index: 100;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast.success {
-            background: linear-gradient(135deg, #10b981, #059669);
-        }
-
-        .toast.error {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-        }
-
-        .toast.info {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-        }
-
-        .remote-badge {
-            background: linear-gradient(135deg, #8b5cf6, #6366f1);
-        }
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .option-btn:hover .select-indicator { opacity: 0.5; }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
 </head>
 
-<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-neon-purple selection:text-white">
+<body class="min-h-screen flex flex-col font-sans">
 
-    <!-- Background Ambient Glow -->
-    <div class="fixed inset-0 z-0 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-neon-blue/10 rounded-full blur-[120px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-neon-purple/10 rounded-full blur-[120px]">
-        </div>
-    </div>
-
-    <!-- Toast Container -->
-    <div id="toast-container"></div>
-
-    <!-- Navbar -->
-    <nav class="relative z-10 w-full px-6 py-4 flex justify-between items-center border-b border-white/5 glass-panel">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="showHome()">
-            <div
-                class="w-8 h-8 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple flex items-center justify-center shadow-lg shadow-neon-blue/20">
-                <i class="fa-solid fa-bolt text-white text-sm"></i>
+    <nav class="border-b border-dark-700 bg-dark-900/80 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('decks-section')">
+                <i class="fa-solid fa-brain text-neon-purple text-2xl"></i>
+                <span class="font-bold text-xl tracking-tight bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">NeuroRecall</span>
             </div>
-            <span
-                class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">NeuroRecall</span>
-        </div>
-
-        <div class="flex items-center gap-4">
-            <button onclick="refreshRemoteDecks()"
-                class="text-slate-400 hover:text-white transition-colors text-sm font-medium"
-                title="Refresh Remote Decks">
-                <i class="fa-solid fa-rotate mr-1"></i> Sync
-            </button>
-            <button onclick="showManager()"
-                class="text-slate-400 hover:text-white transition-colors text-sm font-medium">
-                <i class="fa-solid fa-layer-group mr-1"></i> Decks
-            </button>
-            <a href="https://github.com" target="_blank" class="text-slate-400 hover:text-white transition-colors">
-                <i class="fa-brands fa-github text-xl"></i>
-            </a>
+            <div class="flex gap-4">
+                <button onclick="exportData()" class="text-gray-400 hover:text-neon-blue transition" title="Export JSON"><i class="fa-solid fa-download"></i></button>
+                <label class="text-gray-400 hover:text-neon-green transition cursor-pointer" title="Import JSON">
+                    <i class="fa-solid fa-upload"></i>
+                    <input type="file" onchange="importData(this)" class="hidden" accept=".json">
+                </label>
+            </div>
         </div>
     </nav>
 
-    <!-- Main Content Area -->
-    <main class="relative z-10 flex-grow flex items-center justify-center p-4 md:p-8">
-
-        <!-- VIEW: HOME / START -->
-        <div id="view-home" class="w-full max-w-5xl animate-fade-in">
-            <div class="text-center mb-12">
-                <div
-                    class="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-neon-blue to-neon-purple shadow-2xl shadow-neon-blue/50 animate-pulse-slow">
-                    <i class="fa-solid fa-brain text-4xl text-white"></i>
-                </div>
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">Master Your <span
-                        class="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple">Memory</span>
-                </h1>
-                <p class="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
-                    Active recall is the most effective way to learn.
-                    Access your decks from anywhere with cloud sync.
-                </p>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="flex justify-center gap-4 mb-8">
-                <button onclick="importFromGitHub()"
-                    class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
-                    <i class="fa-brands fa-github text-xl"></i>
-                    <span>Import from GitHub</span>
-                </button>
-                <button onclick="showManager()"
-                    class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
-                    <i class="fa-solid fa-folder-open text-xl"></i>
-                    <span>Manage Decks</span>
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4">
+        
+        <section id="decks-section" class="space-y-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold text-white">Your Decks</h2>
+                <button onclick="createDeck()" class="bg-neon-blue hover:bg-sky-400 text-dark-900 font-bold px-4 py-2 rounded-lg transition flex items-center gap-2 shadow-lg shadow-sky-500/20">
+                    <i class="fa-solid fa-plus"></i> New Deck
                 </button>
             </div>
-
-            <!-- Section: Remote Decks -->
-            <div id="remote-decks-section" class="hidden mb-8">
-                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-cloud text-neon-blue"></i> Cloud Decks
-                </h3>
-                <div id="remote-deck-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Remote decks injected here -->
+            
+            <div id="decks-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 </div>
-            </div>
+        </section>
 
-            <!-- Section: Local Decks -->
-            <div id="local-decks-section" class="mb-8">
-                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-hard-drive text-slate-500"></i> Local Decks
-                </h3>
-                <div id="deck-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Local decks injected here -->
-                </div>
-            </div>
-
-            <div class="mt-12 text-center">
-                <button onclick="showSettings()" class="text-slate-500 hover:text-white text-sm underline mr-4">
-                    Configure Preset Decks
+        <section id="quiz-section" class="hidden h-full flex flex-col">
+            <div class="mb-6 flex justify-between items-center">
+                <button onclick="exitQuiz()" class="text-gray-400 hover:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> Quit
                 </button>
-                <button onclick="showManager()" class="text-slate-500 hover:text-white text-sm underline">
-                    Import / Export
+                <div class="flex items-center gap-4">
+                    <div class="text-sm text-gray-400">Due: <span id="due-count" class="text-neon-red font-bold">0</span></div>
+                    <div class="w-32 h-2 bg-dark-700 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-neon-purple w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quiz-container" class="flex-1 flex flex-col justify-center max-w-3xl mx-auto w-full">
+                </div>
+        </section>
+
+        <section id="manager-section" class="hidden">
+            <div class="mb-6 flex items-center gap-4 border-b border-dark-700 pb-4">
+                <button onclick="showSection('decks-section')" class="text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+                <h2 id="manager-title" class="text-2xl font-bold text-white flex-1">Deck Editor</h2>
+                <button onclick="openQuestionModal()" class="bg-neon-green text-dark-900 font-bold px-4 py-2 rounded transition hover:bg-emerald-400">
+                    <i class="fa-solid fa-plus"></i> Add Question
                 </button>
             </div>
-        </div>
 
-        <!-- VIEW: QUIZ -->
-        <div id="view-quiz" class="w-full max-w-3xl hidden animate-fade-in">
-            <!-- Back Button -->
-            <button onclick="endSession()" class="mb-4 text-slate-400 hover:text-white flex items-center gap-2 text-sm">
-                <i class="fa-solid fa-arrow-left"></i> Exit Session
-            </button>
-
-            <!-- Stats Header -->
-            <div class="flex justify-between items-end mb-4 px-2 text-sm font-mono text-slate-400">
-                <div>
-                    <span class="block text-xs uppercase tracking-wider opacity-50">Due</span>
-                    <span id="stat-due" class="text-white font-bold text-lg">0</span>
+            <div id="questions-list" class="space-y-3">
                 </div>
-                <div class="text-center">
-                    <span class="block text-xs uppercase tracking-wider opacity-50">Progress</span>
-                    <span id="stat-progress" class="text-neon-blue">0/0</span>
-                </div>
-                <div class="text-right">
-                    <span class="block text-xs uppercase tracking-wider opacity-50">Deck</span>
-                    <span id="stat-deck-name" class="text-neon-purple">Default</span>
-                </div>
-            </div>
-
-            <!-- Card -->
-            <div class="glass-panel rounded-2xl shadow-2xl overflow-hidden flex flex-col min-h-[500px]">
-
-                <!-- Question Area -->
-                <div class="flex-grow p-6 md:p-10 flex flex-col">
-                    <div class="flex justify-between items-start mb-6">
-                        <span id="card-category"
-                            class="px-3 py-1 rounded-full text-xs font-bold bg-neon-blue/10 text-neon-blue border border-neon-blue/20">
-                            General
-                        </span>
-                        <span id="card-type" class="text-xs text-slate-500 font-mono">
-                            MULTIPLE CHOICE
-                        </span>
-                    </div>
-
-                    <h2 id="question-text"
-                        class="text-xl md:text-2xl font-semibold leading-relaxed mb-8 text-slate-100">
-                        Loading question...
-                    </h2>
-
-                    <!-- Code Block -->
-                    <div id="code-block" class="hidden mb-8 relative group">
-                        <div
-                            class="absolute top-2 right-2 text-xs text-slate-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity">
-                            Code Snippet</div>
-                        <pre><code id="code-content" class="language-c"></code></pre>
-                    </div>
-
-                    <!-- Options -->
-                    <div id="options-container" class="space-y-3">
-                        <!-- Options injected via JS -->
-                    </div>
-                </div>
-
-                <!-- Explanation / Feedback Area -->
-                <div id="explanation-area"
-                    class="hidden bg-dark-800/50 border-t border-white/5 p-6 md:p-10 animate-slide-up">
-                    <div class="flex items-start gap-4">
-                        <div id="feedback-icon" class="mt-1 text-2xl">
-                            <i class="fa-solid fa-circle-check text-neon-green"></i>
-                        </div>
-                        <div>
-                            <h3 id="feedback-title" class="text-lg font-bold text-white mb-2">Correct!</h3>
-                            <p id="explanation-text" class="text-slate-300 leading-relaxed text-sm md:text-base">
-                                Explanation goes here.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Controls Footer -->
-                <div class="p-4 md:p-6 border-t border-white/5 bg-dark-900/50">
-                    <div id="controls-initial" class="flex justify-between items-center">
-                        <div class="text-xs text-slate-500 font-mono">
-                            Select an answer to reveal
-                        </div>
-                        <button onclick="skipCard()"
-                            class="text-slate-400 hover:text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">
-                            Skip <span class="hidden md:inline">(Next)</span>
-                        </button>
-                    </div>
-
-                    <div id="controls-difficulty" class="hidden grid grid-cols-4 gap-3">
-                        <button onclick="rateCard('again')"
-                            class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20">
-                            <span class="font-bold text-sm">Again</span>
-                            <span class="text-[10px] opacity-70 mt-1">&lt; 1m</span>
-                        </button>
-                        <button onclick="rateCard('hard')"
-                            class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-400 hover:bg-orange-500/20">
-                            <span class="font-bold text-sm">Hard</span>
-                            <span class="text-[10px] opacity-70 mt-1">2d</span>
-                        </button>
-                        <button onclick="rateCard('good')"
-                            class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20">
-                            <span class="font-bold text-sm">Good</span>
-                            <span class="text-[10px] opacity-70 mt-1">4d</span>
-                        </button>
-                        <button onclick="rateCard('easy')"
-                            class="difficulty-btn flex flex-col items-center justify-center p-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 hover:bg-green-500/20">
-                            <span class="font-bold text-sm">Easy</span>
-                            <span class="text-[10px] opacity-70 mt-1">7d</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- VIEW: MANAGER (DECKS & EDITOR) -->
-        <div id="view-manager" class="w-full max-w-6xl hidden animate-fade-in h-[80vh] flex flex-col">
-
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-white">Deck Manager</h2>
-                <div class="flex gap-3">
-                    <button onclick="showHome()" class="text-slate-400 hover:text-white px-4 py-2">Back</button>
-                    <button onclick="createNewDeck()"
-                        class="bg-neon-blue text-dark-900 font-bold px-4 py-2 rounded-lg hover:bg-sky-300 transition-colors">
-                        <i class="fa-solid fa-plus mr-2"></i>New Deck
-                    </button>
-                </div>
-            </div>
-
-            <!-- Import Options -->
-            <div class="grid md:grid-cols-3 gap-4 mb-6">
-                <div onclick="importFromGitHub()"
-                    class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
-                    <div class="flex items-center gap-3 mb-2">
-                        <i class="fa-brands fa-github text-2xl text-white"></i>
-                        <span class="font-bold text-white">GitHub URL</span>
-                    </div>
-                    <p class="text-xs text-slate-400">Import from raw GitHub URL</p>
-                </div>
-                <div onclick="document.getElementById('file-input').click()"
-                    class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
-                    <div class="flex items-center gap-3 mb-2">
-                        <i class="fa-solid fa-file-arrow-up text-2xl text-neon-blue"></i>
-                        <span class="font-bold text-white">Upload JSON</span>
-                    </div>
-                    <p class="text-xs text-slate-400">Import from local file</p>
-                </div>
-                <div onclick="showPresetConfig()"
-                    class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
-                    <div class="flex items-center gap-3 mb-2">
-                        <i class="fa-solid fa-gear text-2xl text-neon-purple"></i>
-                        <span class="font-bold text-white">Auto-Sync</span>
-                    </div>
-                    <p class="text-xs text-slate-400">Configure preset remote decks</p>
-                </div>
-            </div>
-
-            <div class="flex flex-col md:flex-row gap-6 h-full overflow-hidden">
-                <!-- Sidebar: Deck List -->
-                <div class="w-full md:w-1/3 glass-panel rounded-xl p-4 overflow-y-auto flex flex-col gap-2"
-                    id="manager-deck-list">
-                    <!-- Deck list items -->
-                </div>
-
-                <!-- Main: Editor / Details -->
-                <div class="w-full md:w-2/3 glass-panel rounded-xl p-6 overflow-y-auto relative"
-                    id="manager-editor-panel">
-
-                    <!-- Empty State for Editor -->
-                    <div id="editor-empty" class="h-full flex flex-col items-center justify-center text-slate-500">
-                        <i class="fa-solid fa-folder-open text-4xl mb-4 opacity-50"></i>
-                        <p>Select a deck to edit or view details</p>
-                    </div>
-
-                    <!-- Editor Content -->
-                    <div id="editor-content" class="hidden">
-                        <div class="flex justify-between items-start mb-6 border-b border-white/10 pb-4">
-                            <div class="w-full mr-4">
-                                <label class="text-xs text-slate-400 uppercase font-bold tracking-wider">Deck
-                                    Name</label>
-                                <input type="text" id="edit-deck-name"
-                                    class="custom-input text-xl font-bold mt-1 bg-transparent border-none p-0 focus:ring-0"
-                                    placeholder="Deck Name">
-                            </div>
-                            <div class="flex gap-2" id="deck-actions">
-                                <button onclick="refreshCurrentDeck()" id="btn-refresh"
-                                    class="hidden text-neon-blue hover:text-white p-2" title="Refresh from Remote">
-                                    <i class="fa-solid fa-rotate"></i>
-                                </button>
-                                <button onclick="deleteCurrentDeck()" class="text-red-400 hover:text-red-300 p-2"
-                                    title="Delete Deck">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                                <button onclick="exportCurrentDeck()" class="text-slate-400 hover:text-white p-2"
-                                    title="Export JSON">
-                                    <i class="fa-solid fa-download"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Remote Info -->
-                        <div id="remote-info"
-                            class="hidden mb-4 p-3 bg-neon-purple/10 border border-neon-purple/20 rounded-lg">
-                            <div class="flex items-center gap-2 text-sm text-neon-purple">
-                                <i class="fa-solid fa-cloud"></i>
-                                <span>Remote Source:</span>
-                                <a id="remote-url" href="#" target="_blank" class="underline truncate flex-grow"></a>
-                                <span id="remote-status"
-                                    class="text-xs px-2 py-1 rounded bg-neon-purple/20">Synced</span>
-                            </div>
-                        </div>
-
-                        <!-- JSON Upload Area (for local decks) -->
-                        <div id="local-upload" class="mb-6 hidden">
-                            <label class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-2 block">Import
-                                More Questions</label>
-                            <div id="drop-zone" class="drop-zone rounded-xl p-4 text-center cursor-pointer">
-                                <input type="file" id="file-input" accept=".json" multiple class="hidden">
-                                <i class="fa-solid fa-cloud-arrow-up text-xl text-slate-400 mb-1"></i>
-                                <p class="text-xs text-slate-400">Drop JSON files here</p>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-white">Questions (<span id="edit-q-count">0</span>)</h3>
-                            <button onclick="openQuestionModal()"
-                                class="text-xs bg-dark-700 hover:bg-dark-600 text-white px-3 py-1.5 rounded transition-colors">
-                                <i class="fa-solid fa-plus mr-1"></i> Add Manually
-                            </button>
-                        </div>
-
-                        <!-- Questions List -->
-                        <div id="edit-questions-list" class="space-y-3">
-                            <!-- Question items -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- VIEW: PRESET CONFIG -->
-        <div id="view-preset-config" class="w-full max-w-2xl hidden animate-fade-in">
-            <div class="glass-panel rounded-2xl p-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-white">Preset Remote Decks</h2>
-                    <button onclick="showHome()" class="text-slate-400 hover:text-white">
-                        <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
-                </div>
-
-                <p class="text-slate-400 mb-6">
-                    Add URLs to JSON files that will auto-load on startup. Perfect for syncing with GitHub.
-                </p>
-
-                <div id="preset-list" class="space-y-3 mb-6">
-                    <!-- Preset items -->
-                </div>
-
-                <div class="flex gap-2 mb-6">
-                    <input type="text" id="new-preset-name" class="custom-input flex-1"
-                        placeholder="Deck Name (e.g., Web Dev)">
-                    <input type="text" id="new-preset-url" class="custom-input flex-2" placeholder="Raw GitHub URL...">
-                    <button onclick="addPreset()"
-                        class="bg-neon-blue text-dark-900 font-bold px-4 py-2 rounded-lg">Add</button>
-                </div>
-
-                <div class="p-4 bg-dark-800 rounded-lg border border-dark-700">
-                    <h4 class="text-sm font-bold text-white mb-2">How to get the URL:</h4>
-                    <ol class="text-xs text-slate-400 space-y-1 list-decimal list-inside">
-                        <li>Upload your JSON to GitHub</li>
-                        <li>Click on the file</li>
-                        <li>Click <strong>Raw</strong> button</li>
-                        <li>Copy that URL (starts with raw.githubusercontent.com)</li>
-                    </ol>
-                </div>
-
-                <div class="mt-6 flex justify-end">
-                    <button onclick="savePresetsAndLoad()"
-                        class="bg-neon-green text-dark-900 font-bold px-6 py-2 rounded-lg hover:bg-green-400">
-                        Save & Load Decks
-                    </button>
-                </div>
-            </div>
-        </div>
+        </section>
 
     </main>
 
-    <!-- MODAL: ADD/EDIT QUESTION -->
-    <div id="modal-question"
-        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div class="glass-panel w-full max-w-2xl rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-white" id="modal-title">Add Question</h3>
-                <button onclick="closeQuestionModal()" class="text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
+    <div id="question-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 backdrop-blur-sm p-4">
+        <div class="bg-dark-800 border border-dark-700 w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-dark-700 flex justify-between items-center">
+                <h3 id="modal-title" class="text-xl font-bold text-white">Add Question</h3>
+                <button onclick="closeQuestionModal()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-times text-xl"></i></button>
             </div>
-
-            <div class="space-y-4">
+            
+            <div class="p-6 overflow-y-auto space-y-4 flex-1">
                 <div>
-                    <label class="block text-xs text-slate-400 uppercase font-bold mb-1">Question Text</label>
-                    <textarea id="q-input-text" class="custom-input h-20"
-                        placeholder="Enter the question..."></textarea>
+                    <label class="block text-sm text-gray-400 mb-1">Category / Tag</label>
+                    <input type="text" id="category-input" class="w-full bg-dark-900 text-white p-2 rounded border border-dark-700 focus:border-neon-blue outline-none" placeholder="e.g. History, Math">
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Question Text</label>
+                    <textarea id="question-text" rows="3" class="w-full bg-dark-900 text-white p-3 rounded border border-dark-700 focus:border-neon-blue outline-none placeholder-gray-600" placeholder="Enter your question here..."></textarea>
                 </div>
 
                 <div>
-                    <label class="block text-xs text-slate-400 uppercase font-bold mb-1">Category</label>
-                    <input type="text" id="q-input-category" class="custom-input"
-                        placeholder="e.g., Algorithms, History">
+                    <label class="block text-sm text-gray-400 mb-1">Code Snippet (Optional)</label>
+                    <textarea id="code-snippet" rows="3" class="w-full bg-dark-900 text-gray-300 font-mono text-sm p-3 rounded border border-dark-700 focus:border-neon-purple outline-none" placeholder="// code here..."></textarea>
                 </div>
 
                 <div>
-                    <label class="block text-xs text-slate-400 uppercase font-bold mb-1">Code Snippet (Optional)</label>
-                    <textarea id="q-input-code" class="custom-input h-24 font-mono text-xs"
-                        placeholder="Paste code here..."></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-xs text-slate-400 uppercase font-bold mb-1">Options</label>
-                    <div id="q-options-container" class="space-y-2">
-                        <!-- Dynamic Options -->
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm text-gray-400">Options <span class="text-xs text-gray-500">(Check box for correct answer(s))</span></label>
+                        <button onclick="addOptionInput()" class="text-xs text-neon-blue hover:text-white">+ Add Option</button>
                     </div>
-                    <button onclick="addOptionInput()" class="mt-2 text-xs text-neon-blue hover:underline">+ Add
-                        Option</button>
+                    <div id="add-options-container" class="space-y-2"></div>
                 </div>
 
                 <div>
-                    <label class="block text-xs text-slate-400 uppercase font-bold mb-1">Correct Answer</label>
-                    <select id="q-input-correct" class="custom-input">
-                        <!-- Populated by JS -->
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs text-slate-400 uppercase font-bold mb-1">Explanation</label>
-                    <textarea id="q-input-explanation" class="custom-input h-20"
-                        placeholder="Why is this the correct answer?"></textarea>
+                    <label class="block text-sm text-gray-400 mb-1">Explanation (Shown after answer)</label>
+                    <textarea id="explanation-text" rows="2" class="w-full bg-dark-900 text-white p-3 rounded border border-dark-700 focus:border-neon-green outline-none" placeholder="Why is this correct?"></textarea>
                 </div>
             </div>
 
-            <div class="mt-8 flex justify-end gap-3">
-                <button onclick="closeQuestionModal()" class="px-4 py-2 text-slate-400 hover:text-white">Cancel</button>
-                <button onclick="saveQuestion()"
-                    class="bg-neon-blue text-dark-900 font-bold px-6 py-2 rounded-lg hover:bg-sky-300">Save
-                    Question</button>
+            <div class="p-4 border-t border-dark-700 flex justify-end gap-3 bg-dark-800 rounded-b-xl">
+                <button onclick="closeQuestionModal()" class="px-4 py-2 text-gray-400 hover:text-white">Cancel</button>
+                <button onclick="saveQuestion()" class="px-6 py-2 bg-neon-blue text-dark-900 font-bold rounded hover:bg-sky-400 transition">Save</button>
             </div>
         </div>
     </div>
 
+    <div id="toast" class="fixed bottom-6 right-6 px-6 py-3 rounded-lg shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 font-bold flex items-center gap-3"></div>
+
     <script>
-        /* --- STATE --- */
-        const SETTINGS = {
-            again: 0.05,
-            hard: 2.0,
-            good: 4.0,
-            easy: 7.0,
-            easeFactor: 2.5,
-            easeBonus: 0.15
-        };
-
-        // Default preset decks - EDIT THESE FOR YOUR GITHUB PAGES
-        const DEFAULT_PRESETS = [
-            // Example: Replace with your actual GitHub raw URLs
-            {
-                name: "Computer Network",
-
-                url: "https://raw.https://github.com/whoopcat/Neuro-Recall/blob/e6d1d881d039d9cf32d82ba8e3ee1494fc979c4b/CompNet_questions.json.com/YOUR_USERNAME/YOUR_REPO/main/web_questions.json"
-            },
-            // {
-            //     name: "Operating Systems", 
-            //     url: "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/os_questions.json"
-            // }
-        ];
-
-        let decks = [];
-        let presets = [];
-        let activeDeckId = null;
-        let sessionQueue = [];
-        let currentCardIndex = 0;
-        let isAnswerRevealed = false;
-        let editingQuestionIndex = null;
-
-        /* --- INITIALIZATION --- */
-        window.onload = async () => {
-            // Load presets config
-            const savedPresets = localStorage.getItem('neurorecall_presets');
-            presets = savedPresets ? JSON.parse(savedPresets) : DEFAULT_PRESETS;
-
-            // Load local decks
-            const saved = localStorage.getItem('neurorecall_decks');
-            if (saved) {
-                decks = JSON.parse(saved);
-                decks.forEach(d => {
-                    d.questions.forEach(q => {
-                        if (q.dueDate) q.dueDate = new Date(q.dueDate);
-                    });
-                });
-            } else {
-                createDefaultDeck();
-            }
-
-            // Load remote decks on startup
-            await loadPresetDecks();
-
-            renderHome();
-            setupDragAndDrop();
-        };
-
-        function saveToStorage() {
-            localStorage.setItem('neurorecall_decks', JSON.stringify(decks));
-        }
-
-        function savePresets() {
-            localStorage.setItem('neurorecall_presets', JSON.stringify(presets));
-        }
-
-        function createDefaultDeck() {
-            decks.push({
-                id: Date.now().toString(),
-                name: "Sample Deck",
-                isLocal: true,
-                questions: [
-                    {
-                        id: 'q1',
-                        question: "Which of the following Big-O notations represents the most efficient time complexity?",
-                        options: ["O(n^2)", "O(n)", "O(log n)", "O(n!)"],
-                        correct: 2,
-                        explanation: "O(log n) grows very slowly compared to input size.",
-                        category: "Algorithms",
-                        code: null,
-                        dueDate: new Date(),
-                        interval: 0,
-                        ease: 2.5
-                    }
-                ]
-            });
-            saveToStorage();
-        }
-
-        /* --- PRESET/REMOTE DECK SYSTEM --- */
-
-        async function loadPresetDecks() {
-            if (presets.length === 0) return;
-
-            showToast("Loading remote decks...", "info");
-
-            for (const preset of presets) {
-                try {
-                    await loadRemoteDeck(preset.name, preset.url, false);
-                } catch (err) {
-                    console.error("Failed to load preset:", preset.name, err);
-                }
-            }
-
-            saveToStorage();
-            renderHome();
-        }
-
-        async function loadRemoteDeck(name, url, showNotifications = true) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-                const data = await response.json();
-
-                // Check if deck already exists
-                const existingIndex = decks.findIndex(d =>
-                    d.remoteUrl === url || (d.name === name && !d.isLocal)
-                );
-
-                const normalizedQuestions = normalizeQuestions(data);
-
-                const deckData = {
-                    id: existingIndex >= 0 ? decks[existingIndex].id : Date.now().toString() + Math.random(),
-                    name: name,
-                    remoteUrl: url,
-                    isLocal: false,
-                    lastSynced: new Date().toISOString(),
-                    questions: normalizedQuestions
-                };
-
-                if (existingIndex >= 0) {
-                    // Preserve due dates and progress for existing questions
-                    const oldDeck = decks[existingIndex];
-                    deckData.questions = mergeQuestions(oldDeck.questions, normalizedQuestions);
-                    decks[existingIndex] = deckData;
-                } else {
-                    decks.push(deckData);
-                }
-
-                if (showNotifications) {
-                    showToast(`Loaded "${name}" with ${normalizedQuestions.length} questions`, "success");
-                }
-
-                return deckData;
-
-            } catch (err) {
-                if (showNotifications) {
-                    showToast(`Failed to load "${name}": ${err.message}`, "error");
-                }
-                throw err;
-            }
-        }
-
-        function mergeQuestions(oldQuestions, newQuestions) {
-            // Preserve user progress (dueDate, interval, ease) for questions that exist
-            const questionMap = new Map();
-
-            oldQuestions.forEach(q => {
-                questionMap.set(q.question, q); // Use question text as key
-            });
-
-            return newQuestions.map(newQ => {
-                const existing = questionMap.get(newQ.question);
-                if (existing) {
-                    // Preserve progress, update other fields
-                    return {
-                        ...newQ,
-                        id: existing.id,
-                        dueDate: existing.dueDate,
-                        interval: existing.interval,
-                        ease: existing.ease
-                    };
-                }
-                return newQ;
-            });
-        }
-
-        function normalizeQuestions(data) {
-            if (!Array.isArray(data)) {
-                // Try to extract from object format
-                data = data.questions || [];
-            }
-
-            return data.map((q, idx) => {
-                // Find correct index
-                let correct = 0;
-                if (typeof q.correct === 'number') {
-                    correct = q.correct;
-                } else if (q.answer && q.options) {
-                    correct = q.options.findIndex(opt =>
-                        opt.toLowerCase().trim() === q.answer.toLowerCase().trim()
-                    );
-                    if (correct === -1) {
-                        // Try partial match
-                        correct = q.options.findIndex(opt =>
-                            opt.toLowerCase().includes(q.answer.toLowerCase()) ||
-                            q.answer.toLowerCase().includes(opt.toLowerCase())
-                        );
-                    }
-                    if (correct === -1) correct = 0;
-                }
-
-                return {
-                    id: 'q_' + Date.now() + '_' + idx,
-                    question: q.question,
-                    options: q.options || [],
-                    correct: correct,
-                    explanation: q.explanation || q.answer || "No explanation provided",
-                    category: q.category || "General",
-                    code: q.code || null,
-                    dueDate: new Date(),
-                    interval: 0,
-                    ease: 2.5
-                };
-            });
-        }
-
-        async function refreshRemoteDecks() {
-            const remoteDecks = decks.filter(d => d.remoteUrl);
-            if (remoteDecks.length === 0) {
-                showToast("No remote decks to refresh", "info");
-                return;
-            }
-
-            showToast("Refreshing remote decks...", "info");
-
-            for (const deck of remoteDecks) {
-                try {
-                    await loadRemoteDeck(deck.name, deck.remoteUrl, false);
-                } catch (err) {
-                    console.error("Refresh failed for:", deck.name);
-                }
-            }
-
-            saveToStorage();
-            renderHome();
-            showToast("All decks refreshed!", "success");
-        }
-
-        async function refreshCurrentDeck() {
-            if (!selectedManagerDeckId) return;
-            const deck = decks.find(d => d.id === selectedManagerDeckId);
-            if (!deck || !deck.remoteUrl) return;
-
-            showToast("Refreshing...", "info");
-            try {
-                await loadRemoteDeck(deck.name, deck.remoteUrl, true);
-                renderEditor(selectedManagerDeckId);
-                renderManager();
-            } catch (err) {
-                // Error already shown
-            }
-        }
-
-        /* --- TOAST NOTIFICATIONS --- */
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
-                    <span>${message}</span>
-                </div>
-            `;
-            container.appendChild(toast);
-
-            setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        /* --- NAVIGATION --- */
-        function showHome() {
-            hideAllViews();
-            document.getElementById('view-home').classList.remove('hidden');
-            renderHome();
-        }
-
-        function showManager() {
-            hideAllViews();
-            document.getElementById('view-manager').classList.remove('hidden');
-            renderManager();
-        }
-
-        function showSettings() {
-            hideAllViews();
-            document.getElementById('view-preset-config').classList.remove('hidden');
-            renderPresetConfig();
-        }
-
-        function showPresetConfig() {
-            hideAllViews();
-            document.getElementById('view-preset-config').classList.remove('hidden');
-            renderPresetConfig();
-        }
-
-        function hideAllViews() {
-            ['view-home', 'view-quiz', 'view-manager', 'view-preset-config'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-        }
-
-        /* --- HOME / DASHBOARD --- */
-        function renderHome() {
-            const remoteGrid = document.getElementById('remote-deck-grid');
-            const localGrid = document.getElementById('deck-grid');
-            const remoteSection = document.getElementById('remote-decks-section');
-            const localSection = document.getElementById('local-decks-section');
-
-            remoteGrid.innerHTML = '';
-            localGrid.innerHTML = '';
-
-            const remoteDecks = decks.filter(d => !d.isLocal);
-            const localDecks = decks.filter(d => d.isLocal !== false);
-
-            // Show/hide sections
-            remoteSection.classList.toggle('hidden', remoteDecks.length === 0);
-            localSection.classList.toggle('hidden', localDecks.length === 0);
-
-            // Render remote decks
-            remoteDecks.forEach(deck => {
-                const card = createDeckCard(deck, true);
-                remoteGrid.appendChild(card);
-            });
-
-            // Render local decks
-            localDecks.forEach(deck => {
-                const card = createDeckCard(deck, false);
-                localGrid.appendChild(card);
-            });
-        }
-
-        function createDeckCard(deck, isRemote) {
-            const dueCount = deck.questions.filter(q => new Date(q.dueDate) <= new Date()).length;
-            const total = deck.questions.length;
-
-            const card = document.createElement('div');
-            card.className = 'glass-panel rounded-xl p-6 hover:bg-white/5 transition-all cursor-pointer border-l-4 group relative overflow-hidden ' +
-                (isRemote ? 'border-neon-purple' : 'border-neon-blue');
-            card.onclick = () => startSession(deck.id);
-
-            const badge = isRemote ?
-                `<span class="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 rounded-full remote-badge text-white"><i class="fa-solid fa-cloud mr-1"></i>CLOUD</span>` : '';
-
-            const syncInfo = isRemote && deck.lastSynced ?
-                `<div class="text-[10px] text-slate-500 mt-1">Synced: ${new Date(deck.lastSynced).toLocaleDateString()}</div>` : '';
-
-            card.innerHTML = `
-                ${badge}
-                <div class="flex justify-between items-start mb-4">
-                    <h3 class="text-xl font-bold text-white group-hover:text-neon-blue transition-colors pr-16">${deck.name}</h3>
-                </div>
-                <div class="flex items-center justify-between mt-4">
-                    <div>
-                        <span class="text-xs text-slate-500 uppercase font-bold">Due Now</span>
-                        <div class="text-2xl font-bold text-white">${dueCount}</div>
-                        ${syncInfo}
-                    </div>
-                    <div class="text-right">
-                        <span class="bg-dark-800 text-xs font-mono px-2 py-1 rounded text-slate-300">${total} cards</span>
-                        <button class="mt-2 w-10 h-10 rounded-full bg-neon-blue/10 flex items-center justify-center text-neon-blue group-hover:bg-neon-blue group-hover:text-dark-900 transition-all">
-                            <i class="fa-solid fa-play ml-1"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-            return card;
-        }
-
-        /* --- PRESET CONFIG --- */
-        function renderPresetConfig() {
-            const list = document.getElementById('preset-list');
-            list.innerHTML = '';
-
-            presets.forEach((preset, idx) => {
-                const item = document.createElement('div');
-                item.className = 'flex items-center gap-3 p-3 bg-dark-800 rounded-lg border border-dark-700';
-                item.innerHTML = `
-                    <div class="flex-grow">
-                        <div class="font-bold text-white text-sm">${preset.name}</div>
-                        <div class="text-xs text-slate-500 truncate">${preset.url}</div>
-                    </div>
-                    <button onclick="removePreset(${idx})" class="text-red-400 hover:text-red-300 p-2">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                `;
-                list.appendChild(item);
-            });
-
-            if (presets.length === 0) {
-                list.innerHTML = '<div class="text-center text-slate-500 py-4 italic">No presets configured. Add your GitHub URLs below.</div>';
-            }
-        }
-
-        function addPreset() {
-            const name = document.getElementById('new-preset-name').value.trim();
-            const url = document.getElementById('new-preset-url').value.trim();
-
-            if (!name || !url) {
-                showToast("Please enter both name and URL", "error");
-                return;
-            }
-
-            if (!url.includes('raw.githubusercontent.com')) {
-                showToast("Please use a raw GitHub URL (click 'Raw' on GitHub)", "error");
-                return;
-            }
-
-            presets.push({ name, url });
-            document.getElementById('new-preset-name').value = '';
-            document.getElementById('new-preset-url').value = '';
-
-            renderPresetConfig();
-            showToast("Preset added!", "success");
-        }
-
-        function removePreset(idx) {
-            presets.splice(idx, 1);
-            renderPresetConfig();
-        }
-
-        async function savePresetsAndLoad() {
-            savePresets();
-            await loadPresetDecks();
-            showHome();
-        }
-
-        /* --- QUIZ LOGIC --- */
-        function startSession(deckId) {
-            activeDeckId = deckId;
-            const deck = decks.find(d => d.id === deckId);
-
-            const now = new Date();
-            sessionQueue = deck.questions
-                .map((q, idx) => ({ ...q, deckIndex: idx }))
-                .filter(q => new Date(q.dueDate) <= now)
-                .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-
-            if (sessionQueue.length === 0) {
-                showToast("No cards due in this deck! Great job.", "info");
-                return;
-            }
-
-            currentCardIndex = 0;
-            document.getElementById('stat-deck-name').innerText = deck.name;
-
-            hideAllViews();
-            document.getElementById('view-quiz').classList.remove('hidden');
-            renderCard();
-        }
-
-        function endSession() {
-            if (confirm("End current session?")) {
-                showHome();
-            }
-        }
-
-        function renderCard() {
-            if (currentCardIndex >= sessionQueue.length) {
-                document.getElementById('view-quiz').innerHTML = `
-                    <div class="text-center animate-fade-in py-20 glass-panel rounded-2xl">
-                        <div class="text-6xl mb-4">🎉</div>
-                        <h2 class="text-3xl font-bold text-white mb-4">Session Complete!</h2>
-                        <p class="text-slate-400 mb-8">You've cleared all due cards.</p>
-                        <button onclick="showHome()" class="bg-neon-blue text-dark-900 font-bold px-6 py-3 rounded-lg hover:bg-sky-300">Return Home</button>
-                    </div>
-                `;
-                return;
-            }
-
-            const card = sessionQueue[currentCardIndex];
-            isAnswerRevealed = false;
-
-            document.getElementById('explanation-area').classList.add('hidden');
-            document.getElementById('controls-initial').classList.remove('hidden');
-            document.getElementById('controls-difficulty').classList.add('hidden');
-            document.getElementById('options-container').innerHTML = '';
-
-            document.getElementById('card-category').innerText = card.category || 'General';
-            document.getElementById('question-text').innerHTML = card.question;
-
-            const codeBlock = document.getElementById('code-block');
-            if (card.code) {
-                codeBlock.classList.remove('hidden');
-                document.getElementById('code-content').innerText = card.code;
-            } else {
-                codeBlock.classList.add('hidden');
-            }
-
-            const optsContainer = document.getElementById('options-container');
-            card.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = `option-card w-full text-left p-4 rounded-xl border border-dark-700 bg-dark-800/50 text-slate-300 font-medium relative overflow-hidden`;
-                btn.innerHTML = `<span class="inline-block w-6 font-mono text-slate-500 opacity-50">${String.fromCharCode(65 + idx)}.</span> ${opt}`;
-                btn.onclick = () => handleAnswer(idx, btn, card);
-                optsContainer.appendChild(btn);
-            });
-
-            document.getElementById('stat-progress').innerText = `${currentCardIndex + 1}/${sessionQueue.length}`;
-            document.getElementById('stat-due').innerText = sessionQueue.length - currentCardIndex;
-        }
-
-        function handleAnswer(selectedIndex, btnElement, card) {
-            if (isAnswerRevealed) return;
-            isAnswerRevealed = true;
-
-            const isCorrect = selectedIndex === card.correct;
-            const options = document.getElementById('options-container').children;
-
-            if (isCorrect) {
-                btnElement.classList.add('selected-correct');
-                document.getElementById('feedback-title').innerText = "Correct!";
-                document.getElementById('feedback-title').className = "text-lg font-bold text-neon-green mb-2";
-                document.getElementById('feedback-icon').innerHTML = '<i class="fa-solid fa-circle-check text-neon-green"></i>';
-            } else {
-                btnElement.classList.add('selected-wrong');
-                options[card.correct].classList.add('selected-correct');
-                document.getElementById('feedback-title').innerText = "Incorrect";
-                document.getElementById('feedback-title').className = "text-lg font-bold text-neon-red mb-2";
-                document.getElementById('feedback-icon').innerHTML = '<i class="fa-solid fa-circle-xmark text-neon-red"></i>';
-            }
-
-            Array.from(options).forEach(b => b.classList.add('disabled', 'cursor-default'));
-
-            document.getElementById('explanation-text').innerText = card.explanation;
-            document.getElementById('explanation-area').classList.remove('hidden');
-
-            document.getElementById('controls-initial').classList.add('hidden');
-            document.getElementById('controls-difficulty').classList.remove('hidden');
-            document.getElementById('controls-difficulty').classList.add('grid');
-        }
-
-        function rateCard(rating) {
-            const card = sessionQueue[currentCardIndex];
-            let interval = 0;
-            let ease = card.ease || SETTINGS.easeFactor;
-
-            if (rating === 'again') {
-                interval = SETTINGS.again;
-                ease = Math.max(1.3, ease - 0.2);
-            } else {
-                if (card.interval === 0) {
-                    if (rating === 'hard') interval = SETTINGS.hard;
-                    else if (rating === 'good') interval = SETTINGS.good;
-                    else if (rating === 'easy') interval = SETTINGS.easy;
-                } else {
-                    if (rating === 'hard') interval = (card.interval * SETTINGS.hard) / SETTINGS.easeFactor;
-                    else if (rating === 'good') interval = card.interval * ease;
-                    else if (rating === 'easy') {
-                        interval = card.interval * ease * SETTINGS.easeBonus;
-                        ease += 0.15;
-                    }
-                }
-            }
-
-            const deck = decks.find(d => d.id === activeDeckId);
-            const masterQ = deck.questions[card.deckIndex];
-            masterQ.interval = interval;
-            masterQ.ease = ease;
-
-            const dueDate = new Date();
-            dueDate.setDate(dueDate.getDate() + interval);
-            masterQ.dueDate = dueDate;
-
-            saveToStorage();
-
-            currentCardIndex++;
-            renderCard();
-        }
-
-        function skipCard() {
-            currentCardIndex++;
-            renderCard();
-        }
-
-        /* --- MANAGER LOGIC --- */
+        // --- DATA STATE ---
+        let decks = JSON.parse(localStorage.getItem('neurorecall_decks')) || [];
+        
         let selectedManagerDeckId = null;
+        let quizQueue = [];
+        let quizSessionTotal = 0;
+        let currentDeckId = null;
+        let editingQuestionIndex = null;
+        let currentMultiSelections = []; // Store user clicks for multi-select
 
-        function renderManager() {
-            const list = document.getElementById('manager-deck-list');
-            list.innerHTML = '';
+        // --- INIT ---
+        function init() {
+            if(decks.length === 0) {
+                // Example Deck
+                decks.push({
+                    id: Date.now().toString(),
+                    name: "Demo: Computer Science",
+                    questions: [
+                        {
+                            id: "1", question: "Which algorithm is used for finding the shortest path in a graph?", 
+                            options: ["Dijkstra's", "Quick Sort", "DFS", "Binary Search"], 
+                            correct: "Dijkstra's", 
+                            category: "Algorithms",
+                            explanation: "Dijkstra's algorithm specifically targets shortest paths from a source node.",
+                            dueDate: new Date(), interval: 0, ease: 2.5 
+                        },
+                        {
+                            id: "2", question: "Which of the following are valid HTTP methods? (Select all that apply)", 
+                            options: ["GET", "PUSH", "POST", "FETCH"], 
+                            correct: ["GET", "POST"], 
+                            category: "Web",
+                            explanation: "GET and POST are standard HTTP methods. PUSH is not (PUT is). FETCH is a JS API, not a method.",
+                            dueDate: new Date(), interval: 0, ease: 2.5 
+                        }
+                    ]
+                });
+                saveToStorage();
+            }
+            renderDecks();
+        }
+
+        // --- NAVIGATION ---
+        function showSection(id) {
+            ['decks-section', 'quiz-section', 'manager-section'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            if(id === 'decks-section') renderDecks();
+        }
+
+        // --- DECK MANAGEMENT ---
+        function renderDecks() {
+            const container = document.getElementById('decks-container');
+            container.innerHTML = '';
 
             decks.forEach(deck => {
-                const isRemote = !deck.isLocal;
-                const item = document.createElement('div');
-                item.className = `p-3 rounded-lg cursor-pointer flex justify-between items-center ${selectedManagerDeckId === deck.id ? 'bg-neon-blue/20 border border-neon-blue/30' : 'hover:bg-white/5 border border-transparent'}`;
-                item.onclick = () => selectDeckForEdit(deck.id);
-
-                const icon = isRemote ? '<i class="fa-solid fa-cloud text-neon-purple mr-2"></i>' : '<i class="fa-solid fa-hard-drive text-slate-500 mr-2"></i>';
-
-                item.innerHTML = `
-                    <div class="flex items-center flex-grow">
-                        ${icon}
-                        <div>
-                            <div class="font-bold text-white text-sm">${deck.name}</div>
-                            <div class="text-xs text-slate-400">${deck.questions.length} questions</div>
+                const dueCount = deck.questions.filter(q => new Date(q.dueDate) <= new Date()).length;
+                
+                const card = document.createElement('div');
+                card.className = "glass-panel p-6 rounded-xl hover:border-neon-blue/50 transition group relative";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold text-white group-hover:text-neon-blue transition">${deck.name}</h3>
+                        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                            <button onclick="manageDeck('${deck.id}')" class="text-gray-400 hover:text-white p-1" title="Edit Deck"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteDeck('${deck.id}')" class="text-gray-400 hover:text-red-500 p-1" title="Delete Deck"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
-                    ${selectedManagerDeckId === deck.id ? '<i class="fa-solid fa-chevron-right text-neon-blue"></i>' : ''}
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <div class="text-3xl font-bold text-white mb-1">${dueCount}</div>
+                            <div class="text-xs text-gray-400 uppercase tracking-wider">Cards Due</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-500 mb-2">Total: ${deck.questions.length} cards</div>
+                            <button onclick="startQuiz('${deck.id}')" ${dueCount === 0 ? 'disabled' : ''} 
+                                class="px-4 py-2 rounded-lg font-bold text-sm transition ${dueCount > 0 ? 'bg-neon-blue text-dark-900 hover:bg-sky-400' : 'bg-dark-700 text-gray-500 cursor-not-allowed'}">
+                                ${dueCount > 0 ? 'Review Now' : 'All Done'}
+                            </button>
+                        </div>
+                    </div>
                 `;
-                list.appendChild(item);
+                container.appendChild(card);
             });
-
-            if (selectedManagerDeckId) {
-                renderEditor(selectedManagerDeckId);
-            } else {
-                document.getElementById('editor-empty').classList.remove('hidden');
-                document.getElementById('editor-content').classList.add('hidden');
-            }
         }
 
-        function createNewDeck() {
-            const name = prompt("Enter new deck name:");
+        function createDeck() {
+            const name = prompt("Enter deck name:");
             if (name) {
-                const newDeck = {
-                    id: Date.now().toString(),
-                    name: name,
-                    isLocal: true,
-                    questions: []
-                };
-                decks.push(newDeck);
+                decks.push({ id: Date.now().toString(), name: name, questions: [] });
                 saveToStorage();
-                selectedManagerDeckId = newDeck.id;
-                renderManager();
-                showToast("Deck created successfully!", "success");
+                renderDecks();
             }
         }
 
-        function selectDeckForEdit(id) {
+        function deleteDeck(id) {
+            if(confirm("Delete this deck and all its cards?")) {
+                decks = decks.filter(d => d.id !== id);
+                saveToStorage();
+                renderDecks();
+            }
+        }
+
+        // --- EDITOR LOGIC ---
+        function manageDeck(id) {
             selectedManagerDeckId = id;
-            renderManager();
+            const deck = decks.find(d => d.id === id);
+            document.getElementById('manager-title').innerText = `Editing: ${deck.name}`;
+            renderEditor(id);
+            showSection('manager-section');
         }
 
         function renderEditor(deckId) {
-            document.getElementById('editor-empty').classList.add('hidden');
-            document.getElementById('editor-content').classList.remove('hidden');
-
             const deck = decks.find(d => d.id === deckId);
-            document.getElementById('edit-deck-name').value = deck.name;
-            document.getElementById('edit-q-count').innerText = deck.questions.length;
+            const list = document.getElementById('questions-list');
+            list.innerHTML = '';
 
-            // Show/hide remote-specific UI
-            const isRemote = !deck.isLocal;
-            document.getElementById('btn-refresh').classList.toggle('hidden', !isRemote);
-            document.getElementById('local-upload').classList.toggle('hidden', isRemote);
-            document.getElementById('remote-info').classList.toggle('hidden', !isRemote);
+            deck.questions.forEach((q, index) => {
+                const item = document.createElement('div');
+                item.className = "bg-dark-800 p-4 rounded-lg border border-dark-700 flex justify-between items-center hover:border-gray-600";
+                
+                // Badge for Multi/Single
+                const typeBadge = Array.isArray(q.correct) 
+                    ? `<span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-0.5 rounded ml-2">Multi</span>`
+                    : `<span class="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded ml-2">Single</span>`;
 
-            if (isRemote && deck.remoteUrl) {
-                document.getElementById('remote-url').href = deck.remoteUrl;
-                document.getElementById('remote-url').innerText = deck.remoteUrl;
-            }
-
-            const qList = document.getElementById('edit-questions-list');
-            qList.innerHTML = '';
-
-            if (deck.questions.length === 0) {
-                qList.innerHTML = '<div class="text-center text-slate-500 py-8 italic">No questions yet.</div>';
-                return;
-            }
-
-            deck.questions.forEach((q, idx) => {
-                const row = document.createElement('div');
-                row.className = 'bg-dark-800/50 p-3 rounded border border-dark-700 flex justify-between items-center group';
-                const correctLabel = String.fromCharCode(65 + q.correct);
-                row.innerHTML = `
-                    <div class="truncate pr-4 flex-grow">
-                        <div class="text-sm text-white font-medium truncate">${q.question}</div>
-                        <div class="text-xs text-slate-500">${q.category || 'Uncategorized'} • Answer: ${correctLabel}</div>
+                item.innerHTML = `
+                    <div class="flex-1">
+                        <div class="text-xs text-neon-blue mb-1">${q.category || 'General'}</div>
+                        <div class="font-semibold text-gray-200 line-clamp-1">${q.question} ${typeBadge}</div>
                     </div>
-                    ${deck.isLocal ? `
-                    <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onclick="editQuestion(${idx})" class="text-neon-blue hover:text-white p-1"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteQuestion(${idx})" class="text-red-400 hover:text-red-300 p-1"><i class="fa-solid fa-trash"></i></button>
-                    </div>` : '<span class="text-xs text-slate-500"><i class="fa-solid fa-lock mr-1"></i>Remote</span>'}
+                    <div class="flex gap-3 ml-4">
+                        <button onclick="editQuestion(${index})" class="text-gray-400 hover:text-white"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteQuestion(${index})" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
+                    </div>
                 `;
-                qList.appendChild(row);
+                list.appendChild(item);
             });
         }
 
-        document.getElementById('edit-deck-name').addEventListener('input', (e) => {
-            if (selectedManagerDeckId) {
-                const deck = decks.find(d => d.id === selectedManagerDeckId);
-                if (deck.isLocal) {
-                    deck.name = e.target.value;
-                    saveToStorage();
-                }
-            }
-        });
-
-        function deleteCurrentDeck() {
-            if (confirm("Delete this deck? Remote decks can be re-imported.")) {
-                decks = decks.filter(d => d.id !== selectedManagerDeckId);
-                selectedManagerDeckId = null;
-                saveToStorage();
-                renderManager();
-                showToast("Deck deleted", "success");
-            }
-        }
-
-        function exportCurrentDeck() {
-            const deck = decks.find(d => d.id === selectedManagerDeckId);
-            const exportData = {
-                name: deck.name,
-                questions: deck.questions.map(q => ({
-                    question: q.question,
-                    options: q.options,
-                    correct: q.correct,
-                    explanation: q.explanation,
-                    category: q.category,
-                    code: q.code
-                }))
-            };
-
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", deck.name.replace(/\s+/g, '_') + ".json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-            showToast("Deck exported!", "success");
-        }
-
-        /* --- IMPORT FROM GITHUB URL --- */
-        async function importFromGitHub() {
-            const url = prompt("Enter raw GitHub URL:\n\nExample:\nhttps://raw.githubusercontent.com/user/repo/main/questions.json");
-            if (!url) return;
-
-            if (!url.includes('raw.githubusercontent.com')) {
-                showToast("Please use the RAW URL (click 'Raw' on GitHub)", "error");
-                return;
-            }
-
-            const name = prompt("Name for this deck:", "Imported Deck");
-            if (!name) return;
-
-            try {
-                await loadRemoteDeck(name, url, true);
-                renderHome();
-                showManager();
-            } catch (err) {
-                // Error shown in function
-            }
-        }
-
-        /* --- DRAG & DROP FILE UPLOAD --- */
-        function setupDragAndDrop() {
-            const dropZone = document.getElementById('drop-zone');
-            const fileInput = document.getElementById('file-input');
-
-            if (dropZone) {
-                dropZone.addEventListener('click', () => fileInput.click());
-
-                dropZone.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    dropZone.classList.add('drag-over');
-                });
-
-                dropZone.addEventListener('dragleave', () => {
-                    dropZone.classList.remove('drag-over');
-                });
-
-                dropZone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    dropZone.classList.remove('drag-over');
-                    handleFiles(e.dataTransfer.files);
-                });
-            }
-
-            fileInput.addEventListener('change', (e) => {
-                handleFiles(e.target.files);
-            });
-        }
-
-        function handleFiles(files) {
-            if (!selectedManagerDeckId) {
-                showToast("Please select a deck first", "error");
-                return;
-            }
-
-            Array.from(files).forEach(file => {
-                if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
-                    showToast(`Skipped ${file.name}: Not a JSON file`, "error");
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const data = JSON.parse(e.target.result);
-                        processImportedData(data, file.name);
-                    } catch (err) {
-                        showToast(`Error parsing ${file.name}: ${err.message}`, "error");
-                    }
-                };
-                reader.readAsText(file);
-            });
-        }
-
-        function processImportedData(data, filename) {
-            const deck = decks.find(d => d.id === selectedManagerDeckId);
-            if (!deck.isLocal) {
-                showToast("Cannot modify remote deck. Create a local copy first.", "error");
-                return;
-            }
-
-            let importedCount = 0;
-            let errors = [];
-
-            let questionsToImport = [];
-
-            if (Array.isArray(data)) {
-                questionsToImport = data;
-            } else if (data.questions && Array.isArray(data.questions)) {
-                questionsToImport = data.questions;
-            } else if (data.question && data.options) {
-                questionsToImport = [data];
-            } else {
-                showToast(`Unrecognized format in ${filename}`, "error");
-                return;
-            }
-
-            questionsToImport.forEach((q, idx) => {
-                try {
-                    if (!q.question || !q.options || !Array.isArray(q.options)) {
-                        errors.push(`Item ${idx + 1}: Missing question or options`);
-                        return;
-                    }
-
-                    if (q.options.length < 2) {
-                        errors.push(`Item ${idx + 1}: Need at least 2 options`);
-                        return;
-                    }
-
-                    let correctIndex = -1;
-
-                    if (typeof q.correct === 'number' && q.correct >= 0 && q.correct < q.options.length) {
-                        correctIndex = q.correct;
-                    } else if (q.answer) {
-                        correctIndex = q.options.findIndex(opt => opt === q.answer);
-                        if (correctIndex === -1) {
-                            correctIndex = q.options.findIndex(opt =>
-                                opt.toLowerCase().trim() === q.answer.toLowerCase().trim()
-                            );
-                        }
-                        if (correctIndex === -1) {
-                            correctIndex = q.options.findIndex(opt =>
-                                opt.toLowerCase().includes(q.answer.toLowerCase()) ||
-                                q.answer.toLowerCase().includes(opt.toLowerCase())
-                            );
-                        }
-                    }
-
-                    if (correctIndex === -1) {
-                        errors.push(`Item ${idx + 1}: Could not determine correct answer`);
-                        return;
-                    }
-
-                    const newQ = {
-                        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-                        question: q.question,
-                        options: q.options,
-                        correct: correctIndex,
-                        explanation: q.explanation || "No explanation provided",
-                        category: q.category || filename.replace('.json', ''),
-                        code: q.code || null,
-                        dueDate: new Date(),
-                        interval: 0,
-                        ease: 2.5
-                    };
-
-                    deck.questions.push(newQ);
-                    importedCount++;
-
-                } catch (err) {
-                    errors.push(`Item ${idx + 1}: ${err.message}`);
-                }
-            });
-
-            saveToStorage();
-            renderEditor(selectedManagerDeckId);
-
-            if (importedCount > 0) {
-                showToast(`Imported ${importedCount} questions from ${filename}`, "success");
-            }
-
-            if (errors.length > 0) {
-                console.error("Import errors:", errors);
-                if (errors.length <= 3) {
-                    showToast(`Errors: ${errors.join(', ')}`, "error");
-                } else {
-                    showToast(`${errors.length} questions failed to import. Check console.`, "error");
-                }
-            }
-        }
-
-        /* --- QUESTION MODAL LOGIC --- */
         function openQuestionModal(index = null) {
-            const deck = decks.find(d => d.id === selectedManagerDeckId);
-            if (!deck.isLocal) {
-                showToast("Cannot edit remote deck questions directly", "error");
-                return;
-            }
-
             editingQuestionIndex = index;
-            const modal = document.getElementById('modal-question');
+            const deck = decks.find(d => d.id === selectedManagerDeckId);
+            const modalTitle = document.getElementById('modal-title');
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('add-options-container');
+            const explanationText = document.getElementById('explanation-text');
+            const codeSnippet = document.getElementById('code-snippet');
+            const categoryInput = document.getElementById('category-input');
 
-            document.getElementById('q-input-text').value = '';
-            document.getElementById('q-input-category').value = '';
-            document.getElementById('q-input-code').value = '';
-            document.getElementById('q-input-explanation').value = '';
-
-            const optsContainer = document.getElementById('q-options-container');
-            optsContainer.innerHTML = '';
-            addOptionInput();
-            addOptionInput();
+            optionsContainer.innerHTML = '';
 
             if (index !== null) {
+                modalTitle.innerText = "Edit Question";
                 const q = deck.questions[index];
-                document.getElementById('modal-title').innerText = "Edit Question";
-                document.getElementById('q-input-text').value = q.question;
-                document.getElementById('q-input-category').value = q.category || '';
-                document.getElementById('q-input-code').value = q.code || '';
-                document.getElementById('q-input-explanation').value = q.explanation;
+                questionText.value = q.question;
+                explanationText.value = q.explanation || "";
+                codeSnippet.value = q.code || "";
+                categoryInput.value = q.category || "General";
 
-                optsContainer.innerHTML = '';
-                q.options.forEach(opt => addOptionInput(opt));
-                setTimeout(() => {
-                    document.getElementById('q-input-correct').value = q.correct;
-                }, 0);
+                // Populate Options
+                q.options.forEach((opt, i) => {
+                    addOptionInput(opt);
+                    // Check logic: Supports both String (Single) and Array (Multi)
+                    const isCorrect = Array.isArray(q.correct) 
+                        ? q.correct.includes(opt) 
+                        : q.correct === opt;
+                    
+                    if (isCorrect) {
+                        document.getElementsByName('correct-opt')[i].checked = true;
+                    }
+                });
             } else {
-                document.getElementById('modal-title').innerText = "Add Question";
+                modalTitle.innerText = "Add New Question";
+                questionText.value = '';
+                explanationText.value = '';
+                codeSnippet.value = '';
+                categoryInput.value = 'General';
+                addOptionInput('', true);
+                addOptionInput('', false);
             }
 
-            updateCorrectSelect();
-            modal.classList.remove('hidden');
+            document.getElementById('question-modal').classList.remove('hidden');
+            document.getElementById('question-modal').classList.add('flex');
         }
 
         function closeQuestionModal() {
-            document.getElementById('modal-question').classList.add('hidden');
+            document.getElementById('question-modal').classList.add('hidden');
+            document.getElementById('question-modal').classList.remove('flex');
         }
 
         function addOptionInput(value = '') {
-            const container = document.getElementById('q-options-container');
+            const container = document.getElementById('add-options-container');
             const div = document.createElement('div');
-            div.className = 'flex gap-2';
+            div.className = "flex items-center gap-2 mb-2";
+            // Use CHECKBOXES to allow multi-select
             div.innerHTML = `
-                <input type="text" class="custom-input option-input flex-grow" placeholder="Option..." value="${value}">
-                <button onclick="this.parentElement.remove(); updateCorrectSelect()" class="text-slate-500 hover:text-red-400 px-2"><i class="fa-solid fa-times"></i></button>
+                <input type="checkbox" name="correct-opt" class="w-5 h-5 text-neon-blue rounded focus:ring-0 cursor-pointer accent-neon-blue" title="Mark as correct">
+                <input type="text" value="${value}" class="flex-1 bg-dark-700 text-gray-200 p-2 rounded border border-dark-700 focus:border-neon-blue outline-none" placeholder="Option text">
+                <button onclick="this.parentElement.remove()" class="text-gray-500 hover:text-red-500 px-2">
+                    <i class="fa-solid fa-times"></i>
+                </button>
             `;
             container.appendChild(div);
-
-            div.querySelector('input').addEventListener('input', updateCorrectSelect);
-            updateCorrectSelect();
-        }
-
-        function updateCorrectSelect() {
-            const inputs = document.querySelectorAll('.option-input');
-            const select = document.getElementById('q-input-correct');
-            const currentVal = select.value;
-
-            select.innerHTML = '';
-
-            inputs.forEach((input, idx) => {
-                if (input.value.trim() !== '') {
-                    const opt = document.createElement('option');
-                    opt.value = idx;
-                    opt.text = `${String.fromCharCode(65 + idx)}. ${input.value.substring(0, 50)}${input.value.length > 50 ? '...' : ''}`;
-                    select.appendChild(opt);
-                }
-            });
-
-            if (currentVal && select.options[parseInt(currentVal)]) {
-                select.value = currentVal;
-            }
         }
 
         function saveQuestion() {
-            const text = document.getElementById('q-input-text').value;
-            const category = document.getElementById('q-input-category').value;
-            const code = document.getElementById('q-input-code').value;
-            const explanation = document.getElementById('q-input-explanation').value;
+            const text = document.getElementById('question-text').value;
+            const explanation = document.getElementById('explanation-text').value;
+            const code = document.getElementById('code-snippet').value;
+            const category = document.getElementById('category-input').value;
 
-            const options = Array.from(document.querySelectorAll('.option-input'))
-                .map(i => i.value)
-                .filter(v => v.trim() !== '');
+            const optDivs = document.querySelectorAll('#add-options-container > div');
+            const options = [];
+            const correctIndices = [];
 
-            const correctSelect = document.getElementById('q-input-correct');
-            const correct = parseInt(correctSelect.value);
+            optDivs.forEach((div, index) => {
+                const input = div.querySelector('input[type="text"]');
+                const checkbox = div.querySelector('input[type="checkbox"]');
+                if (input.value.trim()) {
+                    options.push(input.value.trim());
+                    if (checkbox.checked) {
+                        correctIndices.push(index);
+                    }
+                }
+            });
 
-            if (!text || options.length < 2 || isNaN(correct) || correct >= options.length) {
-                showToast("Please fill in all required fields correctly", "error");
+            if (!text || options.length < 2 || correctIndices.length === 0) {
+                showToast("Fill question, 2+ options, and select answer(s)", "error");
                 return;
+            }
+
+            // POLYMORPHIC SAVE: String if single, Array if multi
+            let correct;
+            if (correctIndices.length === 1) {
+                correct = options[correctIndices[0]];
+            } else {
+                correct = correctIndices.map(i => options[i]);
             }
 
             const deck = decks.find(d => d.id === selectedManagerDeckId);
@@ -1671,10 +426,7 @@
             closeQuestionModal();
         }
 
-        function editQuestion(index) {
-            openQuestionModal(index);
-        }
-
+        function editQuestion(index) { openQuestionModal(index); }
         function deleteQuestion(index) {
             if (confirm("Delete this question?")) {
                 const deck = decks.find(d => d.id === selectedManagerDeckId);
@@ -1685,7 +437,285 @@
             }
         }
 
+        // --- QUIZ LOGIC ---
+        function startQuiz(deckId) {
+            currentDeckId = deckId;
+            const deck = decks.find(d => d.id === deckId);
+            // Filter only due cards
+            quizQueue = deck.questions.filter(q => new Date(q.dueDate) <= new Date())
+                                      .sort(() => Math.random() - 0.5); // Shuffle
+            
+            if (quizQueue.length === 0) {
+                showToast("No cards due for review!", "success");
+                return;
+            }
+
+            quizSessionTotal = quizQueue.length;
+            showSection('quiz-section');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const container = document.getElementById('quiz-container');
+            const dueCountEl = document.getElementById('due-count');
+            const progBar = document.getElementById('progress-bar');
+            
+            currentMultiSelections = []; // Reset selections
+
+            // Update Header
+            dueCountEl.innerText = quizQueue.length;
+            const progress = ((quizSessionTotal - quizQueue.length) / quizSessionTotal) * 100;
+            progBar.style.width = `${progress}%`;
+
+            if (quizQueue.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-20">
+                        <h2 class="text-3xl font-bold text-white mb-4">All Caught Up! 🎉</h2>
+                        <p class="text-gray-400 mb-8">No cards due for review.</p>
+                        <button onclick="showSection('decks-section')" class="px-6 py-2 bg-neon-blue text-dark-900 font-bold rounded hover:bg-blue-400 transition">
+                            Back to Decks
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const q = quizQueue[0];
+            const isMulti = Array.isArray(q.correct);
+
+            const codeHTML = q.code ? `<pre class="bg-dark-900 p-4 rounded-lg mb-6 overflow-x-auto text-sm text-gray-300 font-mono border border-dark-700"><code>${q.code}</code></pre>` : '';
+
+            // Render Options
+            let optionsHTML = '<div class="grid gap-3">';
+            q.options.forEach(opt => {
+                // Escaping quotes for JS string
+                const safeOpt = opt.replace(/'/g, "\\'");
+                optionsHTML += `
+                    <button onclick="handleOptionClick(this, '${safeOpt}')" 
+                        class="option-btn w-full text-left p-4 rounded-lg bg-dark-800 border-2 border-transparent hover:border-dark-600 transition group flex items-start gap-3 relative">
+                        <div class="mt-1 w-5 h-5 rounded border border-gray-500 flex items-center justify-center group-hover:border-neon-blue transition-colors">
+                            <div class="w-2.5 h-2.5 rounded-sm bg-neon-blue opacity-0 transition select-indicator"></div>
+                        </div>
+                        <span class="text-gray-200 leading-relaxed">${opt}</span>
+                    </button>
+                `;
+            });
+            optionsHTML += '</div>';
+
+            const multiBadge = isMulti 
+                ? `<span class="bg-indigo-900 text-indigo-200 text-xs px-2 py-1 rounded ml-2 align-middle">Select all that apply</span>` 
+                : '';
+
+            // Submit Button (only for multi)
+            const submitBtn = isMulti 
+                ? `<button onclick="submitMultiAnswer()" class="mt-6 w-full py-3 bg-neon-purple text-white font-bold rounded-lg hover:bg-indigo-500 transition shadow-lg shadow-indigo-500/20">Submit Answer</button>`
+                : '';
+
+            container.innerHTML = `
+                <div class="max-w-2xl mx-auto animate-fade-in">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-gray-500 text-sm">Question ${quizSessionTotal - quizQueue.length + 1} / ${quizSessionTotal}</span>
+                        <span class="text-neon-blue text-sm font-mono px-2 py-1 bg-dark-800 rounded border border-dark-700">${q.category}</span>
+                    </div>
+
+                    <h2 class="text-xl md:text-2xl font-bold text-white mb-6 leading-tight">
+                        ${q.question} ${multiBadge}
+                    </h2>
+                    
+                    ${codeHTML}
+                    ${optionsHTML}
+                    ${submitBtn}
+
+                    <div id="feedback-area" class="hidden mt-6 p-4 rounded-lg"></div>
+                </div>
+            `;
+        }
+
+        // --- ANSWER HANDLING ---
+        
+        function handleOptionClick(btn, optionText) {
+            const q = quizQueue[0];
+            const isMulti = Array.isArray(q.correct);
+            const feedbackArea = document.getElementById('feedback-area');
+
+            // Block input if already answered
+            if (!feedbackArea.classList.contains('hidden')) return;
+
+            if (isMulti) {
+                // Toggle Logic
+                if (currentMultiSelections.includes(optionText)) {
+                    currentMultiSelections = currentMultiSelections.filter(i => i !== optionText);
+                    btn.classList.remove('border-neon-blue', 'bg-dark-700');
+                    btn.querySelector('.select-indicator').classList.add('opacity-0');
+                } else {
+                    currentMultiSelections.push(optionText);
+                    btn.classList.add('border-neon-blue', 'bg-dark-700');
+                    btn.querySelector('.select-indicator').classList.remove('opacity-0');
+                }
+            } else {
+                // Single Logic: Immediate Check
+                checkAnswer(optionText, btn);
+            }
+        }
+
+        function submitMultiAnswer() {
+            const q = quizQueue[0];
+            const correctArr = q.correct;
+            
+            // Compare sorted arrays
+            const sortedUser = [...currentMultiSelections].sort();
+            const sortedCorrect = [...correctArr].sort();
+            const isCorrect = JSON.stringify(sortedUser) === JSON.stringify(sortedCorrect);
+
+            // Highlight Logic for Multi
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => {
+                const btnText = btn.querySelector('span').innerText;
+                
+                if (correctArr.includes(btnText)) {
+                    // It is a correct answer
+                    btn.classList.add('border-green-500', 'bg-green-900/20');
+                    btn.querySelector('div').classList.add('border-green-500', 'bg-green-500'); // Fill box
+                } else if (currentMultiSelections.includes(btnText) && !correctArr.includes(btnText)) {
+                    // User selected wrong
+                    btn.classList.add('border-red-500', 'bg-red-900/20');
+                }
+            });
+
+            processResult(isCorrect);
+        }
+
+        function checkAnswer(selectedOpt, btnElement) {
+            const q = quizQueue[0];
+            const isCorrect = selectedOpt === q.correct;
+
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => {
+                const btnText = btn.querySelector('span').innerText;
+                if (btnText === q.correct) {
+                    btn.classList.add('border-green-500', 'bg-green-900/20');
+                    btn.querySelector('.select-indicator').classList.remove('opacity-0');
+                    btn.querySelector('.select-indicator').classList.add('bg-green-400');
+                } else if (btn === btnElement && !isCorrect) {
+                    btn.classList.add('border-red-500', 'bg-red-900/20');
+                }
+            });
+
+            processResult(isCorrect);
+        }
+
+        function processResult(isCorrect) {
+            const q = quizQueue[0];
+            const feedback = document.getElementById('feedback-area');
+            
+            // Update SR Algorithm
+            updateSM2(q, isCorrect);
+
+            feedback.className = `mt-6 p-4 rounded-lg border ${isCorrect ? 'bg-green-900/20 border-green-500 text-green-200' : 'bg-red-900/20 border-red-500 text-red-200'}`;
+            feedback.innerHTML = `
+                <div class="flex items-center gap-2 font-bold mb-2 text-lg">
+                    <i class="fa-solid ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                    ${isCorrect ? 'Correct!' : 'Incorrect'}
+                </div>
+                <div class="text-sm opacity-90 leading-relaxed">${q.explanation || 'No explanation provided.'}</div>
+                <button onclick="nextQuestion()" class="mt-4 px-6 py-2 bg-dark-700 hover:bg-dark-600 rounded text-white text-sm font-bold transition flex items-center gap-2">
+                    Continue <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            `;
+            feedback.classList.remove('hidden');
+        }
+
+        // --- SM2 ALGORITHM (Spaced Repetition) ---
+        function updateSM2(card, isCorrect) {
+            // Simple implementation of SuperMemo-2
+            // Quality: 5=perfect, 0=complete failure
+            // We simplify: Correct=4 or 5, Incorrect=1
+            const quality = isCorrect ? 5 : 1;
+
+            if (quality >= 3) {
+                if (card.interval === 0) {
+                    card.interval = 1;
+                } else if (card.interval === 1) {
+                    card.interval = 6;
+                } else {
+                    card.interval = Math.round(card.interval * card.ease);
+                }
+                card.ease = card.ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+                if (card.ease < 1.3) card.ease = 1.3;
+            } else {
+                card.interval = 0; // Reset
+                card.ease = Math.max(1.3, card.ease - 0.2); // Penalty
+            }
+
+            // Set new Due Date (minutes for demo, usually days)
+            // For Demo: Interval = minutes
+            const nextDue = new Date();
+            nextDue.setMinutes(nextDue.getMinutes() + card.interval);
+            card.dueDate = nextDue;
+
+            // Save to Deck
+            const deck = decks.find(d => d.id === currentDeckId);
+            const qIdx = deck.questions.findIndex(x => x.id === card.id);
+            if(qIdx !== -1) deck.questions[qIdx] = card;
+            saveToStorage();
+        }
+
+        function nextQuestion() {
+            quizQueue.shift();
+            renderQuestion();
+        }
+
+        function exitQuiz() { showSection('decks-section'); }
+
+        // --- STORAGE ---
+        function saveToStorage() {
+            localStorage.setItem('neurorecall_decks', JSON.stringify(decks));
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(decks));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "neurorecall_backup.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if(Array.isArray(imported)) {
+                        decks = imported;
+                        saveToStorage();
+                        renderDecks();
+                        showToast("Decks imported successfully", "success");
+                    } else {
+                        showToast("Invalid JSON format", "error");
+                    }
+                } catch(err) {
+                    showToast("Error parsing file", "error");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function showToast(msg, type="success") {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.className = `fixed bottom-6 right-6 px-6 py-3 rounded-lg shadow-xl transform transition-all duration-300 z-50 font-bold flex items-center gap-3 translate-y-0 opacity-100 ${type === 'success' ? 'bg-neon-green text-dark-900' : 'bg-neon-red text-white'}`;
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Start
+        init();
+
     </script>
 </body>
-
 </html>
