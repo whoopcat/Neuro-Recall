@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>NeuroRecall | Smart MCQ Drill</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -627,6 +630,43 @@
     </div>
 
     <script>
+        /* --- SAFE STORAGE UTILS --- */
+        const Storage = {
+            get(key, defaultVal = null) {
+                try {
+                    const item = localStorage.getItem(key);
+                    return item ? JSON.parse(item) : defaultVal;
+                } catch (e) {
+                    console.error(`Error reading ${key}:`, e);
+                    return defaultVal;
+                }
+            },
+            
+            set(key, value) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                    return true;
+                } catch (e) {
+                    if (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014) {
+                        showToast('Storage full! Export and clear decks first.', 'error');
+                    } else {
+                        showToast('Storage access denied. Check browser settings.', 'error');
+                    }
+                    return false;
+                }
+            },
+            
+            clear() {
+                try {
+                    localStorage.removeItem('neurorecall_decks');
+                    localStorage.removeItem('neurorecall_presets');
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+        };
+
         /* --- STATE --- */
         const SETTINGS = {
             again: 0.05, 
@@ -646,22 +686,30 @@
         let currentCardIndex = 0;
         let isAnswerRevealed = false;
         let editingQuestionIndex = null;
+        let selectedManagerDeckId = null;
         
         // Multi-select state
         let selectedOptions = new Set();
 
         /* --- INITIALIZATION --- */
         window.onload = async () => {
-            const savedPresets = localStorage.getItem('neurorecall_presets');
-            presets = savedPresets ? JSON.parse(savedPresets) : DEFAULT_PRESETS;
+            // Load presets first
+            presets = Storage.get('neurorecall_presets', DEFAULT_PRESETS);
 
-            const saved = localStorage.getItem('neurorecall_decks');
-            if (saved) {
-                decks = JSON.parse(saved);
+            // Load decks with date revival
+            const savedDecks = Storage.get('neurorecall_decks', []);
+            if (savedDecks && savedDecks.length > 0) {
+                decks = savedDecks;
                 decks.forEach(d => {
-                    d.questions.forEach(q => {
-                        if(q.dueDate) q.dueDate = new Date(q.dueDate);
-                    });
+                    if (d.questions) {
+                        d.questions.forEach(q => {
+                            if(q.dueDate) q.dueDate = new Date(q.dueDate);
+                            // Ensure isMultiselect is normalized
+                            if (q.correctArray && q.correctArray.length > 1) {
+                                q.isMultiselect = true;
+                            }
+                        });
+                    }
                 });
             } else {
                 createDefaultDeck();
@@ -673,11 +721,8 @@
         };
 
         function saveToStorage() {
-            localStorage.setItem('neurorecall_decks', JSON.stringify(decks));
-        }
-
-        function savePresets() {
-            localStorage.setItem('neurorecall_presets', JSON.stringify(presets));
+            Storage.set('neurorecall_decks', decks);
+            Storage.set('neurorecall_presets', presets);
         }
 
         function createDefaultDeck() {
@@ -691,6 +736,8 @@
                         question: "Which of the following Big-O notations represents the most efficient time complexity?",
                         options: ["O(n^2)", "O(n)", "O(log n)", "O(n!)"],
                         correct: 2,
+                        correctArray: [2],
+                        isMultiselect: false,
                         explanation: "O(log n) grows very slowly compared to input size.",
                         category: "Algorithms",
                         code: null,
@@ -703,6 +750,8 @@
                         question: "Which are valid HTTP methods? (Select all that apply)",
                         options: ["GET", "POST", "FETCH", "DELETE", "SEND"],
                         correct: [0, 1, 3],
+                        correctArray: [0, 1, 3],
+                        isMultiselect: true,
                         explanation: "GET, POST, and DELETE are standard HTTP methods. FETCH is a JavaScript API, not an HTTP method.",
                         category: "HTTP",
                         type: "multiselect",
@@ -718,7 +767,7 @@
         /* --- UTILITY: Detect question type --- */
         function isMultiSelect(question) {
             // Check if correct is an array (new format) or type is explicitly set
-            return Array.isArray(question.correct) || question.type === 'multiselect';
+            return question.isMultiselect === true || Array.isArray(question.correct) || question.type === 'multiselect';
         }
 
         function normalizeCorrect(correct) {
@@ -746,7 +795,16 @@
 
         async function loadRemoteDeck(name, url, showNotifications = true) {
             try {
-                const response = await fetch(url);
+                // Try jsdelivr if it's a GitHub raw URL
+                let fetchUrl = url;
+                if (url.includes('raw.githubusercontent.com')) {
+                    const match = url.match(/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)/);
+                    if (match) {
+                        fetchUrl = `https://cdn.jsdelivr.net/gh/${match[1]}/${match[2]}@${match[3]}/${match[4]}`;
+                    }
+                }
+
+                const response = await fetch(fetchUrl);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const data = await response.json();
                 
@@ -807,17 +865,36 @@
             return data.map((q, idx) => {
                 // Detect and normalize correct answer format
                 let correctArray = [];
+                let isMultiselect = false;
                 
                 if (Array.isArray(q.correct)) {
                     correctArray = q.correct;
+                    isMultiselect = correctArray.length > 1;
                 } else if (typeof q.correct === 'number') {
                     correctArray = [q.correct];
                 } else if (q.answer) {
                     // Try to match answer text to option index
                     if (typeof q.answer === 'number') {
                         correctArray = [q.answer];
+                    } else if (Array.isArray(q.answer)) {
+                        // Array of text answers
+                        if (q.options) {
+                            correctArray = q.answer.map(ans => {
+                                let found = q.options.findIndex(opt => 
+                                    opt.toLowerCase().trim() === ans.toLowerCase().trim()
+                                );
+                                if (found === -1) {
+                                    found = q.options.findIndex(opt => 
+                                        opt.toLowerCase().includes(ans.toLowerCase()) ||
+                                        ans.toLowerCase().includes(opt.toLowerCase())
+                                    );
+                                }
+                                return found !== -1 ? found : null;
+                            }).filter(x => x !== null);
+                        }
+                        isMultiselect = correctArray.length > 1;
                     } else if (q.options) {
-                        // Try exact match
+                        // Single text answer
                         let found = q.options.findIndex(opt => opt === q.answer);
                         if (found === -1) {
                             found = q.options.findIndex(opt => 
@@ -835,14 +912,15 @@
                 }
                 
                 // Detect if multiselect based on original format or explicit type
-                const isMultiselect = Array.isArray(q.correct) || q.type === 'multiselect';
+                if (q.type === 'multiselect') isMultiselect = true;
+                if (correctArray.length > 1) isMultiselect = true;
                 
                 return {
                     id: 'q_' + Date.now() + '_' + idx,
                     question: q.question,
                     options: q.options || [],
-                    correct: isMultiselect && correctArray.length > 1 ? correctArray : correctArray[0] || 0,
-                    correctArray: correctArray, // Store normalized array for checking
+                    correct: isMultiselect ? correctArray : (correctArray[0] || 0),
+                    correctArray: correctArray,
                     isMultiselect: isMultiselect,
                     explanation: q.explanation || (Array.isArray(q.answer) ? q.answer.join(', ') : q.answer) || "No explanation provided",
                     category: q.category || "General",
@@ -1002,6 +1080,11 @@
             activeDeckId = deckId;
             const deck = decks.find(d => d.id === deckId);
             
+            if (!deck || !deck.questions) {
+                showToast("Deck not found or empty", "error");
+                return;
+            }
+            
             const now = new Date();
             sessionQueue = deck.questions
                 .map((q, idx) => ({ ...q, deckIndex: idx }))
@@ -1057,7 +1140,7 @@
             document.getElementById('question-text').innerHTML = card.question;
             
             // Handle multiselect UI
-            const isMulti = card.isMultiselect;
+            const isMulti = isMultiSelect(card);
             document.getElementById('stat-question-type').innerText = isMulti ? 'Multi' : 'Single';
             
             if (isMulti) {
@@ -1129,7 +1212,8 @@
             if (isAnswerRevealed) return;
             isAnswerRevealed = true;
 
-            const isCorrect = selectedIndex === card.correct;
+            const correctIndex = Array.isArray(card.correct) ? card.correct[0] : card.correct;
+            const isCorrect = selectedIndex === correctIndex;
             const options = document.getElementById('options-container').children;
 
             if (isCorrect) {
@@ -1137,7 +1221,9 @@
                 showFeedback(true, "Correct!");
             } else {
                 btnElement.classList.add('selected-wrong');
-                options[card.correct].classList.add('selected-correct');
+                if (options[correctIndex]) {
+                    options[correctIndex].classList.add('selected-correct');
+                }
                 showFeedback(false, "Incorrect");
             }
 
@@ -1157,6 +1243,7 @@
             
             // Visual feedback
             selectedIndices.forEach(idx => {
+                if (idx >= options.length) return;
                 const btn = options[idx];
                 if (correctSet.has(idx)) {
                     btn.classList.add('selected-correct');
@@ -1167,6 +1254,7 @@
             
             // Show missed correct answers
             correctSet.forEach(idx => {
+                if (idx >= options.length) return;
                 if (!selectedIndices.includes(idx)) {
                     options[idx].classList.add('selected-partial');
                 }
@@ -1233,6 +1321,8 @@
             }
 
             const deck = decks.find(d => d.id === activeDeckId);
+            if (!deck || !deck.questions[card.deckIndex]) return;
+            
             const masterQ = deck.questions[card.deckIndex];
             masterQ.interval = interval;
             masterQ.ease = ease;
@@ -1251,29 +1341,28 @@
             renderCard();
         }
 
-        /* --- MANAGER & EDITOR (Simplified for brevity - same as before) --- */
-        let selectedManagerDeckId = null;
-
+        /* --- MANAGER & EDITOR --- */
         function renderManager() {
             const list = document.getElementById('manager-deck-list');
             list.innerHTML = '';
             
             decks.forEach(deck => {
                 const isRemote = !deck.isLocal;
-                const multiCount = deck.questions.filter(q => q.isMultiselect).length;
+                const multiCount = deck.questions ? deck.questions.filter(q => q.isMultiselect).length : 0;
                 const item = document.createElement('div');
                 item.className = `p-3 rounded-lg cursor-pointer flex justify-between items-center ${selectedManagerDeckId === deck.id ? 'bg-neon-blue/20 border border-neon-blue/30' : 'hover:bg-white/5 border border-transparent'}`;
                 item.onclick = () => selectDeckForEdit(deck.id);
                 
                 const icon = isRemote ? '<i class="fa-solid fa-cloud text-neon-purple mr-2"></i>' : '<i class="fa-solid fa-hard-drive text-slate-500 mr-2"></i>';
                 const multiBadge = multiCount > 0 ? `<span class="text-xs text-neon-yellow ml-2">(${multiCount} multi)</span>` : '';
+                const qCount = deck.questions ? deck.questions.length : 0;
                 
                 item.innerHTML = `
                     <div class="flex items-center flex-grow">
                         ${icon}
                         <div>
                             <div class="font-bold text-white text-sm">${deck.name}${multiBadge}</div>
-                            <div class="text-xs text-slate-400">${deck.questions.length} questions</div>
+                            <div class="text-xs text-slate-400">${qCount} questions</div>
                         </div>
                     </div>
                     ${selectedManagerDeckId === deck.id ? '<i class="fa-solid fa-chevron-right text-neon-blue"></i>' : ''}
@@ -1314,8 +1403,10 @@
             document.getElementById('editor-content').classList.remove('hidden');
             
             const deck = decks.find(d => d.id === deckId);
+            if (!deck) return;
+            
             document.getElementById('edit-deck-name').value = deck.name;
-            document.getElementById('edit-q-count').innerText = deck.questions.length;
+            document.getElementById('edit-q-count').innerText = deck.questions ? deck.questions.length : 0;
 
             const isRemote = !deck.isLocal;
             document.getElementById('btn-refresh').classList.toggle('hidden', !isRemote);
@@ -1330,7 +1421,7 @@
             const qList = document.getElementById('edit-questions-list');
             qList.innerHTML = '';
 
-            if (deck.questions.length === 0) {
+            if (!deck.questions || deck.questions.length === 0) {
                 qList.innerHTML = '<div class="text-center text-slate-500 py-8 italic">No questions yet.</div>';
                 return;
             }
@@ -1338,9 +1429,9 @@
             deck.questions.forEach((q, idx) => {
                 const row = document.createElement('div');
                 row.className = 'bg-dark-800/50 p-3 rounded border border-dark-700 flex justify-between items-center group';
-                const correctLabels = Array.isArray(q.correct) || q.isMultiselect
-                    ? normalizeCorrect(q.correct).map(i => String.fromCharCode(65 + i)).join(', ')
-                    : String.fromCharCode(65 + q.correct);
+                const correctLabels = q.correctArray 
+                    ? q.correctArray.map(i => String.fromCharCode(65 + i)).join(', ')
+                    : (Array.isArray(q.correct) ? q.correct : [q.correct]).map(i => String.fromCharCode(65 + i)).join(', ');
                 const typeIcon = q.isMultiselect ? '<i class="fa-solid fa-check-double text-neon-yellow mr-2" title="Multi-select"></i>' : '';
                 
                 row.innerHTML = `
@@ -1361,17 +1452,24 @@
             });
         }
 
-        document.getElementById('edit-deck-name').addEventListener('input', (e) => {
-            if (selectedManagerDeckId) {
-                const deck = decks.find(d => d.id === selectedManagerDeckId);
-                if (deck.isLocal) {
-                    deck.name = e.target.value;
-                    saveToStorage();
-                }
+        // Add event listener for deck name editing
+        document.addEventListener('DOMContentLoaded', () => {
+            const deckNameInput = document.getElementById('edit-deck-name');
+            if (deckNameInput) {
+                deckNameInput.addEventListener('input', (e) => {
+                    if (selectedManagerDeckId) {
+                        const deck = decks.find(d => d.id === selectedManagerDeckId);
+                        if (deck && deck.isLocal) {
+                            deck.name = e.target.value;
+                            saveToStorage();
+                        }
+                    }
+                });
             }
         });
 
         function deleteCurrentDeck() {
+            if(!selectedManagerDeckId) return;
             if(confirm("Delete this deck?")) {
                 decks = decks.filter(d => d.id !== selectedManagerDeckId);
                 selectedManagerDeckId = null;
@@ -1382,7 +1480,10 @@
         }
 
         function exportCurrentDeck() {
+            if (!selectedManagerDeckId) return;
             const deck = decks.find(d => d.id === selectedManagerDeckId);
+            if (!deck) return;
+            
             const exportData = {
                 name: deck.name,
                 questions: deck.questions.map(q => ({
@@ -1409,8 +1510,8 @@
         async function importFromGitHub() {
             const url = prompt("Enter raw GitHub URL:");
             if (!url) return;
-            if (!url.includes('raw.githubusercontent.com')) {
-                showToast("Please use RAW GitHub URL", "error");
+            if (!url.includes('raw.githubusercontent.com') && !url.includes('cdn.jsdelivr.net')) {
+                showToast("Please use RAW GitHub URL or jsdelivr", "error");
                 return;
             }
             const name = prompt("Name for this deck:", "Imported Deck");
@@ -1442,7 +1543,9 @@
                     handleFiles(e.dataTransfer.files);
                 });
             }
-            fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+            }
         }
 
         function handleFiles(files) {
@@ -1451,6 +1554,10 @@
                 return;
             }
             const deck = decks.find(d => d.id === selectedManagerDeckId);
+            if (!deck) {
+                showToast("Deck not found", "error");
+                return;
+            }
             if (!deck.isLocal) {
                 showToast("Cannot modify remote deck", "error");
                 return;
@@ -1467,24 +1574,35 @@
                         const data = JSON.parse(e.target.result);
                         processImportedData(data, file.name);
                     } catch (err) {
-                        showToast(`Error: ${err.message}`, "error");
+                        showToast(`Error parsing ${file.name}: ${err.message}`, "error");
                     }
+                };
+                reader.onerror = () => {
+                    showToast(`Error reading ${file.name}`, "error");
                 };
                 reader.readAsText(file);
             });
         }
 
         function processImportedData(data, filename) {
+            if (!selectedManagerDeckId) return;
             const deck = decks.find(d => d.id === selectedManagerDeckId);
+            if (!deck) return;
+            
             let imported = 0;
             let errors = [];
 
             let questionsToImport = Array.isArray(data) ? data : (data.questions || []);
+            
+            if (!Array.isArray(questionsToImport)) {
+                showToast("Invalid JSON format: expected array or {questions: [...]}", "error");
+                return;
+            }
 
             questionsToImport.forEach((q, idx) => {
                 try {
                     if (!q.question || !q.options) {
-                        errors.push(`Item ${idx + 1}: Missing fields`);
+                        errors.push(`Item ${idx + 1}: Missing question or options`);
                         return;
                     }
 
@@ -1498,7 +1616,22 @@
                     } else if (q.answer) {
                         if (typeof q.answer === 'number') {
                             correctArray = [q.answer];
-                        } else if (!Array.isArray(q.answer)) {
+                        } else if (Array.isArray(q.answer)) {
+                            // Array of text answers
+                            if (q.options) {
+                                correctArray = q.answer.map(ans => {
+                                    let found = q.options.findIndex(opt => 
+                                        opt.toLowerCase().trim() === ans.toLowerCase().trim()
+                                    );
+                                    if (found === -1) {
+                                        found = q.options.findIndex(opt => 
+                                            opt.toLowerCase().includes(ans.toLowerCase())
+                                        );
+                                    }
+                                    return found !== -1 ? found : null;
+                                }).filter(x => x !== null);
+                            }
+                        } else {
                             // Single text answer
                             let found = q.options.findIndex(opt => 
                                 opt.toLowerCase().trim() === q.answer.toLowerCase().trim()
@@ -1509,14 +1642,6 @@
                                 );
                             }
                             correctArray = found !== -1 ? [found] : [0];
-                        } else {
-                            // Array of text answers
-                            correctArray = q.answer.map(ans => {
-                                let found = q.options.findIndex(opt => 
-                                    opt.toLowerCase().trim() === ans.toLowerCase().trim()
-                                );
-                                return found !== -1 ? found : null;
-                            }).filter(x => x !== null);
                         }
                     }
 
@@ -1548,7 +1673,10 @@
             saveToStorage();
             renderEditor(selectedManagerDeckId);
             if (imported > 0) showToast(`Imported ${imported} questions`, "success");
-            if (errors.length > 0) showToast(`${errors.length} failed. Check console.`, "error");
+            if (errors.length > 0) {
+                console.error("Import errors:", errors);
+                showToast(`${errors.length} failed to import`, "error");
+            }
         }
 
         /* --- PRESET CONFIG --- */
@@ -1584,8 +1712,8 @@
                 showToast("Enter both name and URL", "error");
                 return;
             }
-            if (!url.includes('raw.githubusercontent.com')) {
-                showToast("Use raw GitHub URL", "error");
+            if (!url.includes('raw.githubusercontent.com') && !url.includes('cdn.jsdelivr.net')) {
+                showToast("Use raw GitHub URL or jsdelivr", "error");
                 return;
             }
             
@@ -1602,23 +1730,32 @@
         }
 
         async function savePresetsAndLoad() {
-            savePresets();
+            saveToStorage();
             await loadPresetDecks();
             showHome();
         }
 
-        /* --- QUESTION MODAL with Multi-Select Support --- */
+        /* --- QUESTION MODAL --- */
         function toggleCorrectAnswerInput() {
             const type = document.getElementById('q-input-type').value;
-            document.getElementById('correct-single').classList.toggle('hidden', type === 'multiselect');
-            document.getElementById('correct-multi').classList.toggle('hidden', type !== 'multiselect');
-            document.getElementById('correct-answer-label').innerText = type === 'multiselect' ? 'Correct Answers (check all)' : 'Correct Answer';
+            const singleDiv = document.getElementById('correct-single');
+            const multiDiv = document.getElementById('correct-multi');
+            const label = document.getElementById('correct-answer-label');
+            
+            if (singleDiv) singleDiv.classList.toggle('hidden', type === 'multiselect');
+            if (multiDiv) multiDiv.classList.toggle('hidden', type !== 'multiselect');
+            if (label) label.innerText = type === 'multiselect' ? 'Correct Answers (check all)' : 'Correct Answer';
             updateCorrectSelect();
         }
 
         function openQuestionModal(index = null) {
+            if (!selectedManagerDeckId) {
+                showToast("Select a deck first", "error");
+                return;
+            }
+            
             const deck = decks.find(d => d.id === selectedManagerDeckId);
-            if (!deck.isLocal) {
+            if (!deck || !deck.isLocal) {
                 showToast("Cannot edit remote deck", "error");
                 return;
             }
@@ -1640,9 +1777,9 @@
 
             toggleCorrectAnswerInput();
 
-            if (index !== null) {
+            if (index !== null && deck.questions[index]) {
                 const q = deck.questions[index];
-                const isMulti = q.isMultiselect || Array.isArray(q.correct);
+                const isMulti = q.isMultiselect || (Array.isArray(q.correct) && q.correct.length > 1);
                 
                 document.getElementById('modal-title').innerText = "Edit Question";
                 document.getElementById('q-input-text').value = q.question;
@@ -1652,20 +1789,25 @@
                 document.getElementById('q-input-type').value = isMulti ? 'multiselect' : 'single';
                 
                 optsContainer.innerHTML = '';
-                q.options.forEach(opt => addOptionInput(opt));
+                if (q.options) {
+                    q.options.forEach(opt => addOptionInput(opt));
+                }
                 
                 toggleCorrectAnswerInput();
                 
+                // Set correct answers
                 setTimeout(() => {
+                    const correctIndices = q.correctArray || normalizeCorrect(q.correct);
                     if (isMulti) {
-                        // Check the correct boxes
-                        const correctIndices = normalizeCorrect(q.correct);
                         const checkboxes = document.querySelectorAll('.multi-correct-checkbox');
                         checkboxes.forEach((cb, idx) => {
                             cb.checked = correctIndices.includes(idx);
                         });
                     } else {
-                        document.getElementById('q-input-correct').value = q.correct;
+                        const select = document.getElementById('q-input-correct');
+                        if (select && correctIndices.length > 0) {
+                            select.value = correctIndices[0];
+                        }
                     }
                 }, 0);
             } else {
@@ -1677,19 +1819,24 @@
         }
 
         function closeQuestionModal() {
-            document.getElementById('modal-question').classList.add('hidden');
+            const modal = document.getElementById('modal-question');
+            if (modal) modal.classList.add('hidden');
+            editingQuestionIndex = null;
         }
 
         function addOptionInput(value = '') {
             const container = document.getElementById('q-options-container');
+            if (!container) return;
+            
             const div = document.createElement('div');
             div.className = 'flex gap-2 option-row';
             div.innerHTML = `
-                <input type="text" class="custom-input option-input flex-grow" placeholder="Option..." value="${value}">
+                <input type="text" class="custom-input option-input flex-grow" placeholder="Option..." value="${value.replace(/"/g, '&quot;')}">
                 <button onclick="this.parentElement.remove(); updateCorrectSelect()" class="text-slate-500 hover:text-red-400 px-2"><i class="fa-solid fa-times"></i></button>
             `;
             container.appendChild(div);
-            div.querySelector('input').addEventListener('input', updateCorrectSelect);
+            const input = div.querySelector('input');
+            input.addEventListener('input', updateCorrectSelect);
             updateCorrectSelect();
         }
 
@@ -1700,49 +1847,61 @@
             const isMulti = document.getElementById('q-input-type').value === 'multiselect';
             
             // Update single select dropdown
-            const currentVal = singleSelect.value;
-            singleSelect.innerHTML = '';
-            
-            inputs.forEach((input, idx) => {
-                if (input.value.trim() !== '') {
-                    const opt = document.createElement('option');
-                    opt.value = idx;
-                    opt.text = `${String.fromCharCode(65+idx)}. ${input.value.substring(0, 50)}`;
-                    singleSelect.appendChild(opt);
+            if (singleSelect) {
+                const currentVal = singleSelect.value;
+                singleSelect.innerHTML = '';
+                
+                inputs.forEach((input, idx) => {
+                    if (input.value.trim() !== '') {
+                        const opt = document.createElement('option');
+                        opt.value = idx;
+                        opt.text = `${String.fromCharCode(65+idx)}. ${input.value.substring(0, 50)}`;
+                        singleSelect.appendChild(opt);
+                    }
+                });
+                
+                if (currentVal && singleSelect.options[parseInt(currentVal)]) {
+                    singleSelect.value = currentVal;
                 }
-            });
-            
-            if (currentVal && singleSelect.options[parseInt(currentVal)]) {
-                singleSelect.value = currentVal;
             }
             
             // Update multi-select checkboxes
-            multiContainer.innerHTML = '';
-            inputs.forEach((input, idx) => {
-                if (input.value.trim() !== '') {
-                    const label = document.createElement('label');
-                    label.className = 'flex items-center gap-2 text-slate-300 cursor-pointer hover:bg-white/5 p-2 rounded';
-                    label.innerHTML = `
-                        <input type="checkbox" class="multi-correct-checkbox w-4 h-4 rounded border-slate-500 text-neon-blue focus:ring-neon-blue bg-dark-800" value="${idx}">
-                        <span class="font-mono text-slate-500 w-6">${String.fromCharCode(65+idx)}.</span>
-                        <span>${input.value}</span>
-                    `;
-                    multiContainer.appendChild(label);
-                }
-            });
+            if (multiContainer) {
+                multiContainer.innerHTML = '';
+                inputs.forEach((input, idx) => {
+                    if (input.value.trim() !== '') {
+                        const label = document.createElement('label');
+                        label.className = 'flex items-center gap-2 text-slate-300 cursor-pointer hover:bg-white/5 p-2 rounded';
+                        label.innerHTML = `
+                            <input type="checkbox" class="multi-correct-checkbox w-4 h-4 rounded border-slate-500 text-neon-blue focus:ring-neon-blue bg-dark-800" value="${idx}">
+                            <span class="font-mono text-slate-500 w-6">${String.fromCharCode(65+idx)}.</span>
+                            <span>${input.value}</span>
+                        `;
+                        multiContainer.appendChild(label);
+                    }
+                });
+            }
         }
 
         function saveQuestion() {
-            const text = document.getElementById('q-input-text').value;
-            const category = document.getElementById('q-input-category').value;
+            if (!selectedManagerDeckId) return;
+            const deck = decks.find(d => d.id === selectedManagerDeckId);
+            if (!deck) return;
+
+            const text = document.getElementById('q-input-text').value.trim();
+            const category = document.getElementById('q-input-category').value.trim();
             const code = document.getElementById('q-input-code').value;
-            const explanation = document.getElementById('q-input-explanation').value;
+            const explanation = document.getElementById('q-input-explanation').value.trim();
             const isMulti = document.getElementById('q-input-type').value === 'multiselect';
             
             const options = Array.from(document.querySelectorAll('.option-input'))
-                .map(i => i.value)
-                .filter(v => v.trim() !== '');
+                .map(i => i.value.trim())
+                .filter(v => v !== '');
             
+            if (!text) {
+                showToast("Enter a question", "error");
+                return;
+            }
             if (options.length < 2) {
                 showToast("Need at least 2 options", "error");
                 return;
@@ -1759,7 +1918,7 @@
                     return;
                 }
                 correctArray = checked;
-                correct = checked.length > 1 ? checked : checked[0];
+                correct = correctArray;
             } else {
                 const singleVal = parseInt(document.getElementById('q-input-correct').value);
                 if (isNaN(singleVal) || singleVal >= options.length) {
@@ -1770,14 +1929,13 @@
                 correctArray = [singleVal];
             }
 
-            const deck = decks.find(d => d.id === selectedManagerDeckId);
             const newQ = {
-                id: editingQuestionIndex !== null ? deck.questions[editingQuestionIndex].id : Date.now().toString(),
+                id: editingQuestionIndex !== null ? (deck.questions[editingQuestionIndex]?.id || Date.now().toString()) : Date.now().toString(),
                 question: text,
                 options: options,
                 correct: correct,
                 correctArray: correctArray,
-                isMultiselect: isMulti || (Array.isArray(correct) && correct.length > 1),
+                isMultiselect: isMulti,
                 explanation: explanation,
                 category: category,
                 code: code || null,
@@ -1786,7 +1944,11 @@
                 ease: 2.5
             };
 
-            if (editingQuestionIndex !== null) {
+            if (editingQuestionIndex !== null && deck.questions[editingQuestionIndex]) {
+                // Preserve due date and interval if editing
+                newQ.dueDate = deck.questions[editingQuestionIndex].dueDate;
+                newQ.interval = deck.questions[editingQuestionIndex].interval;
+                newQ.ease = deck.questions[editingQuestionIndex].ease;
                 deck.questions[editingQuestionIndex] = newQ;
                 showToast("Question updated!", "success");
             } else {
@@ -1804,8 +1966,11 @@
         }
 
         function deleteQuestion(index) {
+            if(!selectedManagerDeckId) return;
             if(confirm("Delete this question?")) {
                 const deck = decks.find(d => d.id === selectedManagerDeckId);
+                if (!deck || !deck.questions) return;
+                
                 deck.questions.splice(index, 1);
                 saveToStorage();
                 renderEditor(selectedManagerDeckId);
