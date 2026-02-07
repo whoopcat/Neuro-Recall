@@ -8,6 +8,17 @@
     <meta http-equiv="Expires" content="0">
     <title>NeuroRecall | Smart MCQ Drill</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -116,14 +127,17 @@
             transform: scale(0.95);
         }
 
+        /* Code formatting styles */
         code {
-            background: #0f172a;
+            background: #1e293b;
             padding: 2px 6px;
             border-radius: 4px;
             color: #facc15;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.9em;
+            border: 1px solid #334155;
         }
+        
         pre {
             background: #0f172a;
             padding: 16px;
@@ -131,6 +145,37 @@
             border: 1px solid #334155;
             overflow-x: auto;
             margin: 1rem 0;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            border: none;
+            color: inherit;
+        }
+
+        /* Prism.js theme overrides for dark theme */
+        pre[class*="language-"] {
+            background: #0f172a !important;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        code[class*="language-"] {
+            background: transparent !important;
+            text-shadow: none !important;
+        }
+
+        /* Inline code styling */
+        :not(pre) > code {
+            background: #1e293b;
+            color: #facc15;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            border: 1px solid #334155;
         }
 
         .custom-input {
@@ -191,6 +236,12 @@
 
         .multiselect-indicator {
             background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        /* Question text code block handling */
+        .question-text code {
+            white-space: pre-wrap;
+            word-break: break-word;
         }
     </style>
 </head>
@@ -327,19 +378,22 @@
                         </span>
                     </div>
 
-                    <h2 id="question-text" class="text-xl md:text-2xl font-semibold leading-relaxed mb-2 text-slate-100">
-                        Loading question...
-                    </h2>
+                    <!-- Question Text with Code Support -->
+                    <div id="question-container" class="mb-6">
+                        <h2 id="question-text" class="text-xl md:text-2xl font-semibold leading-relaxed text-slate-100 question-text">
+                            Loading question...
+                        </h2>
+                    </div>
                     
                     <p id="multiselect-hint" class="hidden text-sm text-neon-yellow mb-6 italic">
                         <i class="fa-solid fa-circle-info mr-1"></i>
                         Select all that apply. You must select all correct answers to be marked correct.
                     </p>
 
-                    <!-- Code Block -->
-                    <div id="code-block" class="hidden mb-8 relative group">
+                    <!-- Code Block (for separate code field) -->
+                    <div id="code-block" class="hidden mb-6 relative group">
                         <div class="absolute top-2 right-2 text-xs text-slate-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity">Code Snippet</div>
-                        <pre><code id="code-content" class="language-c"></code></pre>
+                        <pre><code id="code-content" class="language-java"></code></pre>
                     </div>
 
                     <!-- Options -->
@@ -429,7 +483,6 @@
                     </div>
                     <p class="text-xs text-slate-400">Import from raw GitHub URL</p>
                 </div>
-                <!-- FIXED: Added explicit file input trigger with reset -->
                 <div onclick="triggerFileUpload()" class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
                     <div class="flex items-center gap-3 mb-2">
                         <i class="fa-solid fa-file-arrow-up text-2xl text-neon-blue"></i>
@@ -778,6 +831,86 @@
             return [0]; // fallback
         }
 
+        /* --- CODE FORMATTING UTILS --- */
+        
+        /**
+         * Detects language from code content or question context
+         */
+        function detectLanguage(code, category) {
+            const lowerCode = code.toLowerCase();
+            const lowerCat = (category || '').toLowerCase();
+            
+            // Check for explicit language markers in code
+            if (lowerCode.includes('class ') && lowerCode.includes('public static void main')) return 'java';
+            if (lowerCode.includes('system.out.println')) return 'java';
+            if (lowerCode.includes('def ') && lowerCode.includes(':')) return 'python';
+            if (lowerCode.includes('console.log') || lowerCode.includes('function') || lowerCode.includes('=>')) return 'javascript';
+            if (lowerCode.includes('#include')) return 'c';
+            if (lowerCode.includes('using namespace') || lowerCode.includes('std::')) return 'cpp';
+            if (lowerCode.includes('<html') || lowerCode.includes('<div')) return 'html';
+            if (lowerCode.includes('select ') && lowerCode.includes('from ')) return 'sql';
+            
+            // Check category hints
+            if (lowerCat.includes('java')) return 'java';
+            if (lowerCat.includes('python')) return 'python';
+            if (lowerCat.includes('c++') || lowerCat.includes('cpp')) return 'cpp';
+            if (lowerCat.includes('c ')) return 'c';
+            if (lowerCat.includes('sql')) return 'sql';
+            if (lowerCat.includes('web') || lowerCat.includes('html')) return 'html';
+            if (lowerCat.includes('javascript') || lowerCat.includes('js')) return 'javascript';
+            
+            return 'java'; // default
+        }
+
+        /**
+         * Formats question text with code blocks
+         * Extracts code blocks (wrapped in ``` or inline `) and formats them
+         */
+        function formatQuestionText(text, codeField, category) {
+            if (!text) return '';
+            
+            // If there's a separate code field, use it for the code block
+            let code = codeField;
+            
+            // Check for markdown code blocks in the question text
+            const codeBlockRegex = /```(\w+)?\n?([\s\S]*?)```/g;
+            const inlineCodeRegex = /`([^`]+)`/g;
+            
+            let formattedText = text;
+            let extractedCode = null;
+            let language = 'java';
+            
+            // Extract code blocks
+            formattedText = formattedText.replace(codeBlockRegex, (match, lang, codeContent) => {
+                if (!extractedCode) {
+                    extractedCode = codeContent.trim();
+                    language = lang || detectLanguage(codeContent, category);
+                }
+                return ''; // Remove from text, will display separately
+            });
+            
+            // Format inline code
+            formattedText = formattedText.replace(inlineCodeRegex, (match, codeContent) => {
+                return `<code>${escapeHtml(codeContent)}</code>`;
+            });
+            
+            // Clean up extra whitespace from removed code blocks
+            formattedText = formattedText.replace(/\n{3,}/g, '\n\n').trim();
+            
+            // If we extracted code from text but no separate code field, use extracted
+            if (extractedCode && !code) {
+                code = extractedCode;
+            }
+            
+            return { text: formattedText, code: code, language: language };
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         /* --- PRESET/REMOTE DECK SYSTEM --- */
         async function loadPresetDecks() {
             if (presets.length === 0) return;
@@ -916,16 +1049,28 @@
                 if (q.type === 'multiselect') isMultiselect = true;
                 if (correctArray.length > 1) isMultiselect = true;
                 
+                // Process code field - extract from question if needed
+                let code = q.code || null;
+                let questionText = q.question;
+                
+                // Check if question contains code blocks
+                const codeBlockMatch = questionText.match(/```(\w+)?\n?([\s\S]*?)```/);
+                if (codeBlockMatch && !code) {
+                    code = codeBlockMatch[2].trim();
+                    questionText = questionText.replace(codeBlockMatch[0], '').trim();
+                }
+                
                 return {
                     id: 'q_' + Date.now() + '_' + idx,
-                    question: q.question,
+                    question: questionText,
                     options: q.options || [],
                     correct: isMultiselect ? correctArray : (correctArray[0] || 0),
                     correctArray: correctArray,
                     isMultiselect: isMultiselect,
                     explanation: q.explanation || (Array.isArray(q.answer) ? q.answer.join(', ') : q.answer) || "No explanation provided",
                     category: q.category || "General",
-                    code: q.code || null,
+                    code: code,
+                    language: q.language || detectLanguage(code || '', q.category),
                     dueDate: new Date(),
                     interval: 0,
                     ease: 2.5
@@ -1135,10 +1280,32 @@
             document.getElementById('multiselect-hint').classList.add('hidden');
             document.getElementById('card-type-badge').classList.add('hidden');
             document.getElementById('correct-answers-display').classList.add('hidden');
+            document.getElementById('code-block').classList.add('hidden');
+            
+            // Format question text with code handling
+            const formatted = formatQuestionText(card.question, card.code, card.category);
             
             // Set content
             document.getElementById('card-category').innerText = card.category || 'General';
-            document.getElementById('question-text').innerHTML = card.question;
+            document.getElementById('question-text').innerHTML = formatted.text;
+            
+            // Handle code display
+            if (formatted.code) {
+                const codeBlock = document.getElementById('code-block');
+                const codeContent = document.getElementById('code-content');
+                
+                codeBlock.classList.remove('hidden');
+                codeContent.textContent = formatted.code;
+                
+                // Set language class
+                const lang = card.language || formatted.language || 'java';
+                codeContent.className = `language-${lang}`;
+                
+                // Trigger syntax highlighting
+                if (window.Prism) {
+                    Prism.highlightElement(codeContent);
+                }
+            }
             
             // Handle multiselect UI
             const isMulti = isMultiSelect(card);
@@ -1152,15 +1319,6 @@
             } else {
                 document.getElementById('initial-hint').innerText = "Select an answer to reveal";
             }
-            
-            // Code block
-            const codeBlock = document.getElementById('code-block');
-            if (card.code) {
-                codeBlock.classList.remove('hidden');
-                document.getElementById('code-content').innerText = card.code;
-            } else {
-                codeBlock.classList.add('hidden');
-            }
 
             // Render options
             const optsContainer = document.getElementById('options-container');
@@ -1168,9 +1326,13 @@
                 const btn = document.createElement('button');
                 btn.className = `option-card w-full text-left p-4 rounded-xl border border-dark-700 bg-dark-800/50 text-slate-300 font-medium relative overflow-hidden`;
                 btn.dataset.index = idx;
+                
+                // Format option text with inline code support
+                const formattedOpt = opt.replace(/`([^`]+)`/g, '<code>$1</code>');
+                
                 btn.innerHTML = `
                     <span class="inline-block w-6 font-mono text-slate-500 opacity-50">${String.fromCharCode(65+idx)}.</span> 
-                    ${opt}
+                    <span class="option-text">${formattedOpt}</span>
                     ${isMulti ? '<span class="ml-2 text-slate-600 check-icon"><i class="fa-regular fa-square"></i></span>' : ''}
                 `;
                 
@@ -1290,7 +1452,10 @@
         }
 
         function showExplanation(card) {
-            document.getElementById('explanation-text').innerText = card.explanation;
+            // Format explanation with code support
+            const formattedExp = formatQuestionText(card.explanation, null, card.category);
+            document.getElementById('explanation-text').innerHTML = formattedExp.text;
+            
             document.getElementById('explanation-area').classList.remove('hidden');
             document.getElementById('submit-container').classList.add('hidden');
             document.getElementById('controls-initial').classList.add('hidden');
@@ -1434,10 +1599,11 @@
                     ? q.correctArray.map(i => String.fromCharCode(65 + i)).join(', ')
                     : (Array.isArray(q.correct) ? q.correct : [q.correct]).map(i => String.fromCharCode(65 + i)).join(', ');
                 const typeIcon = q.isMultiselect ? '<i class="fa-solid fa-check-double text-neon-yellow mr-2" title="Multi-select"></i>' : '';
+                const hasCode = q.code ? '<i class="fa-solid fa-code text-neon-blue mr-2" title="Has code"></i>' : '';
                 
                 row.innerHTML = `
                     <div class="truncate pr-4 flex-grow flex items-center">
-                        ${typeIcon}
+                        ${typeIcon}${hasCode}
                         <div>
                             <div class="text-sm text-white font-medium truncate">${q.question}</div>
                             <div class="text-xs text-slate-500">${q.category || 'Uncategorized'} • Answers: ${correctLabels}</div>
@@ -1494,7 +1660,8 @@
                     type: q.isMultiselect ? 'multiselect' : undefined,
                     explanation: q.explanation,
                     category: q.category,
-                    code: q.code
+                    code: q.code,
+                    language: q.language
                 }))
             };
             
@@ -1676,16 +1843,28 @@
 
                     if (correctArray.length === 0) correctArray = [0];
 
+                    // Process code from question text if present
+                    let code = q.code || null;
+                    let questionText = q.question;
+                    
+                    // Extract code blocks from question text
+                    const codeBlockMatch = questionText.match(/```(\w+)?\n?([\s\S]*?)```/);
+                    if (codeBlockMatch && !code) {
+                        code = codeBlockMatch[2].trim();
+                        questionText = questionText.replace(codeBlockMatch[0], '').trim();
+                    }
+
                     const newQ = {
                         id: Date.now().toString() + Math.random(),
-                        question: q.question,
+                        question: questionText,
                         options: q.options,
                         correct: isMultiselect && correctArray.length > 1 ? correctArray : correctArray[0],
                         correctArray: correctArray,
                         isMultiselect: isMultiselect,
                         explanation: q.explanation || "No explanation",
                         category: q.category || filename.replace('.json', ''),
-                        code: q.code || null,
+                        code: code,
+                        language: q.language || detectLanguage(code || '', q.category),
                         dueDate: new Date(),
                         interval: 0,
                         ease: 2.5
@@ -1968,6 +2147,7 @@
                 explanation: explanation,
                 category: category,
                 code: code || null,
+                language: detectLanguage(code || '', category),
                 dueDate: new Date(),
                 interval: 0,
                 ease: 2.5
