@@ -429,7 +429,8 @@
                     </div>
                     <p class="text-xs text-slate-400">Import from raw GitHub URL</p>
                 </div>
-                <div onclick="document.getElementById('file-input').click()" class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
+                <!-- FIXED: Added explicit file input trigger with reset -->
+                <div onclick="triggerFileUpload()" class="glass-panel p-4 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-white/10">
                     <div class="flex items-center gap-3 mb-2">
                         <i class="fa-solid fa-file-arrow-up text-2xl text-neon-blue"></i>
                         <span class="font-bold text-white">Upload JSON</span>
@@ -494,9 +495,9 @@
                         <div id="local-upload" class="mb-6 hidden">
                             <label class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-2 block">Import More Questions</label>
                             <div id="drop-zone" class="drop-zone rounded-xl p-4 text-center cursor-pointer">
-                                <input type="file" id="file-input" accept=".json" multiple class="hidden">
+                                <input type="file" id="file-input" accept=".json" multiple class="hidden" onclick="this.value=null">
                                 <i class="fa-solid fa-cloud-arrow-up text-xl text-slate-400 mb-1"></i>
-                                <p class="text-xs text-slate-400">Drop JSON files here</p>
+                                <p class="text-xs text-slate-400">Drop JSON files here or click to browse</p>
                             </div>
                         </div>
 
@@ -1544,8 +1545,30 @@
                 });
             }
             if (fileInput) {
-                fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+                fileInput.addEventListener('change', (e) => {
+                    handleFiles(e.target.files);
+                    // CRITICAL FIX: Reset input so same file can be selected again
+                    e.target.value = null;
+                });
             }
+        }
+
+        // NEW FUNCTION: Trigger file upload from manager view
+        function triggerFileUpload() {
+            if (!selectedManagerDeckId) {
+                showToast("Please select a deck first", "error");
+                return;
+            }
+            const deck = decks.find(d => d.id === selectedManagerDeckId);
+            if (!deck) {
+                showToast("Deck not found", "error");
+                return;
+            }
+            if (!deck.isLocal) {
+                showToast("Cannot upload to remote deck", "error");
+                return;
+            }
+            document.getElementById('file-input').click();
         }
 
         function handleFiles(files) {
@@ -1563,6 +1586,9 @@
                 return;
             }
 
+            console.log("Processing files:", files.length, "for deck:", deck.name);
+            showToast(`Processing ${files.length} file(s)...`, "info");
+
             Array.from(files).forEach(file => {
                 if (!file.name.endsWith('.json')) {
                     showToast(`Skipped ${file.name}: Not JSON`, "error");
@@ -1575,6 +1601,7 @@
                         processImportedData(data, file.name);
                     } catch (err) {
                         showToast(`Error parsing ${file.name}: ${err.message}`, "error");
+                        console.error("Parse error:", err);
                     }
                 };
                 reader.onerror = () => {
@@ -1598,6 +1625,8 @@
                 showToast("Invalid JSON format: expected array or {questions: [...]}", "error");
                 return;
             }
+
+            console.log("Importing", questionsToImport.length, "questions from", filename);
 
             questionsToImport.forEach((q, idx) => {
                 try {
