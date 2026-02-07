@@ -1,0 +1,602 @@
+[
+  {
+    "category": "Polymorphism & Fields",
+    "question": "What is the output of the following code?\n\nclass Parent {\n\tint x = 10;\n\tvoid print() { System.out.println(\"Parent\"); }\n}\n\nclass Child extends Parent {\n\tint x = 20;\n\tvoid print() { System.out.println(\"Child\"); }\n}\n\npublic class Test {\n\tpublic static void main(String[] args) {\n\t\tParent p = new Child();\n\t\tSystem.out.println(p.x + \" \" + ((Child)p).x);\n\t\tp.print();\n\t}\n}",
+    "options": [
+      "10 20 Parent",
+      "20 20 Child",
+      "10 20 Child",
+      "20 10 Parent"
+    ],
+    "answer": "10 20 Child",
+    "explanation": "In Java, methods are polymorphic (overridden), but variables are NOT. 'p.x' refers to the variable in the declared type (Parent), which is 10. '((Child)p).x' casts it to Child, accessing the Child's variable (20). The method 'print()' is overridden, so the runtime object's method (Child) is called."
+  },
+  {
+    "category": "Error Handling",
+    "question": "What is the return value of this method?\n\npublic int test() {\n\ttry {\n\t\treturn 1;\n\t} catch (Exception e) {\n\t\treturn 2;\n\t} finally {\n\t\treturn 3;\n\t}\n}",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "Compilation Error"
+    ],
+    "answer": "3",
+    "explanation": "The 'finally' block is always executed. If a 'finally' block contains a return statement, it overrides any return statement from the 'try' or 'catch' blocks."
+  },
+  {
+    "category": "String Pool & Memory",
+    "question": "What is the result?\n\nString s1 = \"Java\";\nString s2 = new String(\"Java\");\nString s3 = s2.intern();\n\nSystem.out.println((s1 == s2) + \" \" + (s1 == s3));",
+    "options": [
+      "true true",
+      "false false",
+      "false true",
+      "true false"
+    ],
+    "answer": "false true",
+    "explanation": "'s1' is in the String Constant Pool. 's2' is a new object on the Heap (so s1 == s2 is false). 's2.intern()' returns the reference from the pool if it exists, so 's3' points to the same pool object as 's1' (so s1 == s3 is true)."
+  },
+  {
+    "category": "Inheritance & Constructors",
+    "question": "What is the output?\n\nclass A {\n\tA() { System.out.print(\"A \"); }\n}\nclass B extends A {\n\tB() { System.out.print(\"B \"); }\n}\nclass C extends B {\n\tC() { System.out.print(\"C \"); }\n}\n\npublic class Main {\n\tpublic static void main(String[] args) {\n\t\tnew C();\n\t}\n}",
+    "options": [
+      "C",
+      "C B A",
+      "A B C",
+      "B C A"
+    ],
+    "answer": "A B C",
+    "explanation": "Constructors are chained. C's constructor implicitly calls super() (B's constructor), which calls A's constructor. Execution completes from the top down: A -> B -> C."
+  },
+  {
+    "category": "Pass by Value",
+    "question": "What is the output?\n\npublic class Test {\n\tstatic void change(int[] arr) {\n\t\tarr[0] = 99;\n\t\tarr = new int[]{ 1, 2, 3 };\n\t}\n\n\tpublic static void main(String[] args) {\n\t\tint[] nums = { 0, 0, 0 };\n\t\tchange(nums);\n\t\tSystem.out.println(nums[0]);\n\t}\n}",
+    "options": [
+      "0",
+      "1",
+      "99",
+      "Exception"
+    ],
+    "answer": "99",
+    "explanation": "Java passes references by value. 'arr[0] = 99' modifies the actual object in memory. However, 'arr = new int[]{...}' only changes the local reference variable 'arr' inside the method; it does not rebind the 'nums' variable in main."
+  },
+  {
+    "category": "Abstract Classes",
+    "question": "Which statement is TRUE regarding the following code?\n\nabstract class Shape {\n\tShape() { System.out.println(\"Shape Init\"); }\n\tabstract void draw();\n}\n\nclass Circle extends Shape {\n\tvoid draw() { }\n}",
+    "options": [
+      "Compilation Error: Abstract classes cannot have constructors.",
+      "Runtime Error when 'new Circle()' is called.",
+      "The Shape constructor is called when 'new Circle()' is executed.",
+      "The Shape constructor is ignored because Shape cannot be instantiated."
+    ],
+    "answer": "The Shape constructor is called when 'new Circle()' is executed.",
+    "explanation": "Abstract classes CAN have constructors. They are used to initialize the fields of the abstract class when a concrete subclass is instantiated."
+  },
+  {
+    "category": "Exception Hierarchy",
+    "question": "What happens here?\n\ntry {\n\tthrow new java.io.IOException();\n} catch (Exception e) {\n\tSystem.out.print(\"A\");\n} catch (java.io.IOException e) {\n\tSystem.out.print(\"B\");\n}",
+    "options": [
+      "Prints A",
+      "Prints B",
+      "Prints AB",
+      "Compilation Error"
+    ],
+    "answer": "Compilation Error",
+    "explanation": "Unreachable code. 'Exception' is the parent of 'IOException'. The first catch block catches everything, so the specific 'IOException' block can never be reached."
+  },
+  {
+    "category": "Cloning",
+    "question": "Assume 'Person' implements Cloneable but uses the default clone().\n\nPerson p1 = new Person(\"John\", new Address(\"City\"));\nPerson p2 = (Person) p1.clone();\np2.address.city = \"Town\";\n\nSystem.out.println(p1.address.city);",
+    "options": [
+      "City",
+      "Town",
+      "null",
+      "Runtime Exception"
+    ],
+    "answer": "Town",
+    "explanation": "Default clone() performs a Shallow Copy. The 'address' field in p1 and p2 points to the SAME Address object in memory. Changing it in p2 affects p1."
+  },
+  {
+    "category": "Interfaces",
+    "question": "What is the implicit modifier of the variable 'x' in this interface?\n\ninterface MyInterface {\n\tint x = 10;\n}",
+    "options": [
+      "private int",
+      "public int",
+      "public static final int",
+      "protected final int"
+    ],
+    "answer": "public static final int",
+    "explanation": "All variables declared in an interface are implicitly 'public', 'static', and 'final'. They are constants."
+  },
+  {
+    "category": "Overloading",
+    "question": "Which method is called?\n\nvoid test(long l) { System.out.println(\"Long\"); }\nvoid test(int... i) { System.out.println(\"Varargs\"); }\n\npublic static void main(String[] args) {\n\tnew Main().test(5);\n}",
+    "options": [
+      "Long",
+      "Varargs",
+      "Compilation Error (Ambiguous)",
+      "Runtime Error"
+    ],
+    "answer": "Long",
+    "explanation": "Java prefers widening (int -> long) over boxing or varargs. 5 is an int, it widens to long seamlessly."
+  },
+  {
+    "category": "Static Binding",
+    "question": "What is the output?\n\nclass A {\n\tstatic void show() { System.out.print(\"Static-A \"); }\n}\nclass B extends A {\n\tstatic void show() { System.out.print(\"Static-B \"); }\n}\n\npublic class Main {\n\tpublic static void main(String[] args) {\n\t\tA obj = new B();\n\t\tobj.show();\n\t}\n}",
+    "options": [
+      "Static-A",
+      "Static-B",
+      "Static-A Static-B",
+      "Compilation Error"
+    ],
+    "answer": "Static-A",
+    "explanation": "Static methods are hidden, not overridden. The method called depends on the reference type (Class A), not the runtime object type. This is static binding."
+  },
+  {
+    "category": "Encapsulation",
+    "question": "Which is the correct way to strictly encapsulate a class 'Data'?",
+    "options": [
+      "Make variables public and methods private.",
+      "Make variables private and provide public getters/setters.",
+      "Make variables protected and provide default getters.",
+      "Make the class final and variables public."
+    ],
+    "answer": "Make variables private and provide public getters/setters.",
+    "explanation": "Encapsulation requires hiding the internal state (private variables) and controlling access via public methods (getters/setters)."
+  },
+  {
+    "category": "Initialization Blocks",
+    "question": "What is the sequence of output?\n\nclass Test {\n\tstatic { System.out.print(\"Static \"); }\n\t{ System.out.print(\"Instance \"); }\n\tTest() { System.out.print(\"Constructor \"); }\n\n\tpublic static void main(String[] args) {\n\t\tnew Test();\n\t\tnew Test();\n\t}\n}",
+    "options": [
+      "Static Instance Constructor Instance Constructor",
+      "Instance Constructor Static Instance Constructor",
+      "Static Instance Constructor Static Instance Constructor",
+      "Static Instance Instance Constructor Constructor"
+    ],
+    "answer": "Static Instance Constructor Instance Constructor",
+    "explanation": "Static blocks run once when the class is loaded. Instance blocks run every time an object is created, before the constructor. So: Static (once) -> Instance -> Const -> Instance -> Const."
+  },
+  {
+    "category": "Casting",
+    "question": "What happens here?\n\nObject o = new String(\"Hello\");\nInteger i = (Integer) o;",
+    "options": [
+      "i becomes null",
+      "Compilation Error",
+      "ClassCastException at runtime",
+      "i becomes the hash code of the string"
+    ],
+    "answer": "ClassCastException at runtime",
+    "explanation": "The compiler allows the cast because Object is a parent of Integer. However, at runtime, the actual object is a String, which cannot be cast to Integer. This causes a ClassCastException."
+  },
+  {
+    "category": "Garbage Collection",
+    "question": "In the following code, how many objects are eligible for garbage collection after line 4?\n\n1. String s1 = new String(\"A\");\n2. String s2 = new String(\"B\");\n3. s1 = s2;\n4. s2 = null;",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "All objects"
+    ],
+    "answer": "1",
+    "explanation": "The object originally referenced by 's1' (\"A\") has no more references pointing to it after line 3. The object \"B\" is still referenced by 's1'."
+  },
+  {
+    "category": "Inheritance Access",
+    "question": "If method 'void foo()' is 'protected' in the Parent class, which access modifier is INVALID for 'foo()' in the Child class overriding it?",
+    "options": [
+      "public",
+      "protected",
+      "private",
+      "None of the above"
+    ],
+    "answer": "private",
+    "explanation": "When overriding, you cannot reduce the visibility of the inherited method. 'protected' can become 'protected' or 'public', but not 'private' or default (package-private)."
+  },
+  {
+    "category": "Try-Catch Flow",
+    "question": "What is the output?\n\ntry {\n\tSystem.out.print(\"A\");\n\tint x = 5/0;\n\tSystem.out.print(\"B\");\n} catch(ArithmeticException e) {\n\tSystem.out.print(\"C\");\n} finally {\n\tSystem.out.print(\"D\");\n}\nSystem.out.print(\"E\");",
+    "options": [
+      "ACDE",
+      "ABDE",
+      "ACD",
+      "AD"
+    ],
+    "answer": "ACDE",
+    "explanation": "Prints 'A'. Exception at 5/0. Skips 'B'. Goes to 'catch', prints 'C'. Goes to 'finally', prints 'D'. Continues execution after the block, prints 'E'."
+  },
+  {
+    "category": "Interface Inheritance",
+    "question": "Interface A has method 'void x()'. Interface B extends A. Class C implements B.\nWhich methods must Class C implement?",
+    "options": [
+      "Only method x()",
+      "No methods needed if C is abstract",
+      "Both A and B's methods",
+      "Only B's specific methods"
+    ],
+    "answer": "No methods needed if C is abstract",
+    "explanation": "This is a trick question. If Class C is 'abstract', it doesn't need to implement anything. If concrete, it must implement 'x()'."
+  },
+  {
+    "category": "Wrapper Classes",
+    "question": "What is the output?\n\nInteger a = 127;\nInteger b = 127;\nInteger c = 128;\nInteger d = 128;\nSystem.out.println((a==b) + \" \" + (c==d));",
+    "options": [
+      "true true",
+      "true false",
+      "false true",
+      "false false"
+    ],
+    "answer": "true false",
+    "explanation": "Java caches Integer objects between -128 and 127. So 'a' and 'b' point to the same cached object. 128 is outside the cache, so 'c' and 'd' are new distinct objects."
+  },
+  {
+    "category": "Polymorphism",
+    "question": "class Animal { }\nclass Dog extends Animal { }\n\nAnimal a = new Dog();\nDog d = (Dog) a;\n\nIs this valid?",
+    "options": [
+      "Yes, compiles and runs.",
+      "Compilation error.",
+      "Runtime ClassCastException.",
+      "Valid only if Animal is an interface."
+    ],
+    "answer": "Yes, compiles and runs.",
+    "explanation": "This is a valid Downcast. The object 'a' is actually a 'Dog' in memory, so casting it back to 'Dog' is safe."
+  },
+  {
+    "category": "Exceptions",
+    "question": "Which of these is a Checked Exception?",
+    "options": [
+      "NullPointerException",
+      "ArithmeticException",
+      "FileNotFoundException",
+      "IndexOutOfBoundsException"
+    ],
+    "answer": "FileNotFoundException",
+    "explanation": "FileNotFoundException (subclass of IOException) is Checked. The others are RuntimeExceptions (Unchecked)."
+  },
+  {
+    "category": "String Immutability",
+    "question": "What is printed?\n\nString s = \"Hello\";\ns.concat(\" World\");\ns.toUpperCase();\nSystem.out.println(s);",
+    "options": [
+      "Hello World",
+      "HELLO WORLD",
+      "Hello",
+      "HELLO"
+    ],
+    "answer": "Hello",
+    "explanation": "Strings are immutable. Methods like concat() and toUpperCase() return NEW Strings; they do not modify the original 's' unless reassigned (e.g., s = s.concat(...))."
+  },
+  {
+    "category": "Constructors",
+    "question": "What happens if you define a class with arguments in the constructor but attempt to call 'new ClassName()' (no args)?",
+    "options": [
+      "It calls the default constructor provided by Java.",
+      "It calls the parameterized constructor with null/0 values.",
+      "Compilation Error.",
+      "Runtime Error."
+    ],
+    "answer": "Compilation Error.",
+    "explanation": "If you define ANY constructor, the compiler DOES NOT insert the default no-arg constructor. You must manually define a no-arg constructor if you want to use it."
+  },
+  {
+    "category": "Final Keyword",
+    "question": "What is the effect of declaring a class as 'final'?",
+    "options": [
+      "Its variables cannot be changed.",
+      "It cannot be instantiated.",
+      "It cannot be subclassed (extended).",
+      "Its methods are automatically abstract."
+    ],
+    "answer": "It cannot be subclassed (extended).",
+    "explanation": "'final' on a class prevents inheritance. (e.g., String class is final)."
+  },
+  {
+    "category": "Method Overriding",
+    "question": "Can you override a static method?",
+    "options": [
+      "Yes, completely.",
+      "No, it's called Method Hiding.",
+      "Yes, but only if the subclass is static too.",
+      "No, static methods cannot be redefined."
+    ],
+    "answer": "No, it's called Method Hiding.",
+    "explanation": "Static methods belong to the class, not the instance. Redeclaring them in a subclass is 'hiding', not 'overriding' (no dynamic polymorphism)."
+  },
+  {
+    "category": "Arrays",
+    "question": "int[] a = new int[5];\nSystem.out.println(a[2]);",
+    "options": [
+      "Garbage value",
+      "0",
+      "null",
+      "IndexOutOfBoundsException"
+    ],
+    "answer": "0",
+    "explanation": "Arrays of primitives are initialized to their default values. For 'int', the default is 0."
+  },
+  {
+    "category": "Interface Variables",
+    "question": "interface Test { int val = 5; }\n\nTest.val = 10;",
+    "options": [
+      "val becomes 10.",
+      "Compilation Error.",
+      "Runtime Error.",
+      "val becomes 10 only for that instance."
+    ],
+    "answer": "Compilation Error.",
+    "explanation": "Interface variables are 'final'. They cannot be reassigned."
+  },
+  {
+    "category": "Polymorphism",
+    "question": "What is the output?\n\nclass A { int get() { return 1; } }\nclass B extends A { int get() { return 2; } }\n\nA a = new B();\nSystem.out.println(a.get());",
+    "options": [
+      "1",
+      "2",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "answer": "2",
+    "explanation": "Dynamic binding applies to methods. The actual object is of type B, so B's 'get()' is executed."
+  },
+  {
+    "category": "Keywords",
+    "question": "Which keyword is used to access the immediate parent class constructor?",
+    "options": [
+      "this",
+      "parent",
+      "super",
+      "extends"
+    ],
+    "answer": "super",
+    "explanation": "'super()' is used to call the superclass constructor."
+  },
+  {
+    "category": "Exception Handling",
+    "question": "Does the 'finally' block execute if 'System.exit(0)' is called in the 'try' block?",
+    "options": [
+      "Yes, always.",
+      "No.",
+      "Only if an exception occurred.",
+      "Only in multi-threaded environments."
+    ],
+    "answer": "No.",
+    "explanation": "System.exit(0) terminates the JVM immediately. This is one of the few cases where 'finally' does NOT run."
+  },
+  {
+    "category": "Operators",
+    "question": "int x = 5;\nSystem.out.println(x++ + ++x);",
+    "options": [
+      "10",
+      "11",
+      "12",
+      "13"
+    ],
+    "answer": "12",
+    "explanation": "x++ uses 5, then x becomes 6. ++x increments 6 to 7, then uses 7. 5 + 7 = 12."
+  },
+  {
+    "category": "Constructors",
+    "question": "Can a constructor be private?",
+    "options": [
+      "No, never.",
+      "Yes, to prevent instantiation from outside the class.",
+      "Yes, but only in abstract classes.",
+      "No, it violates encapsulation."
+    ],
+    "answer": "Yes, to prevent instantiation from outside the class.",
+    "explanation": "Private constructors are common in Singleton patterns or Utility classes (like java.lang.Math) to prevent creating instances."
+  },
+  {
+    "category": "Deep vs Shallow Copy",
+    "question": "Which method is used to create a Deep Copy manually?",
+    "options": [
+      "Object.clone()",
+      "Overriding clone() and recursively cloning mutable fields.",
+      "Implementing Serializable.",
+      "Using the assignment operator '='"
+    ],
+    "answer": "Overriding clone() and recursively cloning mutable fields.",
+    "explanation": "Default clone() is shallow. For a deep copy, you must manually code the logic to create new instances of the mutable fields."
+  },
+  {
+    "category": "String Builder",
+    "question": "StringBuilder sb = new StringBuilder(\"Hello\");\nsb.append(\" World\");\nSystem.out.println(sb);",
+    "options": [
+      "Hello",
+      "Hello World",
+      "World",
+      "Compilation Error"
+    ],
+    "answer": "Hello World",
+    "explanation": "StringBuilder IS mutable (unlike String). The method 'append' modifies the existing object."
+  },
+  {
+    "category": "Polymorphism",
+    "question": "Which of these is NOT an example of Polymorphism?",
+    "options": [
+      "Method Overloading",
+      "Method Overriding",
+      "Private Method usage",
+      "Operator Overloading (String +)"
+    ],
+    "answer": "Private Method usage",
+    "explanation": "Private methods cannot be overridden, and thus do not exhibit runtime polymorphism."
+  },
+  {
+    "category": "Java Fundamentals",
+    "question": "What is the size of an 'int' in Java?",
+    "options": [
+      "16 bit",
+      "32 bit",
+      "64 bit",
+      "Depends on the OS"
+    ],
+    "answer": "32 bit",
+    "explanation": "In Java, primitive sizes are fixed and platform-independent. int is always 32-bit."
+  },
+  {
+    "category": "Abstract Class",
+    "question": "Can an abstract class have a 'main' method and run?",
+    "options": [
+      "No, because it cannot be instantiated.",
+      "Yes, static methods can run without instantiation.",
+      "No, compilation error.",
+      "Yes, but only if it has no abstract methods."
+    ],
+    "answer": "Yes, static methods can run without instantiation.",
+    "explanation": "You can run 'public static void main' in an abstract class because static methods don't require an object instance."
+  },
+  {
+    "category": "Inheritance",
+    "question": "Which class is the superclass of all classes in Java?",
+    "options": [
+      "Class",
+      "System",
+      "Object",
+      "Main"
+    ],
+    "answer": "Object",
+    "explanation": "Every class in Java implicitly extends java.lang.Object."
+  },
+  {
+    "category": "Operators",
+    "question": "boolean b1 = true;\nboolean b2 = false;\nboolean b3 = true;\nif (b1 & b2 | b2 & b3 | b2) System.out.print(\"ok\");\nelse System.out.print(\"nok\");",
+    "options": [
+      "ok",
+      "nok",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "answer": "nok",
+    "explanation": "Bitwise/Logical precedence. b1 & b2 (T&F=F). b2 & b3 (F&T=F). F | F | F = False."
+  },
+  {
+    "category": "Exceptions",
+    "question": "Can you catch 'Error' in Java (e.g., StackOverflowError)?",
+    "options": [
+      "No, it's impossible.",
+      "Yes, but it's not recommended.",
+      "Yes, but only using 'catch(Exception e)'.",
+      "No, compiler forbids it."
+    ],
+    "answer": "Yes, but it's not recommended.",
+    "explanation": "You CAN catch 'Throwable' or 'Error', but usually shouldn't, as Errors indicate serious JVM problems (like OutOfMemory) that the app cannot recover from."
+  },
+  {
+    "category": "Method Overloading",
+    "question": "Which signature implies Method Overloading for 'void foo(int a)'?",
+    "options": [
+      "int foo(int a)",
+      "void foo(int a, int b)",
+      "void foo(int x)",
+      "private void foo(int a)"
+    ],
+    "answer": "void foo(int a, int b)",
+    "explanation": "Overloading requires a DIFFERENT parameter list. Changing return type or access modifier alone is not overloading (and causes a compile error if signatures match)."
+  },
+  {
+    "category": "Composition",
+    "question": "Which describes Composition?",
+    "options": [
+      "Parent class holds a reference to Child.",
+      "A weak 'Has-A' relationship.",
+      "A strong 'Has-A' relationship where the child cannot exist without the parent.",
+      "Is-A relationship."
+    ],
+    "answer": "A strong 'Has-A' relationship where the child cannot exist without the parent.",
+    "explanation": "Composition implies ownership. If the Container is destroyed, the contained object is destroyed too (e.g., House and Room)."
+  },
+  {
+    "category": "Variables",
+    "question": "Local variables in Java are initialized to:",
+    "options": [
+      "null",
+      "0",
+      "false",
+      "No default value (Must be initialized before use)"
+    ],
+    "answer": "No default value (Must be initialized before use)",
+    "explanation": "Class fields have default values. Local variables (inside methods) DO NOT and will cause a compile error if accessed before initialization."
+  },
+  {
+    "category": "String",
+    "question": "String s = \"123\";\ns += 45;\nSystem.out.println(s);",
+    "options": [
+      "12345",
+      "168",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "answer": "12345",
+    "explanation": "String concatenation. The int 45 is converted to string \"45\" and appended."
+  },
+  {
+    "category": "Inheritance",
+    "question": "Can a class implement two interfaces that have a method with the exact same signature?",
+    "options": [
+      "No, Compilation Error.",
+      "Yes, but you can only implement one.",
+      "Yes, and implementing it once satisfies both.",
+      "Yes, but you must use super.interface to distinguish."
+    ],
+    "answer": "Yes, and implementing it once satisfies both.",
+    "explanation": "Since interface methods are abstract (no body), implementing the method once in the class satisfies the contract for both interfaces."
+  },
+  {
+    "category": "Keywords",
+    "question": "Which keyword prevents a variable from being serialized?",
+    "options": [
+      "static",
+      "volatile",
+      "transient",
+      "abstract"
+    ],
+    "answer": "transient",
+    "explanation": "'transient' variables are skipped during the Serialization process."
+  },
+  {
+    "category": "Collections",
+    "question": "ArrayList<Integer> list = new ArrayList<>();\nlist.add(1);\nlist.add(2);\nlist.remove(1);\nSystem.out.println(list);",
+    "options": [
+      "[1]",
+      "[2]",
+      "[1, 2]",
+      "IndexOutOfBoundsException"
+    ],
+    "answer": "[1]",
+    "explanation": "remove(int index) removes the element at that index. 'list.remove(1)' removes the element at index 1 (which is the value 2). Remaining list is [1]."
+  },
+  {
+    "category": "Math",
+    "question": "System.out.println(Math.round(2.5) + Math.round(3.5));",
+    "options": [
+      "5",
+      "6",
+      "7",
+      "5.0"
+    ],
+    "answer": "7",
+    "explanation": "Math.round() rounds to the nearest long. 2.5 rounds to 3. 3.5 rounds to 4. 3+4=7. (Note: standard rounding rules apply, .5 rounds up for positive numbers in this method)."
+  },
+  {
+    "category": "Threads",
+    "question": "Which method is used to start a thread execution?",
+    "options": [
+      "run()",
+      "start()",
+      "init()",
+      "execute()"
+    ],
+    "answer": "start()",
+    "explanation": "Calling 'run()' just executes the method in the current thread. Calling 'start()' creates a new call stack and starts the new thread."
+  },
+  {
+    "category": "Switch",
+    "question": "Which type is NOT allowed in a switch statement (Pre-Java 14/17)?",
+    "options": [
+      "int",
+      "String",
+      "Enum",
+      "boolean"
+    ],
+    "answer": "boolean",
+    "explanation": "Switch supports int, char, byte, short, String, and Enums. It does NOT support boolean, long, float, or double."
+  }
+]
