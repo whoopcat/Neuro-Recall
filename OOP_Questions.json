@@ -1,0 +1,310 @@
+[
+  {
+    "question": "In the context of Abstraction as described in the provided materials, which of the following statements strictly applies to a class that contains at least one abstract method?",
+    "options": [
+      "The class must be declared as abstract.",
+      "The class can be instantiated if the other methods are concrete.",
+      "The abstract method must be private to prevent external access.",
+      "The class must explicitly implement the abstract method within its own body."
+    ],
+    "answer": "The class must be declared as abstract.",
+    "category": "Abstraction"
+  },
+  {
+    "question": "Consider the following Java code snippet regarding Inheritance. What is the expected behavior when `Car c = new Car();` is executed?\n\nclass Vehicle {\n  Vehicle() { System.out.print(\"Vehicle \"); }\n}\nclass Car extends Vehicle {\n  Car() { System.out.print(\"Car \"); }\n}",
+    "options": [
+      "It prints \"Car \" only, because constructors are not inherited.",
+      "It prints \"Vehicle Car \", because the parent constructor is implicitly called first.",
+      "It prints \"Car Vehicle \", because the child constructor executes before calling super.",
+      "It throws a compile-time error because `super()` was not explicitly called."
+    ],
+    "answer": "It prints \"Vehicle Car \", because the parent constructor is implicitly called first.",
+    "category": "Inheritance"
+  },
+  {
+    "question": "A developer needs to copy an object `Employee` that contains a reference to a `Department` object. If the developer uses the default `clone()` method (Shallow Copy), what is the result?",
+    "options": [
+      "A new `Employee` object is created, and a new distinct `Department` object is also created.",
+      "A new `Employee` object is created, but it shares the same `Department` object reference as the original.",
+      "The `Employee` object is not created; only the reference variable is copied.",
+      "The `Department` object is cloned, but the `Employee` fields are set to null."
+    ],
+    "answer": "A new `Employee` object is created, but it shares the same `Department` object reference as the original.",
+    "category": "Cloning"
+  },
+  {
+    "question": "Based on the Relationships in OOPs, which scenario best describes a 'Composition' relationship?",
+    "options": [
+      "A Department contains Employees, but if the Department is closed, the Employees can still exist independently.",
+      "A Car has an Engine, and if the Car is destroyed, the Engine is also destroyed because their lifecycles are bound.",
+      "A Calculator uses a MathLibrary temporarily to perform a calculation.",
+      "A Teacher is a type of Person."
+    ],
+    "answer": "A Car has an Engine, and if the Car is destroyed, the Engine is also destroyed because their lifecycles are bound.",
+    "category": "Relationships"
+  },
+  {
+    "question": "You are analyzing a block of code involving Error Handling. If an exception is thrown inside a `try` block, caught in a `catch` block, and there is also a `finally` block, which of the following describes the execution flow?",
+    "options": [
+      "The `catch` block executes, and the `finally` block is skipped.",
+      "The `catch` block executes, followed by the `finally` block.",
+      "The `finally` block executes first, followed by the `catch` block.",
+      "The program terminates immediately after the `catch` block without running `finally`."
+    ],
+    "answer": "The `catch` block executes, followed by the `finally` block.",
+    "category": "Error Handling"
+  },
+  {
+    "question": "Regarding Interfaces, how do they differ from Abstract Classes in terms of inheritance limits?",
+    "options": [
+      "A class can extend multiple abstract classes but implement only one interface.",
+      "A class can extend only one abstract class but can implement multiple interfaces.",
+      "Interfaces can have constructors, whereas abstract classes cannot.",
+      "Interfaces cannot contain any variable declarations, whereas abstract classes can."
+    ],
+    "answer": "A class can extend only one abstract class but can implement multiple interfaces.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "In Polymorphism, specifically Method Overriding, what happens if you attempt to assign a weaker access privilege to the overriding method in the subclass (e.g., changing `public` in Parent to `protected` in Child)?",
+    "options": [
+      "It is allowed and restricts access to the subclass method.",
+      "It causes a compile-time error because the overriding method cannot be more restrictive.",
+      "It is allowed only if the method is abstract.",
+      "It runs successfully but throws a runtime SecurityException."
+    ],
+    "answer": "It causes a compile-time error because the overriding method cannot be more restrictive.",
+    "category": "Polymorphism"
+  },
+  {
+    "question": "Which Access Modifier should be used if you want a variable to be accessible only within its own class, ensuring complete data hiding?",
+    "options": [
+      "public",
+      "protected",
+      "private",
+      "default (package-private)"
+    ],
+    "answer": "private",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "Which of the following statements strictly applies to an 'Abstract Class' in Java as per the uploaded notes?",
+    "options": [
+      "It cannot contain any concrete (non-abstract) methods.",
+      "It must be instantiated using the 'new' keyword before use.",
+      "It can contain both abstract and concrete methods, but cannot be instantiated directly.",
+      "It is implicitly final and cannot be subclassed."
+    ],
+    "answer": "It can contain both abstract and concrete methods, but cannot be instantiated directly.",
+    "category": "Abstraction"
+  },
+  {
+    "question": "In the context of the 'Relationships in OOPs' document, which scenario best illustrates a 'Dependency' relationship?",
+    "options": [
+      "A 'Car' object permanently owns an 'Engine' object.",
+      "A 'Student' is a type of 'Person'.",
+      "A 'Calculator' class creates a temporary instance of 'MathLibrary' inside a method to perform a computation.",
+      "A 'Department' has a list of 'Employees', but the employees exist independently of the department."
+    ],
+    "answer": "A 'Calculator' class creates a temporary instance of 'MathLibrary' inside a method to perform a computation.",
+    "category": "Relationships"
+  },
+  {
+    "question": "What is the primary difference between 'Checked' and 'Unchecked' exceptions as described in the Error Handling material?",
+    "options": [
+      "Checked exceptions occur at compile-time and must be handled, while unchecked exceptions occur at runtime (e.g., ArithmeticException).",
+      "Checked exceptions are fatal errors like OutOfMemoryError, while unchecked exceptions are minor warnings.",
+      "Checked exceptions do not require a try-catch block, whereas unchecked exceptions always do.",
+      "Unchecked exceptions are checked by the compiler to ensure they are declared in the method signature."
+    ],
+    "answer": "Checked exceptions occur at compile-time and must be handled, while unchecked exceptions occur at runtime (e.g., ArithmeticException).",
+    "category": "Error Handling"
+  },
+  {
+    "question": "Regarding the `Cloneable` interface in Java, which statement is true?",
+    "options": [
+      "It contains the `clone()` abstract method that must be implemented.",
+      "It is a marker interface (contains no methods) that indicates a class allows field-for-field copying.",
+      "It automatically performs a Deep Copy of all object references.",
+      "It prevents a class from being subclassed."
+    ],
+    "answer": "It is a marker interface (contains no methods) that indicates a class allows field-for-field copying.",
+    "category": "Cloning"
+  },
+  {
+    "question": "When implementing the Singleton pattern or ensuring tight Encapsulation, why might a constructor be declared 'private'?",
+    "options": [
+      "To ensure the class is abstract and cannot be used.",
+      "To allow only subclasses to access the constructor.",
+      "To prevent external classes from creating instances of the class using the 'new' keyword.",
+      "To make the memory allocation faster by skipping initialization."
+    ],
+    "answer": "To prevent external classes from creating instances of the class using the 'new' keyword.",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "In Java Inheritance, if a subclass constructor does not explicitly call `super()`, what happens?",
+    "options": [
+      "The compiler automatically inserts a call to the no-argument constructor of the superclass.",
+      "The program throws a runtime exception.",
+      "The superclass is not initialized, and its fields remain null.",
+      "A compile-time error occurs unless the superclass is abstract."
+    ],
+    "answer": "The compiler automatically inserts a call to the no-argument constructor of the superclass.",
+    "category": "Inheritance"
+  },
+  {
+    "question": "Which of the following creates a 'Deep Copy' of an object?",
+    "options": [
+      "Using the assignment operator `Object copy = original;`.",
+      "Using the default `super.clone()` method without modification.",
+      "Recursively cloning all mutable reference fields inside the `clone()` method.",
+      "Passing the object as an argument to a method."
+    ],
+    "answer": "Recursively cloning all mutable reference fields inside the `clone()` method.",
+    "category": "Cloning"
+  },
+  {
+    "question": "According to the 'Interfaces' PDF, what is a key difference between an Interface and an Abstract Class?",
+    "options": [
+      "Interfaces can have state (instance variables), whereas Abstract Classes cannot.",
+      "A class can implement multiple interfaces but can only extend one abstract class.",
+      "Interfaces have constructors, while Abstract Classes do not.",
+      "Abstract classes are used for unrelated classes, while interfaces are for related classes."
+    ],
+    "answer": "A class can implement multiple interfaces but can only extend one abstract class.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "Review the following code snippet. What is the output?\n\n```java\ntry {\n    System.out.print(\"A\");\n    int x = 1 / 0;\n    System.out.print(\"B\");\n} catch (ArithmeticException e) {\n    System.out.print(\"C\");\n} finally {\n    System.out.print(\"D\");\n}\n```",
+    "options": [
+      "ACD",
+      "ABCD",
+      "AC",
+      "AD"
+    ],
+    "answer": "ACD",
+    "category": "Error Handling"
+  },
+  {
+    "question": "Which statement correctly describes 'Method Overloading'?",
+    "options": [
+      "Defining a method in a subclass with the same name and signature as the parent class.",
+      "Defining multiple methods in the same class with the same name but different parameter lists.",
+      "Hiding a private method from the superclass.",
+      "Changing the return type of a method while keeping parameters the same."
+    ],
+    "answer": "Defining multiple methods in the same class with the same name but different parameter lists.",
+    "category": "Polymorphism"
+  },
+  {
+    "question": "In the 'Retail Store' inheritance example from the slides, if 'Shirt' extends 'ClothingItem', which statement is correct?",
+    "options": [
+      "Shirt IS-A ClothingItem.",
+      "Shirt HAS-A ClothingItem.",
+      "ClothingItem IS-A Shirt.",
+      "Shirt DEPENDS-ON ClothingItem."
+    ],
+    "answer": "Shirt IS-A ClothingItem.",
+    "category": "Relationships"
+  },
+  {
+    "question": "What is the result of the following string comparison in Java?\n\n```java\nString s1 = new String(\"Hello\");\nString s2 = new String(\"Hello\");\nSystem.out.println(s1 == s2);\n```",
+    "options": [
+      "true, because the contents are identical.",
+      "false, because `==` compares object references (memory addresses), which are different.",
+      "true, because Java automatically intern strings created with `new`.",
+      "It throws a compile-time error."
+    ],
+    "answer": "false, because `==` compares object references (memory addresses), which are different.",
+    "category": "Java Fundamentals"
+  },
+  {
+    "question": "If a method in a superclass is declared as `protected`, which of the following is NOT valid for the overriding method in the subclass?",
+    "options": [
+      "Declaring the overriding method as `public`.",
+      "Declaring the overriding method as `protected`.",
+      "Declaring the overriding method as `private`.",
+      "Keeping the return type consistent (covariant)."
+    ],
+    "answer": "Declaring the overriding method as `private`.",
+    "category": "Polymorphism"
+  },
+  {
+    "question": "In the context of Encapsulation, what is the specific role of 'Getter' and 'Setter' methods?",
+    "options": [
+      "To allow unrestricted public access to all variables.",
+      "To provide a controlled public interface for accessing and updating private fields.",
+      "To replace the need for constructors.",
+      "To automatically delete unused objects from memory."
+    ],
+    "answer": "To provide a controlled public interface for accessing and updating private fields.",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "What is the primary characteristic of 'Composition' compared to 'Aggregation'?",
+    "options": [
+      "In Composition, the child object can exist independently of the parent.",
+      "In Composition, if the parent object is destroyed, the child objects are also destroyed (strong ownership).",
+      "Composition allows multiple parents to own the same child.",
+      "Composition is implemented using the `extends` keyword."
+    ],
+    "answer": "In Composition, if the parent object is destroyed, the child objects are also destroyed (strong ownership).",
+    "category": "Relationships"
+  },
+  {
+    "question": "If a class `Dog` implements an interface `Pet`, which of the following is mandatory?",
+    "options": [
+      "Dog must extend the Pet class.",
+      "Dog must implement all abstract methods defined in Pet (unless Dog is abstract).",
+      "Dog must declare a variable of type Pet.",
+      "Dog must have a constructor that accepts a Pet."
+    ],
+    "answer": "Dog must implement all abstract methods defined in Pet (unless Dog is abstract).",
+    "category": "Interfaces"
+  },
+  {
+    "question": "Consider the code below. What is the value of `b.x`?\n\n```java\nclass A { int x = 10; }\nclass B extends A { int x = 20; }\n...\nB b = new B();\n```\nIf you access `b.x` directly, which variable is retrieved?",
+    "options": [
+      "10 (from class A)",
+      "20 (from class B) - this is known as Variable Hiding (Shadowing).",
+      "30 (the sum of both)",
+      "It causes a compile-time ambiguity error."
+    ],
+    "answer": "20 (from class B) - this is known as Variable Hiding (Shadowing).",
+    "category": "Inheritance"
+  },
+  {
+    "question": "Which keyword is used to access the immediate parent class's constructor or methods from a subclass?",
+    "options": [
+      "this",
+      "super",
+      "parent",
+      "base"
+    ],
+    "answer": "super",
+    "category": "Inheritance"
+  },
+  {
+    "question": "Why is the `finally` block often used in Error Handling?",
+    "options": [
+      "To catch exceptions that the `catch` block missed.",
+      "To execute cleanup code (like closing files/scanners) regardless of whether an exception occurred.",
+      "To force the program to terminate immediately.",
+      "To restart the `try` block if it fails."
+    ],
+    "answer": "To execute cleanup code (like closing files/scanners) regardless of whether an exception occurred.",
+    "category": "Error Handling"
+  },
+  {
+    "question": "In the `Polymorphism_updated.pdf` slides, the example `Animal a = new Dog(); a.speak();` demonstrates what concept?",
+    "options": [
+      "Static Binding (Compile-time polymorphism)",
+      "Dynamic Binding (Runtime polymorphism)",
+      "Encapsulation",
+      "Interface Segregation"
+    ],
+    "answer": "Dynamic Binding (Runtime polymorphism)",
+    "category": "Polymorphism"
+  }
+]
