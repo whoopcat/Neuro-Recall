@@ -238,6 +238,18 @@
             background: linear-gradient(135deg, #f59e0b, #d97706);
         }
 
+        /* GitHub scanner styles */
+        .github-file-item {
+            transition: all 0.2s ease;
+        }
+        .github-file-item:hover {
+            background: rgba(56, 189, 248, 0.1);
+        }
+        .github-file-item.selected {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+        }
+
         /* Question text code block handling */
         .question-text code {
             white-space: pre-wrap;
@@ -266,6 +278,9 @@
         </div>
         
         <div class="flex items-center gap-4">
+            <button onclick="showGitHubScanner()" class="text-slate-400 hover:text-white transition-colors text-sm font-medium" title="Scan GitHub Repo">
+                <i class="fa-brands fa-github mr-1"></i> Scan Repo
+            </button>
             <button onclick="refreshRemoteDecks()" class="text-slate-400 hover:text-white transition-colors text-sm font-medium" title="Refresh Remote Decks">
                 <i class="fa-solid fa-rotate mr-1"></i> Sync
             </button>
@@ -296,9 +311,13 @@
 
             <!-- Quick Actions -->
             <div class="flex justify-center gap-4 mb-8">
-                <button onclick="importFromGitHub()" class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
+                <button onclick="showGitHubScanner()" class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
                     <i class="fa-brands fa-github text-xl"></i>
-                    <span>Import from GitHub</span>
+                    <span>Scan GitHub Repo</span>
+                </button>
+                <button onclick="importFromGitHub()" class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
+                    <i class="fa-solid fa-link text-xl"></i>
+                    <span>Import from URL</span>
                 </button>
                 <button onclick="showManager()" class="glass-panel hover:bg-white/10 text-white px-6 py-3 rounded-xl transition-all border border-white/10 flex items-center gap-2">
                     <i class="fa-solid fa-folder-open text-xl"></i>
@@ -570,6 +589,78 @@
             </div>
         </div>
 
+        <!-- VIEW: GITHUB SCANNER -->
+        <div id="view-github-scanner" class="w-full max-w-4xl hidden animate-fade-in">
+            <div class="glass-panel rounded-2xl p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">GitHub Repository Scanner</h2>
+                        <p class="text-slate-400 text-sm mt-1">Scan any public GitHub repository for JSON question files</p>
+                    </div>
+                    <button onclick="showHome()" class="text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Repo Input -->
+                <div class="mb-6">
+                    <label class="block text-xs text-slate-400 uppercase font-bold mb-2">Repository URL or owner/repo</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="github-repo-input" class="custom-input flex-grow" placeholder="e.g., https://github.com/username/repo or username/repo">
+                        <button onclick="scanGitHubRepo()" class="bg-neon-blue text-dark-900 font-bold px-6 py-2 rounded-lg hover:bg-sky-300 transition-colors whitespace-nowrap">
+                            <i class="fa-solid fa-magnifying-glass mr-2"></i>Scan
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">
+                        <i class="fa-solid fa-circle-info mr-1"></i>
+                        Works with any public repository. No authentication required.
+                    </p>
+                </div>
+
+                <!-- Loading State -->
+                <div id="scanner-loading" class="hidden text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-neon-blue mb-4"></div>
+                    <p class="text-slate-400">Scanning repository...</p>
+                </div>
+
+                <!-- Results -->
+                <div id="scanner-results" class="hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-white">Found JSON Files (<span id="scanner-count">0</span>)</h3>
+                        <div class="flex gap-2">
+                            <button onclick="selectAllScannerFiles(true)" class="text-xs text-neon-blue hover:text-white">Select All</button>
+                            <span class="text-slate-600">|</span>
+                            <button onclick="selectAllScannerFiles(false)" class="text-xs text-slate-400 hover:text-white">None</button>
+                        </div>
+                    </div>
+
+                    <div id="scanner-file-list" class="space-y-2 max-h-[400px] overflow-y-auto mb-6">
+                        <!-- File items injected here -->
+                    </div>
+
+                    <div class="flex justify-between items-center pt-4 border-t border-white/10">
+                        <div class="text-sm text-slate-400">
+                            <span id="scanner-selected-count">0</span> files selected
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="showHome()" class="px-4 py-2 text-slate-400 hover:text-white">Cancel</button>
+                            <button onclick="importSelectedFiles()" class="bg-neon-green text-dark-900 font-bold px-6 py-2 rounded-lg hover:bg-green-400 transition-colors">
+                                Import Selected
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div id="scanner-error" class="hidden text-center py-8">
+                    <i class="fa-solid fa-circle-exclamation text-4xl text-red-400 mb-4"></i>
+                    <p class="text-red-400 mb-2">Failed to scan repository</p>
+                    <p class="text-slate-500 text-sm" id="scanner-error-msg">Make sure the repository exists and is public</p>
+                    <button onclick="resetScanner()" class="mt-4 text-neon-blue hover:text-white text-sm">Try Again</button>
+                </div>
+            </div>
+        </div>
+
         <!-- VIEW: PRESET CONFIG -->
         <div id="view-preset-config" class="w-full max-w-2xl hidden animate-fade-in">
             <div class="glass-panel rounded-2xl p-8">
@@ -744,6 +835,10 @@
         
         // Multi-select state
         let selectedOptions = new Set();
+        
+        // GitHub Scanner state
+        let scannerFiles = [];
+        let scannerRepoInfo = null;
 
         /* --- INITIALIZATION --- */
         window.onload = async () => {
@@ -911,6 +1006,222 @@
             return div.innerHTML;
         }
 
+        /* --- GITHUB SCANNER --- */
+        
+        function showGitHubScanner() {
+            hideAllViews();
+            document.getElementById('view-github-scanner').classList.remove('hidden');
+            resetScanner();
+            
+            // Load last used repo if available
+            const lastRepo = Storage.get('neurorecall_last_repo', '');
+            if (lastRepo) {
+                document.getElementById('github-repo-input').value = lastRepo;
+            }
+        }
+
+        function resetScanner() {
+            scannerFiles = [];
+            scannerRepoInfo = null;
+            document.getElementById('scanner-loading').classList.add('hidden');
+            document.getElementById('scanner-results').classList.add('hidden');
+            document.getElementById('scanner-error').classList.add('hidden');
+            document.getElementById('github-repo-input').disabled = false;
+        }
+
+        async function scanGitHubRepo() {
+            const input = document.getElementById('github-repo-input').value.trim();
+            if (!input) {
+                showToast("Please enter a repository URL or owner/repo", "error");
+                return;
+            }
+
+            // Parse owner/repo from input
+            let owner, repo, branch = 'main';
+            
+            if (input.includes('github.com')) {
+                // Full URL: https://github.com/owner/repo or https://github.com/owner/repo/tree/branch
+                const match = input.match(/github\.com\/([^\/]+)\/([^\/]+)(?:\/tree\/([^\/]+))?/);
+                if (match) {
+                    owner = match[1];
+                    repo = match[2];
+                    if (match[3]) branch = match[3];
+                }
+            } else {
+                // Short format: owner/repo
+                const parts = input.split('/');
+                if (parts.length >= 2) {
+                    owner = parts[0];
+                    repo = parts[1];
+                    if (parts[2]) branch = parts[2];
+                }
+            }
+
+            if (!owner || !repo) {
+                showToast("Invalid repository format. Use: owner/repo or full GitHub URL", "error");
+                return;
+            }
+
+            // Save for later
+            Storage.set('neurorecall_last_repo', input);
+            scannerRepoInfo = { owner, repo, branch };
+
+            // Show loading
+            document.getElementById('scanner-loading').classList.remove('hidden');
+            document.getElementById('scanner-results').classList.add('hidden');
+            document.getElementById('scanner-error').classList.add('hidden');
+            document.getElementById('github-repo-input').disabled = true;
+
+            try {
+                // Try to get the tree from the Git Trees API
+                const treeUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
+                const response = await fetch(treeUrl);
+                
+                if (!response.ok) {
+                    // Try with 'master' branch if 'main' fails
+                    if (branch === 'main') {
+                        scannerRepoInfo.branch = 'master';
+                        const masterResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/master?recursive=1`);
+                        if (!masterResponse.ok) throw new Error(`HTTP ${response.status}`);
+                        const data = await masterResponse.json();
+                        processTreeResults(data);
+                        return;
+                    }
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                processTreeResults(data);
+
+            } catch (err) {
+                console.error("Scan error:", err);
+                document.getElementById('scanner-loading').classList.add('hidden');
+                document.getElementById('scanner-error').classList.remove('hidden');
+                document.getElementById('scanner-error-msg').textContent = 
+                    err.message.includes('404') ? "Repository not found or not public" : 
+                    err.message.includes('403') ? "API rate limit exceeded. Try again later." :
+                    "Failed to fetch repository contents";
+                document.getElementById('github-repo-input').disabled = false;
+            }
+        }
+
+        function processTreeResults(data) {
+            if (!data.tree || !Array.isArray(data.tree)) {
+                throw new Error("Invalid response format");
+            }
+
+            // Filter for JSON files only
+            scannerFiles = data.tree
+                .filter(item => item.type === 'blob' && item.path.endsWith('.json'))
+                .map(item => ({
+                    path: item.path,
+                    name: item.path.split('/').pop(),
+                    size: item.size,
+                    sha: item.sha,
+                    selected: false,
+                    url: `https://raw.githubusercontent.com/${scannerRepoInfo.owner}/${scannerRepoInfo.repo}/${scannerRepoInfo.branch}/${item.path}`
+                }));
+
+            document.getElementById('scanner-loading').classList.add('hidden');
+            document.getElementById('github-repo-input').disabled = false;
+
+            if (scannerFiles.length === 0) {
+                document.getElementById('scanner-error').classList.remove('hidden');
+                document.getElementById('scanner-error-msg').textContent = "No JSON files found in this repository";
+                return;
+            }
+
+            renderScannerResults();
+        }
+
+        function renderScannerResults() {
+            const list = document.getElementById('scanner-file-list');
+            list.innerHTML = '';
+            
+            scannerFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = `github-file-item p-3 rounded-lg border border-dark-700 bg-dark-800/50 flex items-center gap-3 cursor-pointer ${file.selected ? 'selected' : ''}`;
+                item.onclick = () => toggleScannerFile(index);
+                
+                const folder = file.path.includes('/') ? file.path.substring(0, file.path.lastIndexOf('/')) : 'root';
+                
+                item.innerHTML = `
+                    <input type="checkbox" ${file.selected ? 'checked' : ''} class="w-4 h-4 rounded border-slate-500 text-neon-blue focus:ring-neon-blue bg-dark-800 pointer-events-none">
+                    <div class="flex-grow min-w-0">
+                        <div class="font-medium text-white text-sm truncate">${file.name}</div>
+                        <div class="text-xs text-slate-500 truncate">${folder} • ${formatBytes(file.size)}</div>
+                    </div>
+                    <i class="fa-solid fa-file-code text-neon-blue"></i>
+                `;
+                
+                list.appendChild(item);
+            });
+
+            document.getElementById('scanner-count').textContent = scannerFiles.length;
+            document.getElementById('scanner-results').classList.remove('hidden');
+            updateSelectedCount();
+        }
+
+        function toggleScannerFile(index) {
+            scannerFiles[index].selected = !scannerFiles[index].selected;
+            renderScannerResults();
+        }
+
+        function selectAllScannerFiles(select) {
+            scannerFiles.forEach(f => f.selected = select);
+            renderScannerResults();
+        }
+
+        function updateSelectedCount() {
+            const count = scannerFiles.filter(f => f.selected).length;
+            document.getElementById('scanner-selected-count').textContent = count;
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        async function importSelectedFiles() {
+            const selected = scannerFiles.filter(f => f.selected);
+            if (selected.length === 0) {
+                showToast("Please select at least one file to import", "error");
+                return;
+            }
+
+            showToast(`Importing ${selected.length} file(s)...`, "info");
+            
+            let imported = 0;
+            let failed = 0;
+
+            for (const file of selected) {
+                try {
+                    // Use the raw URL directly
+                    const deckName = file.name.replace('.json', '').replace(/_/g, ' ').replace(/-/g, ' ');
+                    await loadRemoteDeck(deckName, file.url, false);
+                    imported++;
+                } catch (err) {
+                    console.error(`Failed to import ${file.name}:`, err);
+                    failed++;
+                }
+            }
+
+            saveToStorage();
+            renderHome();
+            
+            if (imported > 0) {
+                showToast(`Successfully imported ${imported} deck(s)`, "success");
+            }
+            if (failed > 0) {
+                showToast(`${failed} file(s) failed to import`, "error");
+            }
+
+            showHome();
+        }
+
         /* --- PRESET/REMOTE DECK SYSTEM --- */
         async function loadPresetDecks() {
             if (presets.length === 0) return;
@@ -1049,7 +1360,7 @@
                 if (q.type === 'multiselect') isMultiselect = true;
                 if (correctArray.length > 1) isMultiselect = true;
                 
-                // Process code field - extract from question if needed
+                // Process code from question text if present
                 let code = q.code || null;
                 let questionText = q.question;
                 
@@ -1154,7 +1465,7 @@
         }
 
         function hideAllViews() {
-            ['view-home', 'view-quiz', 'view-manager', 'view-preset-config'].forEach(id => {
+            ['view-home', 'view-quiz', 'view-manager', 'view-preset-config', 'view-github-scanner'].forEach(id => {
                 document.getElementById(id).classList.add('hidden');
             });
         }
