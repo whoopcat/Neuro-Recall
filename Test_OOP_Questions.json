@@ -1,0 +1,702 @@
+[
+  {
+    "question": "What is the output of the following code?",
+    "code": "class A {\n    static void show() {\n        System.out.println(\"Static A\");\n    }\n    void print() {\n        System.out.println(\"Instance A\");\n    }\n}\n\nclass B extends A {\n    static void show() {\n        System.out.println(\"Static B\");\n    }\n    void print() {\n        System.out.println(\"Instance B\");\n    }\n}\n\npublic class Test {\n    public static void main(String[] args) {\n        A obj = new B();\n        obj.show();\n        obj.print();\n    }\n}",
+    "language": "java",
+    "options": [
+      "Static B\nInstance B",
+      "Static A\nInstance A",
+      "Static A\nInstance B",
+      "Static B\nInstance A"
+    ],
+    "correct": 2,
+    "explanation": "Static methods are hidden, not overridden. The method `show()` is chosen based on the reference type (Class A) at compile time. Instance methods `print()` are overridden, so the runtime object's type (Class B) is used.",
+    "category": "Polymorphism & Static Binding"
+  },
+  {
+    "question": "What happens when this code runs?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        try {\n            System.out.print(\"A\");\n            throw new RuntimeException();\n        } catch (Exception e) {\n            System.out.print(\"B\");\n            return;\n        } finally {\n            System.out.print(\"C\");\n        }\n        System.out.print(\"D\");\n    }\n}",
+    "language": "java",
+    "options": [
+      "AB",
+      "ABC",
+      "ABCD",
+      "AC"
+    ],
+    "correct": 1,
+    "explanation": "Output is 'ABC'. 'A' is printed. The exception triggers the catch block, printing 'B'. The `return` statement prepares to exit the method, BUT the `finally` block MUST execute before the method actually returns. So 'C' is printed. 'D' is never reached because the method returned.",
+    "category": "Error Handling"
+  },
+  {
+    "question": "What is the output?",
+    "code": "class Base {\n    Base() {\n        System.out.print(\"Base \");\n    }\n}\n\nclass Derived extends Base {\n    Derived() {\n        this(10);\n        System.out.print(\"DerivedDefault \");\n    }\n    Derived(int i) {\n        System.out.print(\"DerivedParam \");\n    }\n}\n\npublic class Test {\n    public static void main(String[] args) {\n        new Derived();\n    }\n}",
+    "language": "java",
+    "options": [
+      "Base DerivedDefault DerivedParam",
+      "Base DerivedParam DerivedDefault",
+      "DerivedParam Base DerivedDefault",
+      "Compilation Error"
+    ],
+    "correct": 1,
+    "explanation": "1. `new Derived()` calls the no-arg constructor.\n2. `this(10)` calls `Derived(int i)`.\n3. `Derived(int i)` implicitly calls `super()` (Base constructor) first.\n4. Order: `Base` -> `DerivedParam` (finishes) -> `DerivedDefault` (finishes).",
+    "category": "Inheritance & Constructors"
+  },
+  {
+    "question": "Which option matches the output of this string comparison?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        String s1 = \"Hello\";\n        String s2 = new String(\"Hello\");\n        String s3 = s2.intern();\n        \n        System.out.println((s1 == s2) + \" \" + (s1 == s3));\n    }\n}",
+    "language": "java",
+    "options": [
+      "true true",
+      "false false",
+      "false true",
+      "true false"
+    ],
+    "correct": 2,
+    "explanation": "`s1` is in the String Pool. `s2` is a new object on the Heap (so `s1 == s2` is false). `s2.intern()` returns the reference from the String Pool, which is `s1` (so `s1 == s3` is true).",
+    "category": "Java Fundamentals & Strings"
+  },
+  {
+    "question": "What is the result of the following code?",
+    "code": "interface I {\n    int x = 10;\n}\n\npublic class Test implements I {\n    public static void main(String[] args) {\n        x = 20;\n        System.out.println(x);\n    }\n}",
+    "language": "java",
+    "options": [
+      "10",
+      "20",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "correct": 2,
+    "explanation": "Variables declared in an interface are implicitly `public static final`. Final variables cannot be reassigned. `x = 20` causes a compilation error.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "What does this code print?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        int[] a = {1};\n        Test t = new Test();\n        t.increment(a);\n        System.out.println(a[a.length - 1]);\n    }\n\n    void increment(int[] i) {\n        i[i.length - 1]++;\n    }\n}",
+    "language": "java",
+    "options": [
+      "1",
+      "2",
+      "0",
+      "ArrayIndexOutOfBoundsException"
+    ],
+    "correct": 1,
+    "explanation": "Java passes references by value. The method `increment` receives a copy of the reference to the array `a`. `i[i.length - 1]++` modifies the actual object on the heap. So `a[0]` becomes 2.",
+    "category": "Memory & Pass by Value"
+  },
+  {
+    "question": "Identify the output.",
+    "code": "class Parent {\n    public void print() throws java.io.IOException {\n        System.out.println(\"Parent\");\n    }\n}\n\nclass Child extends Parent {\n    public void print() throws Exception {\n        System.out.println(\"Child\");\n    }\n}",
+    "language": "java",
+    "options": [
+      "Parent",
+      "Child",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "correct": 2,
+    "explanation": "When overriding a method, the subclass cannot declare a *broader* checked exception than the parent class. `Exception` is broader than `IOException`, so this causes a compilation error.",
+    "category": "Polymorphism & Exceptions"
+  },
+  {
+    "question": "What is the value of 'result'?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        int x = 5;\n        int result = x++ * 2 + --x;\n        System.out.println(result);\n    }\n}",
+    "language": "java",
+    "options": [
+      "15",
+      "16",
+      "17",
+      "12"
+    ],
+    "correct": 0,
+    "explanation": "1. `x++` uses 5, then `x` becomes 6.\n2. `5 * 2 = 10`.\n3. `--x` decrements 6 to 5, then uses 5.\n4. `10 + 5 = 15`.",
+    "category": "Operators"
+  },
+  {
+    "question": "What happens here?",
+    "code": "abstract class Shape {\n    abstract void draw();\n    Shape() {\n        System.out.println(\"Shape Constructor\");\n    }\n}\n\nclass Circle extends Shape {\n    void draw() { System.out.println(\"Circle\"); }\n}\n\npublic class Test {\n    public static void main(String[] args) {\n        Shape s = new Circle();\n    }\n}",
+    "language": "java",
+    "options": [
+      "Compilation Error (Cannot instantiate abstract class constructor)",
+      "Runtime Error",
+      "Prints: Shape Constructor",
+      "Prints: Circle"
+    ],
+    "correct": 2,
+    "explanation": "Although you cannot do `new Shape()`, the constructor of an abstract class is called when a concrete subclass is instantiated (via implicit `super()`).",
+    "category": "Abstraction"
+  },
+  {
+    "question": "What is the output?",
+    "code": "public class Test {\n    static int x = 10;\n    public static void main(String[] args) {\n        Test t1 = new Test();\n        Test t2 = new Test();\n        t1.x = 20;\n        System.out.print(t1.x + \" \" + t2.x);\n    }\n}",
+    "language": "java",
+    "options": [
+      "10 10",
+      "20 10",
+      "20 20",
+      "Compilation Error"
+    ],
+    "correct": 2,
+    "explanation": "`x` is `static`, meaning it is shared among all instances of the class. Changing it via `t1` changes it for `t2` and the class itself.",
+    "category": "Java Fundamentals (Static)"
+  },
+  {
+    "question": "Analyze the exception flow.",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        try {\n            method();\n        } catch (Exception e) {\n            System.out.println(\"Caught in Main\");\n        }\n    }\n    static void method() {\n        try {\n            throw new NullPointerException();\n        } finally {\n            System.out.println(\"Finally in Method\");\n        }\n    }\n}",
+    "language": "java",
+    "options": [
+      "Caught in Main",
+      "Finally in Method",
+      "Finally in Method\nCaught in Main",
+      "Caught in Main\nFinally in Method"
+    ],
+    "correct": 2,
+    "explanation": "The exception is thrown in `method()`. The `finally` block in `method()` MUST execute before the exception propagates up. After printing 'Finally...', the exception goes to `main` and is caught there.",
+    "category": "Error Handling"
+  },
+  {
+    "question": "What does this code print?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        String s = \"Java\";\n        s.concat(\" SE\");\n        s.replace('J', 'L');\n        System.out.println(s);\n    }\n}",
+    "language": "java",
+    "options": [
+      "Java",
+      "Java SE",
+      "Lava",
+      "Lava SE"
+    ],
+    "correct": 0,
+    "explanation": "Strings are immutable. `concat` and `replace` return NEW string objects. Since the results are not assigned back to variable `s`, `s` remains \"Java\".",
+    "category": "Java Fundamentals (Strings)"
+  },
+  {
+    "question": "What is the result of this casting operation?",
+    "code": "class Animal {}\nclass Dog extends Animal {}\nclass Cat extends Animal {}\n\npublic class Test {\n    public static void main(String[] args) {\n        Animal a = new Dog();\n        Cat c = (Cat) a;\n    }\n}",
+    "language": "java",
+    "options": [
+      "Compiles and runs successfully",
+      "Compilation Error",
+      "ClassCastException at runtime",
+      "NullPointerException at runtime"
+    ],
+    "correct": 2,
+    "explanation": "The compiler allows the cast because `Cat` is a subclass of `Animal`. However, at runtime, the object `a` is a `Dog`. A `Dog` cannot be cast to a `Cat`. This throws a `ClassCastException`.",
+    "category": "Polymorphism & Casting"
+  },
+  {
+    "question": "Which method is selected by the compiler?",
+    "code": "public class Test {\n    public void foo(String s) { System.out.println(\"String\"); }\n    public void foo(Object o) { System.out.println(\"Object\"); }\n    \n    public static void main(String[] args) {\n        new Test().foo(null);\n    }\n}",
+    "language": "java",
+    "options": [
+      "String",
+      "Object",
+      "Compilation Error (Ambiguous)",
+      "Runtime Error"
+    ],
+    "correct": 0,
+    "explanation": "Java picks the 'most specific' method. `String` is more specific than `Object` (since String inherits from Object). `null` can be both, but the compiler chooses `String`.",
+    "category": "Polymorphism (Overloading)"
+  },
+  {
+    "question": "What is the output?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        int x = 0;\n        for (int i = 0; i < 5; i++) {\n            x = x++;\n        }\n        System.out.println(x);\n    }\n}",
+    "language": "java",
+    "options": [
+      "0",
+      "4",
+      "5",
+      "6"
+    ],
+    "correct": 0,
+    "explanation": "This is a classic Java gotcha. `x = x++` works like this: 1. Store original value of `x` (temp = 0). 2. Increment `x` (x becomes 1). 3. Assign temp back to `x` (x becomes 0). `x` never increases.",
+    "category": "Operators & Assignments"
+  },
+  {
+    "question": "Consider the following regarding Cloneable.",
+    "code": "class A implements Cloneable {\n    int x = 10;\n    public Object clone() throws CloneNotSupportedException {\n        return super.clone();\n    }\n}\n// In main:\nA a1 = new A();\nA a2 = (A) a1.clone();\na2.x = 20;\n// What is a1.x?",
+    "language": "java",
+    "options": [
+      "10",
+      "20",
+      "0",
+      "CloneNotSupportedException"
+    ],
+    "correct": 0,
+    "explanation": "For primitive fields (like `int x`), a shallow copy (default `clone`) creates a distinct copy of the value. Changing `a2.x` does NOT affect `a1.x`.",
+    "category": "Cloning"
+  },
+  {
+    "question": "What happens if a child class defines a variable with the same name as the parent?",
+    "code": "class Parent { int x = 10; }\nclass Child extends Parent { int x = 20; }\n\npublic class Test {\n    public static void main(String[] args) {\n        Parent p = new Child();\n        System.out.println(p.x);\n    }\n}",
+    "language": "java",
+    "options": [
+      "10",
+      "20",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "correct": 0,
+    "explanation": "Variables are NOT polymorphic. This is known as 'Variable Hiding' or 'Shadowing'. The reference type (`Parent`) determines which variable is accessed. `p.x` sees Parent's `x`.",
+    "category": "Inheritance (Fields)"
+  },
+  {
+    "question": "What is the correct access flow?",
+    "code": "package p1;\npublic class A {\n    protected int x = 10;\n}\n\npackage p2;\nimport p1.A;\nclass B extends A {\n    void test() {\n        System.out.println(x); // Line 1\n        A a = new A();\n        System.out.println(a.x); // Line 2\n    }\n}",
+    "language": "java",
+    "options": [
+      "Line 1 and Line 2 compile.",
+      "Line 1 compiles, Line 2 fails.",
+      "Line 1 fails, Line 2 compiles.",
+      "Both fail."
+    ],
+    "correct": 1,
+    "explanation": "`protected` allows access via inheritance (Line 1 is valid: subclass accessing inherited field). However, `protected` does NOT allow access via a reference to the parent class instance in a different package (Line 2 is invalid).",
+    "category": "Encapsulation & Access Modifiers"
+  },
+  {
+    "question": "What is the output?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        System.out.println(tryMethod());\n    }\n    static int tryMethod() {\n        try {\n            return 1;\n        } catch (Exception e) {\n            return 2;\n        } finally {\n            return 3;\n        }\n    }\n}",
+    "language": "java",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "Compilation Error"
+    ],
+    "correct": 2,
+    "explanation": "A `return` statement in the `finally` block overrides any return statement in the `try` or `catch` blocks. The method returns 3.",
+    "category": "Error Handling"
+  },
+  {
+    "question": "What happens when executing this?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        Integer a = 1000, b = 1000;\n        Integer c = 100, d = 100;\n        System.out.println((a == b) + \" \" + (c == d));\n    }\n}",
+    "language": "java",
+    "options": [
+      "true true",
+      "false false",
+      "true false",
+      "false true"
+    ],
+    "correct": 3,
+    "explanation": "Java caches Integer objects from -128 to 127. `c` and `d` (100) point to the same cached object (`true`). `a` and `b` (1000) are outside the range, so they are new distinct objects (`false`).",
+    "category": "Java Fundamentals (Wrapper Classes)"
+  },
+  {
+    "question": "Which statement is true regarding this array declaration?",
+    "code": "int[] arr = new int[5];",
+    "language": "java",
+    "options": [
+      "arr[0] is null",
+      "arr[0] is 0",
+      "arr[0] is undefined",
+      "arr is null"
+    ],
+    "correct": 1,
+    "explanation": "When an array of primitives is created, elements are initialized to their default values. For `int`, the default is `0`.",
+    "category": "Arrays"
+  },
+  {
+    "question": "What is the output of this inheritance chain?",
+    "code": "class A {\n    A() { System.out.print(\"A\"); }\n    A(int x) { this(); System.out.print(\"A\" + x); }\n}\nclass B extends A {\n    B() { super(1); System.out.print(\"B\"); }\n}\npublic class Test {\n    public static void main(String[] args) {\n        new B();\n    }\n}",
+    "language": "java",
+    "options": [
+      "AB",
+      "A1B",
+      "AA1B",
+      "Compilation Error"
+    ],
+    "correct": 2,
+    "explanation": "1. `new B()` calls `B()`. 2. `super(1)` calls `A(1)`. 3. `A(1)` calls `this()` which is `A()`. 4. `A()` prints \"A\". 5. `A(1)` prints \"A1\". 6. `B()` prints \"B\". Result: \"AA1B\".",
+    "category": "Inheritance"
+  },
+  {
+    "question": "What is the result?",
+    "code": "public class Test {\n    static int x;\n    public static void main(String[] args) {\n        System.out.println(x);\n    }\n}",
+    "language": "java",
+    "options": [
+      "0",
+      "null",
+      "Garbage value",
+      "Compilation Error"
+    ],
+    "correct": 0,
+    "explanation": "Static variables (class fields) are initialized to default values. For `int`, it is 0. Local variables are the ones that must be initialized manually.",
+    "category": "Variables"
+  },
+  {
+    "question": "What happens here?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        byte b = 127;\n        b++;\n        b++;\n        System.out.print(b);\n    }\n}",
+    "language": "java",
+    "options": [
+      "129",
+      "127",
+      "-127",
+      "Compilation Error"
+    ],
+    "correct": 2,
+    "explanation": "Byte range is -128 to 127. 127 + 1 wraps around to -128. -128 + 1 is -127. This is called overflow.",
+    "category": "Data Types"
+  },
+  {
+    "question": "Can you run this code?",
+    "code": "abstract class A {\n    public static void main(String[] args) {\n        System.out.println(\"Running Abstract Class\");\n    }\n}",
+    "language": "java",
+    "options": [
+      "No, abstract classes cannot be run.",
+      "Yes, prints \"Running Abstract Class\".",
+      "No, compilation error.",
+      "Runtime Error: Main method not found."
+    ],
+    "correct": 1,
+    "explanation": "Yes, `main` is a static method. You do not need to instantiate the class to run the main method. The fact that the class is abstract is irrelevant for invoking static methods.",
+    "category": "Abstraction"
+  },
+  {
+    "question": "What is the output?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        String s1 = \"Java\";\n        String s2 = \"Java\";\n        System.out.println(s1.equals(s2) + \" \" + (s1 == s2));\n    }\n}",
+    "language": "java",
+    "options": [
+      "true true",
+      "true false",
+      "false true",
+      "false false"
+    ],
+    "correct": 0,
+    "explanation": "String literals are placed in the String Pool. `s1` and `s2` refer to the exact same object in the pool, so `==` is true. `.equals()` checks content, which is also true.",
+    "category": "Java Fundamentals (Strings)"
+  },
+  {
+    "question": "What is the output?",
+    "code": "import java.util.ArrayList;\npublic class Test {\n    public static void main(String[] args) {\n        ArrayList<Integer> list = new ArrayList<>();\n        list.add(1);\n        list.add(2);\n        list.remove(1);\n        System.out.println(list);\n    }\n}",
+    "language": "java",
+    "options": [
+      "[1]",
+      "[2]",
+      "[1, 2]",
+      "Runtime Error"
+    ],
+    "correct": 0,
+    "explanation": "`remove(int index)` removes the element at that INDEX. `list.remove(1)` removes the element at index 1 (which is the value 2). The list remains with `[1]`.",
+    "category": "Collections"
+  },
+  {
+    "question": "What logic does this print?",
+    "code": "boolean x = true;\nboolean y = false;\nif (x || y && false) {\n    System.out.print(\"True\");\n} else {\n    System.out.print(\"False\");\n}",
+    "language": "java",
+    "options": [
+      "True",
+      "False",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "correct": 0,
+    "explanation": "`&&` has higher precedence than `||`. `y && false` is `false`. Then `x || false` is `true || false`, which is `true`.",
+    "category": "Operators"
+  },
+  {
+    "question": "Which output is produced?",
+    "code": "class A {\n    int x = 5;\n}\nclass B extends A {\n    int x = 10;\n}\npublic class Test {\n    public static void main(String[] args) {\n        A a = new B();\n        System.out.println(a.x);\n    }\n}",
+    "language": "java",
+    "options": [
+      "5",
+      "10",
+      "0",
+      "Compilation Error"
+    ],
+    "correct": 0,
+    "explanation": "Field access is NOT polymorphic. `a` is of type `A`, so `a.x` accesses variable `x` defined in class `A`.",
+    "category": "Inheritance (Fields)"
+  },
+  {
+    "question": "What is the result?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        int i = 0;\n        System.out.println(i++ + ++i);\n    }\n}",
+    "language": "java",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "0"
+    ],
+    "correct": 1,
+    "explanation": "1. `i++` yields 0, then `i` becomes 1.\n2. `++i` increments 1 to 2, then yields 2.\n3. `0 + 2 = 2`.",
+    "category": "Operators"
+  },
+  {
+    "question": "What does this throw?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        Object[] o = new String[2];\n        o[0] = 10;\n    }\n}",
+    "language": "java",
+    "options": [
+      "Compilation Error",
+      "ArrayStoreException",
+      "ClassCastException",
+      "No Error"
+    ],
+    "correct": 1,
+    "explanation": "Arrays are covariant. `Object[] o = new String[]` is valid. However, at runtime, the array checks the type of object being inserted. Inserting an `Integer` (10) into a `String` array throws `ArrayStoreException`.",
+    "category": "Arrays"
+  },
+  {
+    "question": "What is the output?",
+    "code": "class Test {\n   public static void main(String args[]) {\n      String s1 = \"abc\";\n      String s2 = \"def\";\n      System.out.println(s1.compareTo(s2));\n   }\n}",
+    "language": "java",
+    "options": [
+      "positive number",
+      "negative number",
+      "0",
+      "true"
+    ],
+    "correct": 1,
+    "explanation": "`compareTo` returns the difference between the first unmatched characters. 'a' (97) - 'd' (100) is negative (-3).",
+    "category": "Java Fundamentals (Strings)"
+  },
+  {
+    "question": "What is the output?",
+    "code": "class A {\n    public A() { System.out.print(\"A\"); }\n}\nclass B extends A {\n    public B() { System.out.print(\"B\"); }\n}\npublic class Test {\n    public static void main(String[] args) {\n        new B();\n    }\n}",
+    "language": "java",
+    "options": [
+      "B",
+      "BA",
+      "AB",
+      "Compilation Error"
+    ],
+    "correct": 2,
+    "explanation": "Constructor of B implicitly calls `super()` (A's constructor) first. So A runs, then B runs.",
+    "category": "Inheritance"
+  },
+  {
+    "question": "Will this compile?",
+    "code": "final class A {}\nclass B extends A {}",
+    "language": "java",
+    "options": [
+      "Yes",
+      "No",
+      "Yes, if in same package",
+      "Yes, if A is static"
+    ],
+    "correct": 1,
+    "explanation": "A `final` class cannot be subclassed.",
+    "category": "Inheritance"
+  },
+  {
+    "question": "What is the output?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        StringBuilder sb = new StringBuilder(\"A\");\n        sb.append(\"B\").reverse().append(\"C\");\n        System.out.println(sb);\n    }\n}",
+    "language": "java",
+    "options": [
+      "BAC",
+      "ABC",
+      "CBA",
+      "BCA"
+    ],
+    "correct": 0,
+    "explanation": "1. \"A\".append(\"B\") -> \"AB\". 2. reverse() -> \"BA\". 3. append(\"C\") -> \"BAC\".",
+    "category": "Java Fundamentals (StringBuilder)"
+  },
+  {
+    "question": "What happens here?",
+    "code": "class Test {\n    final int x;\n    public Test() {\n        x = 10;\n    }\n}",
+    "language": "java",
+    "options": [
+      "Compilation Error",
+      "Valid Code",
+      "Runtime Error",
+      "Warning"
+    ],
+    "correct": 1,
+    "explanation": "A `final` instance variable is blank final. It must be initialized in every constructor (or in an initialization block). Since it is initialized in the constructor, this is valid.",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "What is the output?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        try {\n             int x = 1/0;\n        } catch (ArithmeticException e) {\n             System.out.print(\"E1 \");\n        } catch (Exception e) {\n             System.out.print(\"E2 \");\n        }\n    }\n}",
+    "language": "java",
+    "options": [
+      "E1",
+      "E2",
+      "E1 E2",
+      "Compilation Error"
+    ],
+    "correct": 0,
+    "explanation": "Java catches the FIRST matching exception. `ArithmeticException` matches, so E1 is printed. The second catch block is skipped.",
+    "category": "Error Handling"
+  },
+  {
+    "question": "What is the result?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        int x = 10;\n        change(x);\n        System.out.println(x);\n    }\n    static void change(int x) {\n        x = 20;\n    }\n}",
+    "language": "java",
+    "options": [
+      "10",
+      "20",
+      "0",
+      "Compilation Error"
+    ],
+    "correct": 0,
+    "explanation": "Primitives are passed by value. The method `change` gets a COPY of x. Modifying the copy does not affect the original variable in `main`.",
+    "category": "Pass by Value"
+  },
+  {
+    "question": "What is the output?",
+    "code": "interface A { default void show() { System.out.print(\"A\"); } }\nclass B implements A {}\nclass C implements A { public void show() { System.out.print(\"C\"); } }\n\npublic class Test {\n    public static void main(String[] args) {\n        new B().show();\n        new C().show();\n    }\n}",
+    "language": "java",
+    "options": [
+      "AC",
+      "AA",
+      "CC",
+      "CA"
+    ],
+    "correct": 0,
+    "explanation": "`B` inherits the default method implementation from `A`. `C` overrides the default method with its own implementation.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "What is the output?",
+    "code": "class Test {\n    public static void main(String[] args) {\n        System.out.println(10 + 20 + \"Java\");\n        System.out.println(\"Java\" + 10 + 20);\n    }\n}",
+    "language": "java",
+    "options": [
+      "30Java\nJava1020",
+      "30Java\nJava30",
+      "1020Java\nJava1020",
+      "30Java\nJava30"
+    ],
+    "correct": 0,
+    "explanation": "1. `10 + 20` (int addition) = 30. Then `30 + \"Java\"` (concat) = \"30Java\".\n2. `\"Java\" + 10` (concat) = \"Java10\". Then `\"Java10\" + 20` (concat) = \"Java1020\".",
+    "category": "Operators & Strings"
+  },
+  {
+    "question": "Which constructor is called?",
+    "code": "class Test {\n    Test(int x) { System.out.print(\"int\"); }\n    Test(long x) { System.out.print(\"long\"); }\n    \n    public static void main(String[] args) {\n        new Test(10);\n    }\n}",
+    "language": "java",
+    "options": [
+      "int",
+      "long",
+      "Ambiguous",
+      "Compilation Error"
+    ],
+    "correct": 0,
+    "explanation": "`10` is an `int` literal. The exact match constructor `Test(int)` is preferred.",
+    "category": "Polymorphism (Overloading)"
+  },
+  {
+    "question": "What happens?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        short s = 10;\n        s = s + 10;\n        System.out.println(s);\n    }\n}",
+    "language": "java",
+    "options": [
+      "20",
+      "1010",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "correct": 2,
+    "explanation": "`s + 10` promotes `s` to `int` before addition. The result is an `int`. You cannot assign an `int` back to a `short` variable `s` without an explicit cast. `s = (short)(s + 10)` would work.",
+    "category": "Data Types"
+  },
+  {
+    "question": "What is the output?",
+    "code": "class A {\n    int i = 10;\n}\nclass B extends A {\n    int i = 20;\n}\npublic class Test {\n    public static void main(String[] args) {\n        A a = new B();\n        System.out.println(a.i);\n    }\n}",
+    "language": "java",
+    "options": [
+      "10",
+      "20",
+      "30",
+      "Compilation Error"
+    ],
+    "correct": 0,
+    "explanation": "Field polymorphism does NOT exist in Java. The reference type `A` determines which `i` is accessed. `a.i` is 10.",
+    "category": "Polymorphism & Fields"
+  },
+  {
+    "question": "What is the output?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        int[] a = {1, 2, 3};\n        int[] b = a;\n        b[0] = 10;\n        System.out.println(a[0]);\n    }\n}",
+    "language": "java",
+    "options": [
+      "1",
+      "10",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "correct": 1,
+    "explanation": "Arrays are objects. `b = a` copies the reference. Both variables point to the same array in memory. Modifying `b[0]` modifies the shared array.",
+    "category": "Assignments"
+  },
+  {
+    "question": "What happens with this switch?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        int x = 1;\n        switch(x) {\n            case 1: System.out.print(\"1\");\n            case 2: System.out.print(\"2\");\n            default: System.out.print(\"D\");\n        }\n    }\n}",
+    "language": "java",
+    "options": [
+      "1",
+      "12",
+      "12D",
+      "Compilation Error"
+    ],
+    "correct": 2,
+    "explanation": "There are no `break` statements. Execution 'falls through' from case 1 to case 2 to default. Output is \"12D\".",
+    "category": "Control Flow"
+  },
+  {
+    "question": "What is printed?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        do {\n            System.out.print(\"A\");\n        } while (false);\n    }\n}",
+    "language": "java",
+    "options": [
+      "A",
+      "Nothing",
+      "Infinite Loop",
+      "Compilation Error"
+    ],
+    "correct": 0,
+    "explanation": "A `do-while` loop executes the body AT LEAST once before checking the condition.",
+    "category": "Control Flow"
+  },
+  {
+    "question": "What is the output?",
+    "code": "class Test {\n    public static void main(String[] args) {\n        System.out.println(10 % 3);\n        System.out.println(-10 % 3);\n    }\n}",
+    "language": "java",
+    "options": [
+      "1 1",
+      "1 -1",
+      "1 2",
+      "-1 1"
+    ],
+    "correct": 1,
+    "explanation": "Modulo operator takes the sign of the numerator (left operand). 10%3 is 1. -10%3 is -1.",
+    "category": "Operators"
+  },
+  {
+    "question": "What happens here?",
+    "code": "public class Test {\n    public static void main(String[] args) {\n        int x = 5;\n        System.out.println(x > 2 ? x < 4 ? 10 : 8 : 7);\n    }\n}",
+    "language": "java",
+    "options": [
+      "10",
+      "8",
+      "7",
+      "Compilation Error"
+    ],
+    "correct": 1,
+    "explanation": "Nested ternary operator. 1. `x > 2` (5 > 2) is True. 2. Evaluate `x < 4 ? 10 : 8`. 3. `x < 4` (5 < 4) is False. 4. Return 8.",
+    "category": "Operators"
+  },
+  {
+    "question": "What does this code do?",
+    "code": "class Test {\n    public static void main(String[] args) {\n        String s = null;\n        if (s != null & s.length() > 0) {\n            System.out.println(\"OK\");\n        }\n    }\n}",
+    "language": "java",
+    "options": [
+      "Nothing",
+      "Prints OK",
+      "NullPointerException",
+      "Compilation Error"
+    ],
+    "correct": 2,
+    "explanation": "The operator `&` is the bitwise AND (or logical AND without short-circuiting). Both sides are evaluated. `s.length()` is called on null, causing NPE. You should use `&&` for short-circuiting.",
+    "category": "Operators & Exceptions"
+  },
+  {
+    "question": "What is the output?",
+    "code": "class Test {\n    static int count = 0;\n    Test() { count++; }\n    public static void main(String[] args) {\n        new Test();\n        new Test();\n        System.out.println(count);\n    }\n}",
+    "language": "java",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "Compilation Error"
+    ],
+    "correct": 2,
+    "explanation": "`count` is static, so it is shared across instances. Every time `new Test()` is called, the constructor runs and increments the shared variable.",
+    "category": "Java Fundamentals (Static)"
+  }
+]
