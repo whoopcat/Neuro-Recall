@@ -1,0 +1,642 @@
+[
+  {
+    "question": "In the context of the 'Entity' pattern used in your labs, why might we choose to make 'Entity' an abstract class rather than a concrete class?",
+    "code": "abstract class Entity {\n    protected float x, y;\n    public abstract void update();\n}",
+    "language": "java",
+    "options": [
+      "To prevent the game engine from ever creating a generic 'Entity' that isn't a specific thing like a Player or Enemy.",
+      "To save memory by not allocating space for x and y variables.",
+      "Because abstract classes are faster to instantiate than concrete classes.",
+      "To allow the Entity class to be instantiated without a constructor."
+    ],
+    "correct": 0,
+    "explanation": "Abstract classes are used when a class represents a general concept (like 'Entity') that should not exist on its own. You never want a generic 'Entity' floating in your game; you only want specific subtypes (Player, Bullet, etc.).",
+    "category": "Entities & Abstraction"
+  },
+  {
+    "question": "Which relationship best describes the connection between a 'GameMaster' class and a list of 'Droplet' objects it manages?",
+    "code": "class GameMaster {\n    private ArrayList<Droplet> droplets;\n    // ...\n}",
+    "language": "java",
+    "options": [
+      "IS-A (Inheritance)",
+      "HAS-A (Aggregation/Composition)",
+      "Dependency (Uses-A)",
+      "Implementation"
+    ],
+    "correct": 1,
+    "explanation": "The GameMaster 'has' a list of droplets. This is a HAS-A relationship. If the GameMaster is destroyed, the droplets likely cease to be managed or exist in the scene context, implying Composition or Aggregation.",
+    "category": "Relationships (HAS-A)"
+  },
+  {
+    "question": "You have an interface `Renderable` with a method `draw()`. A class `Player` implements `Renderable`. A `GameScene` class takes a `Renderable` in its constructor. What concept allows `GameScene` to accept a `Player` object?",
+    "code": "interface Renderable { void draw(); }\nclass Player implements Renderable { ... }\n\nclass GameScene {\n    GameScene(Renderable r) { ... }\n}",
+    "language": "java",
+    "options": [
+      "Encapsulation",
+      "Polymorphism (Upcasting)",
+      "Method Overloading",
+      "Static Binding"
+    ],
+    "correct": 1,
+    "explanation": "This is Polymorphism. The `Player` object is being treated as its interface type `Renderable`. This allows `GameScene` to be decoupled from the specific `Player` class.",
+    "category": "Polymorphism"
+  },
+  {
+    "question": "What is the primary architectural benefit of using a 'Manager' class (like `GameMaster` or `EntityManager`) instead of letting objects manage themselves?",
+    "options": [
+      "It reduces Encapsulation by making all data public.",
+      "It allows for centralized control over the game loop (update/render cycles) and object lifecycle.",
+      "It enables multiple inheritance in Java.",
+      "It eliminates the need for constructors in the entity classes."
+    ],
+    "correct": 1,
+    "explanation": "Managers centralize logic. Instead of 100 objects all trying to figure out when to render or collide, a Manager iterates through them in a controlled order, handling logic like pausing, cleanup, or collision detection efficiently.",
+    "category": "Managers & Architecture"
+  },
+  {
+    "question": "Analyze the following relationship. What design principle is being violated if `Engine` is public?",
+    "code": "class Car {\n    public Engine engine = new Engine();\n}",
+    "language": "java",
+    "options": [
+      "Polymorphism",
+      "Encapsulation",
+      "Inheritance",
+      "Abstraction"
+    ],
+    "correct": 1,
+    "explanation": "Encapsulation is violated. The internal component (`Engine`) is exposed directly via `public`. It should be `private` with restricted access via methods if necessary.",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "If `TextureObject` extends `Entity`, and `Player` extends `TextureObject`, which statement is true regarding the `Entity` fields?",
+    "code": "class Entity { protected float x; }\nclass TextureObject extends Entity { ... }\nclass Player extends TextureObject { ... }",
+    "language": "java",
+    "options": [
+      "Player cannot access `x` because it is in a grandparent class.",
+      "Player inherits `x` and can access it directly if it is in the same package or if `x` is protected.",
+      "Player must re-declare `x` to use it.",
+      "TextureObject hides `x` from Player."
+    ],
+    "correct": 1,
+    "explanation": "Inheritance is transitive. Player IS-A TextureObject, and TextureObject IS-A Entity. Therefore, Player IS-A Entity and inherits all accessible fields (public/protected) from the entire hierarchy.",
+    "category": "Inheritance (IS-A)"
+  },
+  {
+    "question": "Which scenario best illustrates a 'Dependency' relationship (Uses-A) rather than Association (Has-A)?",
+    "code": "class Player {\n    void interact(Door d) {\n        d.open();\n    }\n}",
+    "language": "java",
+    "options": [
+      "The Player class has a field `private Door myDoor;`",
+      "The Player class extends Door.",
+      "The Player class receives a Door object as a method parameter, uses it, and discards it.",
+      "The Player creates a Door in its constructor and holds it forever."
+    ],
+    "correct": 2,
+    "explanation": "Dependency is a temporary relationship. The Player 'uses' the Door for the duration of the method call but does not strictly 'own' it or maintain a long-term reference to it as a field.",
+    "category": "Dependencies"
+  },
+  {
+    "question": "In LibGDX or similar frameworks, a `Screen` or `Scene` class often implements methods like `show()`, `render()`, and `dispose()`. What concept enforces that every Scene MUST have these methods?",
+    "options": [
+      "The `Screen` is likely an Interface or an Abstract Class.",
+      "The `Screen` is a final class.",
+      "The `Screen` uses static methods.",
+      "The `Screen` uses Method Overloading."
+    ],
+    "correct": 0,
+    "explanation": "Interfaces (or abstract classes) define a contract. If `Screen` is an interface, any class implementing it *must* provide implementations for `render`, `dispose`, etc., ensuring the main game loop knows exactly how to interact with any screen.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "What is the result of the following Composition code?",
+    "code": "class Room {\n    Wall wall;\n    Room() {\n        wall = new Wall();\n    }\n}\n// In main:\nRoom r = new Room();\nr = null;\n// Garbage collector runs",
+    "language": "java",
+    "options": [
+      "The Wall object remains in memory indefinitely.",
+      "The Wall object is eligible for garbage collection because the Room (the owner) is destroyed.",
+      "The Wall object is destroyed only if it implements `Disposable`.",
+      "The code throws a NullPointerException."
+    ],
+    "correct": 1,
+    "explanation": "Composition implies strong ownership. The `Wall` is created *by* the `Room` and exists *within* the `Room`. If the `Room` reference is lost (`r = null`), the `Wall` inside it is also unreachable and eligible for GC.",
+    "category": "Composition (HAS-A)"
+  },
+  {
+    "question": "Which code snippet correctly demonstrates Method Overloading?",
+    "language": "java",
+    "options": [
+      "void move(int x) { } \nvoid move(int y) { }",
+      "void move(int x) { } \nint move(int x) { return 0; }",
+      "void move(float x) { } \nvoid move(int x) { }",
+      "void move(int x) { } \nprivate void move(int x) { }"
+    ],
+    "correct": 2,
+    "explanation": "Overloading requires different parameter types or counts. Option 3 has `float` vs `int`, which differentiates the methods. The others differ only by return type, parameter name, or access modifier, which is not valid overloading.",
+    "category": "Polymorphism (Overload)"
+  },
+  {
+    "question": "In an Entity-Component System (ECS) conceptual model, which description fits best?",
+    "options": [
+      "Entities are large classes with all possible methods (draw, move, audio) inherited.",
+      "Entities are lightweight IDs/containers, and behavior is composed by attaching Component objects (Position, Velocity, Sprite).",
+      "Entities are interfaces that Components implement.",
+      "Entities are static classes that manage global state."
+    ],
+    "correct": 1,
+    "explanation": "ECS favors Composition over Inheritance. Instead of `Player extends Entity`, a Player is an Entity that *has* a PositionComponent, *has* a RenderComponent, etc. This prevents deep inheritance trees.",
+    "category": "Entities / Components"
+  },
+  {
+    "question": "If `GameMaster` handles the `update()` loop for all entities, what design pattern is it likely approximating?",
+    "options": [
+      "Observer Pattern",
+      "Singleton Pattern (often, though not strictly required)",
+      "Mediator / Controller",
+      "Decorator Pattern"
+    ],
+    "correct": 2,
+    "explanation": "A GameMaster acts as a Controller or Mediator. It holds references to the entities and coordinates their behavior (checking collisions, moving them) rather than the entities handling unrelated logic themselves.",
+    "category": "Managers"
+  },
+  {
+    "question": "What happens here regarding Polymorphism?",
+    "code": "class Enemy {\n    void attack() { System.out.print(\"Generic\"); }\n}\nclass Orc extends Enemy {\n    void attack() { System.out.print(\"Smash\"); }\n}\nclass Elf extends Enemy {\n    void attack(int range) { System.out.print(\"Shoot\"); }\n}\n\nEnemy e = new Elf();\ne.attack();",
+    "language": "java",
+    "options": [
+      "Smash",
+      "Shoot",
+      "Generic",
+      "Compilation Error"
+    ],
+    "correct": 2,
+    "explanation": "The `Elf` class defined `attack(int range)`. This is Overloading, NOT Overriding. `Elf` did not override the no-arg `attack()` from `Enemy`. So `e.attack()` calls the inherited `Generic` method from the parent.",
+    "category": "Polymorphism (Override/Overload)"
+  },
+  {
+    "question": "Why would you define a `move()` method in an interface `Movable` rather than in a base class `GameObject`?",
+    "options": [
+      "To ensure `move()` is private.",
+      "To allow unrelated objects (e.g., a `Cloud` and a `Car`) to share movement behavior without forcing them to inherit from the same parent.",
+      "Because interfaces are faster than classes.",
+      "To prevent the method from being overridden."
+    ],
+    "correct": 1,
+    "explanation": "Interfaces allow for cross-hierarchy behaviors. A `Car` is a `Vehicle` and a `Cloud` is a `WeatherEffect`. They don't share a close parent, but both might need to `move()`. Interfaces solve this diamond problem/hierarchy rigidity.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "What is the relationship between `Inventory` and `Item`?",
+    "code": "class Inventory {\n    private List<Item> items;\n    public void addItem(Item i) { ... }\n}",
+    "language": "java",
+    "options": [
+      "Inventory IS-A Item",
+      "Inventory HAS-MANY Items (Aggregation)",
+      "Item DEPENDS-ON Inventory",
+      "Inventory EXTENDS Item"
+    ],
+    "correct": 1,
+    "explanation": "This is Aggregation (a form of Association/HAS-A). The Inventory holds a collection of Items. Usually, if the Inventory is deleted, the Items (like a Sword) might still exist in the game world (dropped on ground), so it's often Aggregation, though Composition is also a valid HAS-A interpretation depending on lifecycle.",
+    "category": "Relationships (HAS-A)"
+  },
+  {
+    "question": "When overriding a method, which annotation is recommended (though not mandatory) to prevent errors?",
+    "options": [
+      "@Overload",
+      "@Override",
+      "@Inherit",
+      "@Polymorph"
+    ],
+    "correct": 1,
+    "explanation": "`@Override` tells the compiler \"I intend to override a parent method.\" If you typo the name or get the parameters wrong, the compiler will throw an error, saving you from bugs.",
+    "category": "Polymorphism"
+  },
+  {
+    "question": "Which statement implies strict Encapsulation?",
+    "code": "class Player {\n    private int health;\n    public void takeDamage(int amount) {\n        if (amount > 0) health -= amount;\n    }\n}",
+    "language": "java",
+    "options": [
+      "The `health` variable is unused.",
+      "The class manages its own state validity (preventing negative damage) and hides internal data.",
+      "The class allows external objects to set health to any value directly.",
+      "The class demonstrates inheritance."
+    ],
+    "correct": 1,
+    "explanation": "Encapsulation isn't just `private` variables; it's about bundling logic with data. The method `takeDamage` ensures the state (`health`) changes only in valid ways (no negative damage).",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "In Java, can an interface extend another interface?",
+    "code": "interface A { void a(); }\ninterface B extends A { void b(); }",
+    "language": "java",
+    "options": [
+      "No, interfaces can only implement other interfaces.",
+      "Yes, interfaces can extend multiple other interfaces.",
+      "No, extension is only for classes.",
+      "Yes, but only one."
+    ],
+    "correct": 1,
+    "explanation": "Interfaces supports multiple inheritance of type. An interface can extend one or more other interfaces.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "Consider a game where `Dog` and `Cat` both extend `Animal`. You want a list that contains both. What type should the list be?",
+    "code": "ArrayList<___> list = new ArrayList<>();\nlist.add(new Dog());\nlist.add(new Cat());",
+    "language": "java",
+    "options": [
+      "Dog",
+      "Cat",
+      "Object",
+      "Animal"
+    ],
+    "correct": 3,
+    "explanation": "Using the superclass `Animal` as the generic type allows the list to hold any subclass (Dog, Cat) via Polymorphism (Upcasting). `Object` would work but is bad practice as you lose access to `Animal` methods.",
+    "category": "Polymorphism & Collections"
+  },
+  {
+    "question": "If `Shape` is an abstract class with an abstract method `area()`, and `Circle` extends `Shape`, what MUST `Circle` do?",
+    "options": [
+      "Declare `area()` as abstract.",
+      "Provide a concrete implementation (body) for `area()`, or be declared abstract itself.",
+      "Call `super.area()`.",
+      "Nothing, inheritance handles it."
+    ],
+    "correct": 1,
+    "explanation": "Concrete subclasses must implement ALL abstract methods inherited from abstract parents. If it doesn't, the subclass must also be marked abstract.",
+    "category": "Abstract Classes"
+  },
+  {
+    "question": "What is the output?",
+    "code": "class A { int x = 1; }\nclass B extends A { int x = 2; }\n\nA obj = new B();\nSystem.out.println(obj.x);",
+    "language": "java",
+    "options": [
+      "1",
+      "2",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "correct": 0,
+    "explanation": "Fields (variables) are NOT polymorphic in Java. Reference type `A` determines that `obj.x` refers to `A`'s `x` (1). This is called Variable Hiding.",
+    "category": "Inheritance (Fields)"
+  },
+  {
+    "question": "Which creates a tight coupling (dependency) that is generally hardest to test/mock?",
+    "code": "class Game {\n    // Case A\n    InputHandler input;\n    Game() { input = new InputHandler(); }\n    \n    // Case B\n    Game(InputHandler i) { input = i; }\n}",
+    "language": "java",
+    "options": [
+      "Case A",
+      "Case B",
+      "Both are equal",
+      "Neither creates coupling"
+    ],
+    "correct": 0,
+    "explanation": "Case A instantiates the dependency *inside* the constructor using `new`. You cannot easily swap `InputHandler` for a mock version for testing. Case B uses Dependency Injection, which is looser coupling.",
+    "category": "Dependencies"
+  },
+  {
+    "question": "How does `super` work in a constructor?",
+    "code": "class Child extends Parent {\n    Child() {\n        System.out.println(\"Child\");\n        super();\n    }\n}",
+    "language": "java",
+    "options": [
+      "It calls the Parent constructor after the print.",
+      "It causes a Compilation Error.",
+      "It works fine.",
+      "It creates a new Parent object on the heap."
+    ],
+    "correct": 1,
+    "explanation": "The call to `super()` MUST be the **first statement** in a constructor. Placing it after `System.out.println` is a syntax error.",
+    "category": "Inheritance (Constructors)"
+  },
+  {
+    "question": "Which represents a 'Realization' relationship?",
+    "options": [
+      "Class A extends Class B",
+      "Class A implements Interface B",
+      "Class A has a field of Class B",
+      "Class A uses Class B in a method"
+    ],
+    "correct": 1,
+    "explanation": "In UML and OOP theory, implementing an interface is called 'Realization'. The class realizes (makes real) the contract defined by the interface.",
+    "category": "Relationships"
+  },
+  {
+    "question": "You want to create a `SceneManager` that can only have ONE instance running at a time. What concept is this?",
+    "options": [
+      "Polymorphism",
+      "Singleton Pattern",
+      "Abstraction",
+      "Inheritance"
+    ],
+    "correct": 1,
+    "explanation": "The Singleton pattern ensures a class has only one instance and provides a global point of access to it.",
+    "category": "Managers"
+  },
+  {
+    "question": "What is the key difference between Composition and Aggregation regarding lifecycle?",
+    "options": [
+      "In Composition, the child dies with the parent. In Aggregation, the child survives.",
+      "In Aggregation, the child dies with the parent. In Composition, the child survives.",
+      "There is no difference.",
+      "Composition uses Interfaces, Aggregation uses Classes."
+    ],
+    "correct": 0,
+    "explanation": "Composition is 'Strong' ownership (House & Room). Aggregation is 'Weak' ownership (Library & Student). If the Library burns down, the Students still exist.",
+    "category": "Composition vs Aggregation"
+  },
+  {
+    "question": "Does this compile?",
+    "code": "final abstract class Entity { }",
+    "language": "java",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "correct": 1,
+    "explanation": "`abstract` requires extension (inheritance) to be useful. `final` prevents extension. They are mutually exclusive keywords.",
+    "category": "Abstract Classes"
+  },
+  {
+    "question": "In the Lab files, `TextureObject` usually calls `super.render()` or similar. What does this enable?",
+    "options": [
+      "It allows the Parent class to perform base logic (like setting colors) before the Child adds specific logic (drawing the texture).",
+      "It deletes the parent object.",
+      "It skips the child's method.",
+      "It is required by the compiler even if the parent method is empty."
+    ],
+    "correct": 0,
+    "explanation": "Calling `super.method()` allows for behavior extension. You keep the parent's behavior and add to it, rather than completely replacing it.",
+    "category": "Polymorphism (Super)"
+  },
+  {
+    "question": "What is Dynamic Binding?",
+    "options": [
+      "Resolving method calls at compile time based on reference type.",
+      "Resolving method calls at runtime based on the actual object type.",
+      "Linking libraries during build.",
+      "Assigning values to variables."
+    ],
+    "correct": 1,
+    "explanation": "Dynamic Binding (Late Binding) is the mechanism behind Polymorphism. The JVM waits until runtime to decide which `override` of a method to call based on the actual object in memory.",
+    "category": "Polymorphism"
+  },
+  {
+    "question": "Which design favors 'Composition over Inheritance'?",
+    "code": "A: class Player extends InputHandler {}\nB: class Player { InputHandler input; }",
+    "language": "java",
+    "options": [
+      "A",
+      "B"
+    ],
+    "correct": 1,
+    "explanation": "Inheritance (A) locks you into a hierarchy (Player IS an InputHandler? Weird). Composition (B) gives the Player an InputHandler component, which is more flexible.",
+    "category": "Composition"
+  },
+  {
+    "question": "If `Entity` has a static variable `count`, and you create 10 `Entity` objects. How many copies of `count` exist?",
+    "options": [
+      "10",
+      "1",
+      "0",
+      "11"
+    ],
+    "correct": 1,
+    "explanation": "Static variables are shared across the class. There is only one copy, regardless of how many instances exist.",
+    "category": "Entities & Static"
+  },
+  {
+    "question": "What happens if a class implements two interfaces that both define `default void reset() {}`?",
+    "language": "java",
+    "options": [
+      "It picks the first one.",
+      "It picks the second one.",
+      "Compilation Error (Diamond Problem).",
+      "It runs both."
+    ],
+    "correct": 2,
+    "explanation": "Java allows multiple interface inheritance, but if two interfaces provide conflicting default implementations, the compiler throws an error. The class must override `reset()` to resolve the ambiguity.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "Which access modifier allows a `Manager` class in the same package to access an `Entity`'s fields, but hides them from classes in other packages?",
+    "options": [
+      "private",
+      "public",
+      "protected",
+      "default (no modifier)"
+    ],
+    "correct": 3,
+    "explanation": "Default (package-private) visibility allows access to other classes in the same package (like a Manager) but restricts access from outside packages.",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "Can an abstract class have a constructor?",
+    "options": [
+      "No, because it can't be instantiated.",
+      "Yes, to initialize its own fields when a subclass is created.",
+      "Yes, but it must be private.",
+      "No, only interfaces have constructors."
+    ],
+    "correct": 1,
+    "explanation": "Abstract classes often have state (variables). Constructors are needed to initialize that state. The constructor is called via `super()` from the subclass.",
+    "category": "Abstract Classes"
+  },
+  {
+    "question": "What is the output?",
+    "code": "class Parent { void show() { System.out.print(\"P\"); } }\nclass Child extends Parent { void show() { System.out.print(\"C\"); } }\n\nParent p = new Child();\np.show();",
+    "language": "java",
+    "options": [
+      "P",
+      "C",
+      "PC",
+      "Error"
+    ],
+    "correct": 1,
+    "explanation": "Basic Polymorphism/Method Overriding. The object is a `Child`, so `Child`'s version of `show` runs.",
+    "category": "Polymorphism"
+  },
+  {
+    "question": "A `Scene` containing a list of `GameObjects` iterates them calling `obj.update()`. Some objects move, some explode, some play sound. This works because:",
+    "options": [
+      "All objects are exactly the same class.",
+      "All objects share a common parent/interface with the `update()` method (Polymorphism).",
+      "The Scene uses reflection to find methods.",
+      "The Scene uses static methods."
+    ],
+    "correct": 1,
+    "explanation": "This is the heart of game loops. The Scene treats everything as a `GameObject`, relying on Polymorphism to execute specific behaviors.",
+    "category": "Scene / Core System"
+  },
+  {
+    "question": "Why is 'protected' often used in Game Entities?",
+    "options": [
+      "To allow the variable to be accessed by the Garbage Collector.",
+      "To allow subclasses (like `Player` extending `Entity`) to access variables like `x` and `y` directly for performance/convenience.",
+      "To make the variable global.",
+      "To prevent subclasses from seeing the variable."
+    ],
+    "correct": 1,
+    "explanation": "`protected` strikes a balance: it hides data from the outside world (Encapsulation) but exposes it to children (Inheritance), which is common in game objects where children need frequent access to position data.",
+    "category": "Encapsulation & Inheritance"
+  },
+  {
+    "question": "Which is true about 'Interface' variables?",
+    "code": "interface Data { int MAX = 100; }",
+    "language": "java",
+    "options": [
+      "They are instance variables.",
+      "They are implicitly `public static final`.",
+      "They can be changed by implementing classes.",
+      "They are private."
+    ],
+    "correct": 1,
+    "explanation": "Interface variables are constants.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "If you have `List<Entity> entities`, can you add a `TextureObject` to it (assuming `TextureObject extends Entity`)?",
+    "options": [
+      "Yes",
+      "No",
+      "Only if casted",
+      "Only if TextureObject is abstract"
+    ],
+    "correct": 0,
+    "explanation": "Yes. A `TextureObject` IS-A `Entity`. You can store subclasses in a collection of the superclass.",
+    "category": "Polymorphism & Collections"
+  },
+  {
+    "question": "What is the danger of `public float x;` in an Entity class?",
+    "options": [
+      "It uses too much memory.",
+      "Any external class can set it to an invalid state (e.g., NaN or out of bounds) without checks.",
+      "It cannot be inherited.",
+      "It makes the game slower."
+    ],
+    "correct": 1,
+    "explanation": "This violates Encapsulation. Public mutable fields allow invariant violations (bad state).",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "Which method signature correctly OVERRIDES this method?",
+    "code": "protected Object doSomething(String s) throws Exception",
+    "language": "java",
+    "options": [
+      "protected void doSomething(String s)",
+      "public String doSomething(String s)",
+      "private Object doSomething(String s)",
+      "Object doSomething(Object s)"
+    ],
+    "correct": 1,
+    "explanation": "Override rules: 1. Access cannot be more restrictive (`protected` -> `public` is OK). 2. Return type must be covariant (`Object` -> `String` is OK). 3. Exceptions cannot be broader (removed here, which is OK). Option 4 is Overloading (Object vs String param).",
+    "category": "Polymorphism (Override)"
+  },
+  {
+    "question": "What happens if a subclass constructor does not call `super()`?",
+    "options": [
+      "The compiler inserts a call to the no-arg `super()` automatically.",
+      "The parent is not initialized.",
+      "Runtime Error.",
+      "It uses the child's default values."
+    ],
+    "correct": 0,
+    "explanation": "Java automatically inserts `super()` if you don't. If the parent doesn't HAVE a no-arg constructor, you get a compile error.",
+    "category": "Inheritance"
+  },
+  {
+    "question": "How do you call a version of a method defined in the parent class that you have overridden?",
+    "options": [
+      "parent.method()",
+      "super.method()",
+      "base.method()",
+      "this.parent.method()"
+    ],
+    "correct": 1,
+    "explanation": "`super` keyword accesses the immediate parent's members.",
+    "category": "Inheritance"
+  },
+  {
+    "question": "In a `Scene`, you want to draw all objects. You have `Background`, `Player`, `Enemy`. They don't share a class, but all share `draw()`. What should you use?",
+    "options": [
+      "Create a `Drawable` interface and make them all implement it.",
+      "Use `Object` class.",
+      "Make them all extend `Player`.",
+      "Create 3 different lists."
+    ],
+    "correct": 0,
+    "explanation": "This is the primary use case for Interfaces: defining a common capability (`Drawable`) across disparate class hierarchies.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "What is the output?",
+    "code": "class A { A() { System.out.print(\"A\"); } }\nclass B extends A { B() { System.out.print(\"B\"); } }\nnew B();",
+    "language": "java",
+    "options": [
+      "B",
+      "A",
+      "AB",
+      "BA"
+    ],
+    "correct": 2,
+    "explanation": "Constructors execute Top-Down (Parent first). A initializes, then B initializes.",
+    "category": "Inheritance (Constructors)"
+  },
+  {
+    "question": "If `GameMaster` is a Singleton, how do you usually access it?",
+    "options": [
+      "new GameMaster()",
+      "GameMaster.getInstance()",
+      "GameMaster.this",
+      "super.GameMaster()"
+    ],
+    "correct": 1,
+    "explanation": "Standard Singleton pattern uses a static method `getInstance()` to return the single stored instance.",
+    "category": "Managers"
+  },
+  {
+    "question": "Which is NOT a valid access modifier in Java?",
+    "options": [
+      "public",
+      "private",
+      "friend",
+      "protected"
+    ],
+    "correct": 2,
+    "explanation": "`friend` is C++. Java uses package-private (default) instead.",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "Can a class be both `abstract` and `final`?",
+    "options": [
+      "Yes",
+      "No",
+      "Only inner classes",
+      "Only static classes"
+    ],
+    "correct": 1,
+    "explanation": "Contradiction. Abstract means 'must be extended'. Final means 'cannot be extended'.",
+    "category": "Abstract Classes"
+  },
+  {
+    "question": "In an ECS (Entity Component System), if an Entity `HAS-A` `VelocityComponent`, what allows the entity to move?",
+    "options": [
+      "The Entity moves itself.",
+      "The Component moves itself.",
+      "A `MovementSystem` (or Manager) iterates entities with Velocity and updates position.",
+      "The Scene moves it."
+    ],
+    "correct": 2,
+    "explanation": "In pure ECS, data (Components) is separated from behavior (Systems). A System iterates over entities that possess specific components.",
+    "category": "Entities / Components"
+  },
+  {
+    "question": "Which code demonstrates Polymorphic Array?",
+    "options": [
+      "Entity[] e = new Entity[10]; e[0] = new Player();",
+      "Player[] p = new Player[10]; p[0] = new Entity();",
+      "Entity[] e = new Player[10];",
+      "Player[] p = new Entity[10];"
+    ],
+    "correct": 0,
+    "explanation": "You can store Child objects in a Parent array. (Option 2 is invalid because Entity is not a Player. Option 3 is tricky array covariance but often causes runtime storage errors if you try to put a non-Player in it. Option 0 is the standard polymorphic usage).",
+    "category": "Polymorphism"
+  }
+]
