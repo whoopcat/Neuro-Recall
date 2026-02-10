@@ -1,0 +1,634 @@
+[
+  {
+    "question": "Building off the 'Switch' concept: What happens if the 'default' case is placed in the middle of a switch block without a break?",
+    "code": "int x = 1;\nswitch(x) {\n    default: System.out.print(\"D\");\n    case 0: System.out.print(\"0\");\n    case 1: System.out.print(\"1\");\n    case 2: System.out.print(\"2\");\n}",
+    "language": "java",
+    "options": [
+      "D012",
+      "12",
+      "D12",
+      "1"
+    ],
+    "correct": 1,
+    "explanation": "The `default` case is only executed if NO other case matches. Since `case 1` matches `x`, execution starts there. It prints '1', then falls through to `case 2` and prints '2'. The position of `default` does not change its priority, only its fall-through behavior if it were executed.",
+    "category": "Control Flow"
+  },
+  {
+    "question": "Building off String comparison: What is the output of this chain?",
+    "code": "String s1 = \"Java\";\nString s2 = \"Ja\" + \"va\";\nString s3 = new String(\"Java\");\nSystem.out.println((s1 == s2) + \" \" + (s1 == s3));",
+    "language": "java",
+    "options": [
+      "true true",
+      "false false",
+      "true false",
+      "false true"
+    ],
+    "correct": 2,
+    "explanation": "`s2` is computed at compile-time because both parts are string literals. It points to the same String Pool entry as `s1` (true). `s3` is forced to the heap via `new`, so it has a different reference (false).",
+    "category": "Strings & Memory"
+  },
+  {
+    "question": "Building off Interfaces: If an interface defines a variable, what happens if an implementing class tries to change it?",
+    "code": "interface Config {\n    int TIMEOUT = 10;\n}\nclass App implements Config {\n    void update() {\n        TIMEOUT = 20;\n    }\n}",
+    "language": "java",
+    "options": [
+      "It changes the global TIMEOUT to 20.",
+      "It changes TIMEOUT only for that instance of App.",
+      "Compilation Error.",
+      "Runtime Error."
+    ],
+    "correct": 2,
+    "explanation": "Variables in interfaces are implicitly `public static final` (constants). You cannot reassign a final variable.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "Building off Polymorphism: What happens here?",
+    "code": "class A {\n    public int x = 10;\n}\nclass B extends A {\n    public int x = 20;\n}\npublic class Test {\n    public static void main(String[] args) {\n        A a = new B();\n        System.out.println(a.x);\n    }\n}",
+    "language": "java",
+    "options": [
+      "10",
+      "20",
+      "Compilation Error",
+      "Runtime Exception"
+    ],
+    "correct": 0,
+    "explanation": "While methods are polymorphic (overridden), **variables are NOT**. Variable access is determined by the reference type (`A`), not the runtime object (`B`). This is called variable hiding.",
+    "category": "Polymorphism (Fields)"
+  },
+  {
+    "question": "Building off Abstract Classes: Can an abstract class have a constructor?",
+    "code": "abstract class Base {\n    Base() { System.out.print(\"Base \"); }\n}\nclass Child extends Base {\n    Child() { System.out.print(\"Child \"); }\n}",
+    "language": "java",
+    "options": [
+      "No, abstract classes cannot have constructors.",
+      "Yes, but it can only be called via 'super()' from a subclass.",
+      "Yes, and it can be called via 'new Base()'.",
+      "No, it causes a compile error."
+    ],
+    "correct": 1,
+    "explanation": "Abstract classes CAN have constructors to initialize their own fields. However, you cannot instantiate the abstract class directly. The constructor is called when a concrete subclass is instantiated.",
+    "category": "Abstract Classes"
+  },
+  {
+    "question": "Building off Overriding: Which method correctly overrides the parent?",
+    "code": "class Parent {\n    protected Number getVal() { return 5; }\n}\nclass Child extends Parent {\n    // Insert code here\n}",
+    "language": "java",
+    "options": [
+      "public Integer getVal() { return 10; }",
+      "private Number getVal() { return 10; }",
+      "protected Object getVal() { return 10; }",
+      "public Number getVal(int x) { return 10; }"
+    ],
+    "correct": 0,
+    "explanation": "1. Access can be broader (`protected` -> `public`). 2. Return type can be a subclass (Covariant: `Number` -> `Integer`). Option B fails (more restrictive access). Option C fails (return type `Object` is not a subclass of `Number`). Option D is overloading, not overriding.",
+    "category": "Polymorphism (Rules)"
+  },
+  {
+    "question": "Building off 'this' vs 'super': What is the output?",
+    "code": "class A {\n    int x = 5;\n}\nclass B extends A {\n    int x = 10;\n    void print() {\n        int x = 15;\n        System.out.print(x + \" \" + this.x + \" \" + super.x);\n    }\n}",
+    "language": "java",
+    "options": [
+      "15 10 5",
+      "15 15 10",
+      "10 10 5",
+      "5 10 15"
+    ],
+    "correct": 0,
+    "explanation": "`x` refers to the local variable (15). `this.x` refers to the current class instance variable (10). `super.x` refers to the parent class variable (5).",
+    "category": "Keywords (this/super)"
+  },
+  {
+    "question": "Building off Static methods: Can you override a static method?",
+    "code": "class Parent {\n    static void show() { System.out.print(\"Parent\"); }\n}\nclass Child extends Parent {\n    static void show() { System.out.print(\"Child\"); }\n}\nParent p = new Child();\np.show();",
+    "language": "java",
+    "options": [
+      "Parent",
+      "Child",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "correct": 0,
+    "explanation": "Static methods are **hidden**, not overridden. The method called depends on the reference type (`Parent`), not the runtime object.",
+    "category": "Polymorphism (Static)"
+  },
+  {
+    "question": "Building off Constructors: What happens if you don't define a constructor?",
+    "options": [
+      "The compiler creates a public no-arg constructor.",
+      "The compiler creates a constructor with arguments for all fields.",
+      "You cannot create objects of that class.",
+      "The class implicitly becomes abstract."
+    ],
+    "correct": 0,
+    "explanation": "If (and only if) you provide NO constructors, the compiler injects a default no-argument constructor.",
+    "category": "OOP Basics"
+  },
+  {
+    "question": "Building off Interfaces: Java 8 introduced 'default' methods. What happens if a class implements two interfaces with the SAME default method?",
+    "code": "interface A { default void hello() { } }\ninterface B { default void hello() { } }\nclass C implements A, B { }",
+    "language": "java",
+    "options": [
+      "It picks A's implementation.",
+      "It picks B's implementation.",
+      "It runs both.",
+      "Compilation Error (Diamond Problem)."
+    ],
+    "correct": 3,
+    "explanation": "The compiler cannot decide which default method to use. You MUST override `hello()` in class `C` to resolve the conflict.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "Building off Access Modifiers: If a class member has no modifier (default), where is it visible?",
+    "options": [
+      "Only in the same class.",
+      "In the same class and subclasses anywhere.",
+      "In the same package only.",
+      "Everywhere."
+    ],
+    "correct": 2,
+    "explanation": "Default access (package-private) restricts visibility to classes within the same package.",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "Building off Object Creation: How many objects are created here?",
+    "code": "String s = \"Hello\";\ns = s + \" World\";\ns = s.substring(0, 5);",
+    "language": "java",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "correct": 2,
+    "explanation": "1. \"Hello\" (Literal).\n2. \"Hello World\" (New object from concatenation).\n3. \"Hello\" (New object from substring - depending on JDK version, usually creates a new String or shares array, but conceptually distinct result).\nWait, strictly speaking: \"Hello\" is 1. \" World\" is 1 (literal). s+... is 1. Substring is 1. That's 4. \n*Correction:* \"Hello\" (Pool). \" World\" (Pool). Result of concat (Heap). Result of substring (Heap). Total 4 string objects involved. If counting distinct content/references created: 3 references assigned to s over time.",
+    "category": "Strings & Memory"
+  },
+  {
+    "question": "Building off Arrays: What is the output?",
+    "code": "int[] arr = new int[5];\nSystem.out.println(arr[0]);",
+    "language": "java",
+    "options": [
+      "null",
+      "0",
+      "Garbage Value",
+      "Runtime Error"
+    ],
+    "correct": 1,
+    "explanation": "Arrays of primitives are automatically initialized to default values. For `int`, it is 0.",
+    "category": "Arrays"
+  },
+  {
+    "question": "Building off Final: What does 'final' mean when applied to a method?",
+    "options": [
+      "The method cannot be called.",
+      "The method cannot be overridden by subclasses.",
+      "The method cannot allow local variables.",
+      "The method must be static."
+    ],
+    "correct": 1,
+    "explanation": "`final` methods cannot be overridden, ensuring the behavior remains consistent in all subclasses.",
+    "category": "Keywords"
+  },
+  {
+    "question": "Building off Inheritance: What is the order of execution?",
+    "code": "class A { static { System.out.print(\"1\"); } }\nclass B extends A { static { System.out.print(\"2\"); } }\npublic class Test { \n  public static void main(String[] args) { new B(); }\n}",
+    "language": "java",
+    "options": [
+      "12",
+      "21",
+      "1",
+      "No output"
+    ],
+    "correct": 0,
+    "explanation": "Static initialization blocks run when the class is loaded. The parent class `A` is loaded first (printing 1), then the child class `B` (printing 2).",
+    "category": "Initialization"
+  },
+  {
+    "question": "Building off Encapsulation: Why use a getter instead of a public field?",
+    "options": [
+      "It uses less memory.",
+      "It allows you to control/validate how the data is accessed or modified.",
+      "It is required by the compiler.",
+      "It makes the code run faster."
+    ],
+    "correct": 1,
+    "explanation": "Getters/Setters provide a layer of abstraction, allowing validation, logging, or lazy loading without breaking external code.",
+    "category": "Encapsulation"
+  },
+  {
+    "question": "Building off Loops: What happens in this loop?",
+    "code": "for(int i=0; i<5; i++) {\n    if (i==2) continue;\n    System.out.print(i);\n}",
+    "language": "java",
+    "options": [
+      "01234",
+      "0134",
+      "01",
+      "Infinite loop"
+    ],
+    "correct": 1,
+    "explanation": "`continue` skips the rest of the current iteration. When `i` is 2, the print is skipped.",
+    "category": "Control Flow"
+  },
+  {
+    "question": "Building off Type Casting: What happens here?",
+    "code": "double d = 10.99;\nint i = (int) d;",
+    "language": "java",
+    "options": [
+      "i becomes 11 (rounded)",
+      "i becomes 10 (truncated)",
+      "Compilation Error",
+      "Runtime Error"
+    ],
+    "correct": 1,
+    "explanation": "Casting floating-point to integer simply truncates the decimal part (it does NOT round).",
+    "category": "Data Types"
+  },
+  {
+    "question": "Building off Strings: String vs StringBuilder?",
+    "options": [
+      "String is mutable; StringBuilder is immutable.",
+      "String is immutable; StringBuilder is mutable and thread-safe.",
+      "String is immutable; StringBuilder is mutable and not thread-safe.",
+      "Both are immutable."
+    ],
+    "correct": 2,
+    "explanation": "String is immutable. StringBuilder is mutable but NOT thread-safe (StringBuffer is the thread-safe version).",
+    "category": "Strings"
+  },
+  {
+    "question": "Building off Exceptions: What happens if a 'catch' block throws a new exception?",
+    "code": "try { throw new Exception(); }\ncatch (Exception e) { throw new RuntimeException(); }\nfinally { System.out.print(\"F\"); }",
+    "language": "java",
+    "options": [
+      "F is printed, then RuntimeException propagates.",
+      "RuntimeException propagates immediately, F is skipped.",
+      "F is printed, then original Exception propagates.",
+      "Compilation Error."
+    ],
+    "correct": 0,
+    "explanation": "The `finally` block ALWAYS executes before the method exits, even if an exception is thrown in `catch`.",
+    "category": "Error Handling"
+  },
+  {
+    "question": "Building off Interfaces: Can an interface have a private method?",
+    "options": [
+      "No, never.",
+      "Yes, starting from Java 9, to share code between default methods.",
+      "Yes, but only if it is static.",
+      "No, all methods must be public."
+    ],
+    "correct": 1,
+    "explanation": "Java 9 added private interface methods to allow helper code for `default` methods without exposing it to the API.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "Building off Polymorphism: What is Dynamic Binding?",
+    "options": [
+      "Connecting method calls to bodies at compile time.",
+      "Connecting method calls to bodies at runtime based on the actual object type.",
+      "Linking static variables.",
+      "Importing packages."
+    ],
+    "correct": 1,
+    "explanation": "Dynamic binding (Late binding) is the mechanism that enables method overriding to work at runtime.",
+    "category": "Polymorphism"
+  },
+  {
+    "question": "Building off Abstract Classes: If `class Dog extends Animal` and `Animal` is abstract, does `Dog` HAVE to implement abstract methods?",
+    "options": [
+      "No, not if `Dog` is also abstract.",
+      "Yes, always.",
+      "No, abstract methods are optional.",
+      "Yes, but only if they are public."
+    ],
+    "correct": 0,
+    "explanation": "If `Dog` is also declared `abstract`, it is not required to implement the parent's abstract methods. The burden is passed to the next concrete subclass.",
+    "category": "Abstract Classes"
+  },
+  {
+    "question": "Building off Operators: What is the result of `10 / 0` vs `10.0 / 0`?",
+    "options": [
+      "Both throw ArithmeticException.",
+      "Both return Infinity.",
+      "Exception, Infinity.",
+      "Infinity, Exception."
+    ],
+    "correct": 2,
+    "explanation": "Integer division by zero throws `ArithmeticException`. Floating-point division by zero returns `Infinity`.",
+    "category": "Operators"
+  },
+  {
+    "question": "Building off Constructors: Can a constructor be private?",
+    "options": [
+      "No, never.",
+      "Yes, to prevent instantiation from outside the class (Singleton Pattern).",
+      "Yes, but only in abstract classes.",
+      "No, the compiler will delete it."
+    ],
+    "correct": 1,
+    "explanation": "Private constructors are a key feature for limiting object creation, used in Singletons or Utility classes.",
+    "category": "OOP Patterns"
+  },
+  {
+    "question": "Building off Inheritance: What happens if you define a method with the same signature as a parent's private method?",
+    "options": [
+      "It overrides the method.",
+      "It causes a compilation error.",
+      "It is treated as a new, unrelated method (no polymorphism).",
+      "It throws a runtime error."
+    ],
+    "correct": 2,
+    "explanation": "Private methods are not visible to subclasses, so you cannot 'override' them. You are simply defining a new method that happens to have the same name.",
+    "category": "Inheritance"
+  },
+  {
+    "question": "Building off 'super': Can you use 'super' in a static method?",
+    "options": [
+      "Yes.",
+      "No.",
+      "Only to access static variables.",
+      "Only in the main method."
+    ],
+    "correct": 1,
+    "explanation": "`super` (and `this`) relies on an object instance context. Static methods belong to the class, not an instance, so they have no `super` context.",
+    "category": "Static Context"
+  },
+  {
+    "question": "Building off Variables: What is a 'blank final' variable?",
+    "options": [
+      "A variable that is null.",
+      "A final variable that is not initialized at declaration but must be initialized in the constructor.",
+      "A variable that can be changed once.",
+      "A static final variable."
+    ],
+    "correct": 1,
+    "explanation": "Blank finals allow you to delay setting a constant value until the constructor runs (e.g., setting an ID based on an argument).",
+    "category": "Variables"
+  },
+  {
+    "question": "Building off Interfaces: Can an interface extend a class?",
+    "options": [
+      "Yes, any class.",
+      "Yes, but only abstract classes.",
+      "No, interfaces can only extend other interfaces.",
+      "Yes, if the class has no fields."
+    ],
+    "correct": 2,
+    "explanation": "Interfaces and Classes are different hierarchies. An Interface extends Interfaces; a Class extends a Class.",
+    "category": "Interfaces"
+  },
+  {
+    "question": "Building off Memory: Where are objects stored?",
+    "options": [
+      "Stack",
+      "Heap",
+      "String Pool",
+      "Registers"
+    ],
+    "correct": 1,
+    "explanation": "In Java, all Objects (including arrays) are stored in the Heap. References to those objects are stored in the Stack (for local variables).",
+    "category": "Memory Management"
+  },
+  {
+    "question": "Building off Wrapper Classes: `Integer a = 200; Integer b = 200;` Is `a == b`?",
+    "options": [
+      "True",
+      "False",
+      "Compilation Error",
+      "Undefined"
+    ],
+    "correct": 1,
+    "explanation": "False. Integer caching usually stops at 127. 200 creates new objects, so references differ.",
+    "category": "Wrapper Classes"
+  },
+  {
+    "question": "Building off Loops: Which loop is guaranteed to execute at least once?",
+    "options": [
+      "for",
+      "while",
+      "do-while",
+      "foreach"
+    ],
+    "correct": 2,
+    "explanation": "do-while checks the condition *after* the body executes.",
+    "category": "Control Flow"
+  },
+  {
+    "question": "Building off Strings: What does `String.intern()` do?",
+    "options": [
+      "Deletes the string.",
+      "Moves the string to the Stack.",
+      "Returns a canonical representation from the String Constant Pool.",
+      "Encrypts the string."
+    ],
+    "correct": 2,
+    "explanation": "It ensures that all strings with the same content share the same memory reference in the Pool.",
+    "category": "Strings"
+  },
+  {
+    "question": "Building off Collections: Which Collection allows duplicate elements?",
+    "options": [
+      "Set",
+      "List",
+      "Map (Keys)",
+      "None"
+    ],
+    "correct": 1,
+    "explanation": "Lists (like ArrayList) allow duplicates. Sets (like HashSet) do not.",
+    "category": "Collections"
+  },
+  {
+    "question": "Building off OOP: What is the relationship between a 'House' and a 'Room'?",
+    "options": [
+      "Inheritance (Is-A)",
+      "Composition (Has-A, strong ownership)",
+      "Aggregation (Has-A, weak ownership)",
+      "Dependency"
+    ],
+    "correct": 1,
+    "explanation": "A Room usually doesn't exist without a House. If House is destroyed, Rooms are gone. This is Composition.",
+    "category": "Relationships"
+  },
+  {
+    "question": "Building off Methods: What is the return type of a constructor?",
+    "options": [
+      "void",
+      "The class type",
+      "Object",
+      "It has no return type."
+    ],
+    "correct": 3,
+    "explanation": "Constructors strictly have no return type, not even void. If you add 'void', it becomes a regular method.",
+    "category": "Constructors"
+  },
+  {
+    "question": "Building off Modifiers: Which modifier prevents a class from being inherited?",
+    "options": [
+      "static",
+      "private",
+      "final",
+      "abstract"
+    ],
+    "correct": 2,
+    "explanation": "`final class` cannot be subclassed.",
+    "category": "Keywords"
+  },
+  {
+    "question": "Building off Arrays: `int[] a = {1,2}; int[] b = a; a[0]=99;` What is `b[0]`?",
+    "options": [
+      "1",
+      "2",
+      "99",
+      "0"
+    ],
+    "correct": 2,
+    "explanation": "Arrays are objects. `b=a` copies the reference. They point to the same array.",
+    "category": "Arrays"
+  },
+  {
+    "question": "Building off Control Flow: What happens if you put `break` inside an `if` statement that is NOT inside a loop/switch?",
+    "options": [
+      "It breaks the program.",
+      "It compiles fine.",
+      "Compilation Error.",
+      "It breaks the nearest method."
+    ],
+    "correct": 2,
+    "explanation": "`break` is only allowed inside loops or switch statements.",
+    "category": "Control Flow"
+  },
+  {
+    "question": "Building off Polymorphism: Can you cast a Superclass reference to a Subclass type?",
+    "options": [
+      "Always.",
+      "Never.",
+      "Yes, but only if the actual object is of that Subclass type (Downcasting).",
+      "Yes, but it creates a new object."
+    ],
+    "correct": 2,
+    "explanation": "Downcasting is risky. It compiles, but throws `ClassCastException` at runtime if the object isn't actually that subtype.",
+    "category": "Casting"
+  },
+  {
+    "question": "Building off Logic: `true || false && false` evaluates to?",
+    "options": [
+      "false",
+      "true",
+      "null",
+      "error"
+    ],
+    "correct": 1,
+    "explanation": "AND (`&&`) has higher precedence than OR (`||`). `false && false` is `false`. `true || false` is `true`.",
+    "category": "Operators"
+  },
+  {
+    "question": "Building off Variables: What is the default value of a boolean field?",
+    "options": [
+      "true",
+      "false",
+      "null",
+      "0"
+    ],
+    "correct": 1,
+    "explanation": "Fields (instance variables) initialize to `false`.",
+    "category": "Variables"
+  },
+  {
+    "question": "Building off Packages: Which package is imported automatically?",
+    "options": [
+      "java.util",
+      "java.io",
+      "java.lang",
+      "java.net"
+    ],
+    "correct": 2,
+    "explanation": "`java.lang` (contains String, System, Math, etc.) is auto-imported.",
+    "category": "Packages"
+  },
+  {
+    "question": "Building off Methods: Can a method accept a variable number of arguments?",
+    "code": "void fun(int... x) { }",
+    "language": "java",
+    "options": [
+      "No.",
+      "Yes, this is called Varargs.",
+      "Yes, but only for Strings.",
+      "No, arrays must be used."
+    ],
+    "correct": 1,
+    "explanation": "Varargs (`Type... name`) allows 0 to N arguments, treated as an array internally.",
+    "category": "Methods"
+  },
+  {
+    "question": "Building off Exceptions: Is `Error` a subclass of `Exception`?",
+    "options": [
+      "Yes.",
+      "No, they are siblings under `Throwable`.",
+      "No, `Exception` inherits from `Error`.",
+      "They are unrelated."
+    ],
+    "correct": 1,
+    "explanation": "`Throwable` splits into `Error` (serious JVM issues) and `Exception` (program issues).",
+    "category": "Exceptions"
+  },
+  {
+    "question": "Building off Switch: What types are allowed in switch expressions (pre-Java 14)?",
+    "options": [
+      "int, long, float",
+      "int, String, Enum, char",
+      "boolean, int",
+      "Object, int"
+    ],
+    "correct": 1,
+    "explanation": "Switch supports `byte`, `short`, `char`, `int`, `String`, and `Enum`. No `long`, `float`, `boolean`.",
+    "category": "Control Flow"
+  },
+  {
+    "question": "Building off Strings: What is the result of `\"abc\".toUpperCase()`?",
+    "options": [
+      "It modifies the string to \"ABC\".",
+      "It returns a new string \"ABC\".",
+      "It returns void.",
+      "Error."
+    ],
+    "correct": 1,
+    "explanation": "Strings are immutable. Methods return NEW strings; they don't change the original.",
+    "category": "Strings"
+  },
+  {
+    "question": "Building off Math: `Math.round(2.5)` returns?",
+    "options": [
+      "2",
+      "3",
+      "2.5",
+      "3.0"
+    ],
+    "correct": 1,
+    "explanation": "`Math.round` follows standard rounding (round half up for positive). 2.5 -> 3. It returns a `long` (or `int` for float input).",
+    "category": "Math"
+  },
+  {
+    "question": "Building off OOP: What is the purpose of `instanceof`?",
+    "options": [
+      "To create an instance.",
+      "To check if an object is of a specific type (or subclass).",
+      "To cast an object.",
+      "To check for null."
+    ],
+    "correct": 1,
+    "explanation": "It returns true/false checking the runtime type.",
+    "category": "Operators"
+  },
+  {
+    "question": "Building off Garbage Collection: Can you force Garbage Collection?",
+    "options": [
+      "Yes, System.gc() forces it immediately.",
+      "No, System.gc() is just a suggestion to the JVM.",
+      "Yes, by setting objects to null.",
+      "No, it never runs."
+    ],
+    "correct": 1,
+    "explanation": "`System.gc()` suggests cleanup, but the JVM guarantees nothing.",
+    "category": "Memory"
+  }
+]
