@@ -610,22 +610,22 @@
                 <p class="text-center text-slate-400 mb-4 text-sm">How well did you know this?</p>
                 <div class="grid grid-cols-4 gap-3">
                     <button onclick="rateCard('again')" class="difficulty-btn again rounded-xl p-4 text-center">
-                        <div class="text-2xl mb-1">😵</div>
+                        <div class="text-2xl mb-1"></div>
                         <div class="font-semibold text-sm">Again</div>
                         <div class="text-xs opacity-70">&lt;1m</div>
                     </button>
                     <button onclick="rateCard('hard')" class="difficulty-btn hard rounded-xl p-4 text-center">
-                        <div class="text-2xl mb-1">😬</div>
+                        <div class="text-2xl mb-1"></div>
                         <div class="font-semibold text-sm">Hard</div>
                         <div class="text-xs opacity-70">2d</div>
                     </button>
                     <button onclick="rateCard('good')" class="difficulty-btn good rounded-xl p-4 text-center">
-                        <div class="text-2xl mb-1">🙂</div>
+                        <div class="text-2xl mb-1"></div>
                         <div class="font-semibold text-sm">Good</div>
                         <div class="text-xs opacity-70">4d</div>
                     </button>
                     <button onclick="rateCard('easy')" class="difficulty-btn easy rounded-xl p-4 text-center">
-                        <div class="text-2xl mb-1">😎</div>
+                        <div class="text-2xl mb-1"></div>
                         <div class="font-semibold text-sm">Easy</div>
                         <div class="text-xs opacity-70">7d</div>
                     </button>
@@ -1715,7 +1715,7 @@ Format as JSON array with fields: question, answer (for flashcards) OR options/c
             const iconEl = document.getElementById('quiz-result-icon');
 
             if (isCorrect) {
-                titleEl.textContent = 'Correct! 🎉';
+                titleEl.textContent = 'Correct! ';
                 titleEl.className = 'text-lg font-semibold text-emerald-400 mb-2';
                 iconEl.innerHTML = '<i class="fa-solid fa-circle-check text-2xl text-emerald-400"></i>';
             } else {
