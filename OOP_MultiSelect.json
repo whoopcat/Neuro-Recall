@@ -1,0 +1,461 @@
+{
+  "name": "Java OOP & Fundamentals Multi-Select",
+  "questions": [
+    {
+      "question": "Select all statements that are TRUE regarding Java Interfaces:",
+      "options": [
+        "Variables defined in an interface are implicitly public, static, and final.",
+        "An interface can extend multiple other interfaces.",
+        "Interfaces can contain constructors.",
+        "A class can implement multiple interfaces."
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Interfaces cannot have constructors. They support multiple inheritance (interface extending interfaces) and a class can implement multiple interfaces. Variables are constants by default.",
+      "category": "Interfaces"
+    },
+    {
+      "question": "Which of the following are the four main pillars of Object-Oriented Programming (OOP)?",
+      "options": [
+        "Encapsulation",
+        "Compilation",
+        "Inheritance",
+        "Polymorphism",
+        "Abstraction"
+      ],
+      "correct": [0, 2, 3, 4],
+      "correctArray": [0, 2, 3, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "The four pillars are Encapsulation, Inheritance, Polymorphism, and Abstraction. Compilation is a process, not an OOP pillar.",
+      "category": "OOP Basics"
+    },
+    {
+      "question": "Select all valid Java Access Modifiers:",
+      "options": [
+        "public",
+        "friend",
+        "private",
+        "protected",
+        "default (no keyword)"
+      ],
+      "correct": [0, 2, 3, 4],
+      "correctArray": [0, 2, 3, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "'friend' is a C++ concept. Java uses public, private, protected, and package-private (default).",
+      "category": "Encapsulation"
+    },
+    {
+      "question": "Which of the following are classified as Unchecked Exceptions?",
+      "options": [
+        "IOException",
+        "NullPointerException",
+        "ArithmeticException",
+        "SQLException",
+        "ArrayIndexOutOfBoundsException"
+      ],
+      "correct": [1, 2, 4],
+      "correctArray": [1, 2, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "RuntimeExceptions (NullPointer, Arithmetic, IndexOutOfBounds) are unchecked. IO and SQL exceptions are Checked.",
+      "category": "Error Handling"
+    },
+    {
+      "question": "Select all true statements regarding the 'final' keyword:",
+      "options": [
+        "A final class cannot be subclassed.",
+        "A final method cannot be overridden.",
+        "A final variable can be reassigned exactly once.",
+        "A final variable represents a constant value (or constant reference)."
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "A final variable cannot be reassigned after its initial assignment.",
+      "category": "Keywords"
+    },
+    {
+      "question": "Which of the following statements distinguish Abstract Classes from Interfaces?",
+      "options": [
+        "Abstract classes can have constructors; Interfaces cannot.",
+        "Abstract classes can hold state (instance variables); Interfaces only hold constants.",
+        "A class can extend multiple abstract classes.",
+        "Abstract classes can have concrete methods."
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Java does not support multiple inheritance for classes, so a class can only extend one Abstract Class. Interfaces have no constructors and variables are static final.",
+      "category": "Abstraction"
+    },
+    {
+      "question": "Identify the characteristics of 'Composition' in OOP:",
+      "options": [
+        "It represents a 'HAS-A' relationship.",
+        "It represents an 'IS-A' relationship.",
+        "It implies strong ownership (Child dies if Parent dies).",
+        "It implies weak ownership (Child survives if Parent dies)."
+      ],
+      "correct": [0, 2],
+      "correctArray": [0, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Composition is a strong 'HAS-A' relationship. Aggregation is the weak version.",
+      "category": "Relationships"
+    },
+    {
+      "question": "Which of the following are valid primitive data types in Java?",
+      "options": [
+        "int",
+        "String",
+        "boolean",
+        "double",
+        "Float"
+      ],
+      "correct": [0, 2, 3],
+      "correctArray": [0, 2, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "String and Float (capital F) are Classes/Objects. The primitives are int, boolean, double, float, char, byte, short, long.",
+      "category": "Java Fundamentals"
+    },
+    {
+      "question": "Select all true statements about Method Overriding:",
+      "options": [
+        "The method name must be the same.",
+        "The parameter list must be the same.",
+        "The return type can be different (non-covariant).",
+        "The access modifier cannot be more restrictive than the parent's."
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Overriding requires the exact same signature (name + params) and the return type must be the same or a subclass (covariant). You cannot restrict access (e.g., make a public method private).",
+      "category": "Polymorphism"
+    },
+    {
+      "question": "Which of the following are steps in the Test Driven Development (TDD) cycle?",
+      "options": [
+        "Write a failing test (Red)",
+        "Write the minimal code to pass (Green)",
+        "Optimize the code (Refactor)",
+        "Write documentation"
+      ],
+      "correct": [0, 1, 2],
+      "correctArray": [0, 1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "The core TDD cycle is Red -> Green -> Refactor.",
+      "category": "Testing"
+    },
+    {
+      "question": "Select the correct statements about Java Constructors:",
+      "options": [
+        "Constructors must have the same name as the class.",
+        "Constructors have a return type of void.",
+        "Constructors are not inherited by subclasses.",
+        "A class can have multiple constructors (Overloading)."
+      ],
+      "correct": [0, 2, 3],
+      "correctArray": [0, 2, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Constructors have NO return type (not even void). They are not inherited.",
+      "category": "Constructors"
+    },
+    {
+      "question": "Which data types are valid for a 'switch' statement in Java (Standard JDK)?",
+      "options": [
+        "int",
+        "String",
+        "boolean",
+        "Enum",
+        "double"
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Switch supports byte, short, char, int, String, and Enums. It does NOT support boolean, long, float, or double.",
+      "category": "Control Flow"
+    },
+    {
+      "question": "Select all true statements about the 'static' keyword:",
+      "options": [
+        "Static variables are shared among all instances of a class.",
+        "Static methods can access instance variables directly.",
+        "Static methods belong to the class, not a specific object.",
+        "Static blocks are executed when the class is loaded."
+      ],
+      "correct": [0, 2, 3],
+      "correctArray": [0, 2, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Static methods cannot access non-static (instance) variables because they run without an object instance context.",
+      "category": "Keywords"
+    },
+    {
+      "question": "Which of the following are Checked Exceptions?",
+      "options": [
+        "java.io.IOException",
+        "java.sql.SQLException",
+        "java.lang.ArithmeticException",
+        "java.lang.ClassNotFoundException"
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "ArithmeticException is a RuntimeException (Unchecked). The others are Checked.",
+      "category": "Error Handling"
+    },
+    {
+      "question": "Select all immutable classes/types in Java:",
+      "options": [
+        "String",
+        "StringBuilder",
+        "Integer (Wrapper)",
+        "Double (Wrapper)"
+      ],
+      "correct": [0, 2, 3],
+      "correctArray": [0, 2, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "String and all primitive Wrapper classes are immutable. StringBuilder is mutable.",
+      "category": "Java Fundamentals"
+    },
+    {
+      "question": "Which of the following constitute a valid 'Deep Copy' implementation?",
+      "options": [
+        "Using the assignment operator (=) to copy the object.",
+        "Creating a new object instance.",
+        "Recursively cloning all mutable reference fields.",
+        "Calling super.clone() alone."
+      ],
+      "correct": [1, 2],
+      "correctArray": [1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Assignment copies the reference. super.clone() is a shallow copy. Deep copy requires new instances and recursive cloning of mutable fields.",
+      "category": "Cloning"
+    },
+    {
+      "question": "Select the benefits of Encapsulation:",
+      "options": [
+        "Data Hiding (Security)",
+        "Maintainability (Code can change internally without breaking external code)",
+        "Controlled access via Getters/Setters",
+        "Enables Multiple Inheritance"
+      ],
+      "correct": [0, 1, 2],
+      "correctArray": [0, 1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Encapsulation does not enable multiple inheritance.",
+      "category": "Encapsulation"
+    },
+    {
+      "question": "Which keywords are used in Java Exception Handling?",
+      "options": [
+        "try",
+        "catch",
+        "finally",
+        "throw",
+        "terminate"
+      ],
+      "correct": [0, 1, 2, 3],
+      "correctArray": [0, 1, 2, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "'terminate' is not a Java keyword.",
+      "category": "Error Handling"
+    },
+    {
+      "question": "Select all true statements regarding Java Arrays:",
+      "options": [
+        "Arrays have a fixed size once created.",
+        "Arrays can store primitive data types.",
+        "Arrays can store objects.",
+        "Arrays automatically resize when full."
+      ],
+      "correct": [0, 1, 2],
+      "correctArray": [0, 1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Arrays are fixed size. ArrayLists resize automatically.",
+      "category": "Arrays"
+    },
+    {
+      "question": "Which of the following represent Polymorphism in Java?",
+      "options": [
+        "Method Overloading",
+        "Method Overriding",
+        "Variable Hiding",
+        "Interface Implementation"
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Variable hiding is NOT polymorphism. Overloading (static poly) and Overriding (dynamic poly) are the main forms. Interface implementation allows objects to be treated as their interface type (subtype polymorphism).",
+      "category": "Polymorphism"
+    },
+    {
+      "question": "Select all valid ways to initialize a String:",
+      "options": [
+        "String s = \"Hello\";",
+        "String s = new String(\"Hello\");",
+        "String s = 'Hello';",
+        "String s = new String(new char[]{'H', 'e', 'l', 'l', 'o'});"
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Single quotes are for char ('c'), not Strings.",
+      "category": "Strings"
+    },
+    {
+      "question": "Which of the following are valid usages of the 'super' keyword?",
+      "options": [
+        "Calling a parent class constructor: super()",
+        "Accessing a hidden parent class variable: super.variable",
+        "Calling an overridden parent class method: super.method()",
+        "Creating a new instance of the parent: new super()"
+      ],
+      "correct": [0, 1, 2],
+      "correctArray": [0, 1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "'new super()' is invalid syntax.",
+      "category": "Inheritance"
+    },
+    {
+      "question": "Select all statements that apply to 'Garbage Collection' in Java:",
+      "options": [
+        "It happens automatically.",
+        "It reclaims memory from the Heap.",
+        "It reclaims memory from the Stack.",
+        "Programmers can force it to run immediately using System.gc()."
+      ],
+      "correct": [0, 1],
+      "correctArray": [0, 1],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "GC cleans the Heap. The Stack is cleaned automatically as method frames pop. System.gc() is only a request, not a command.",
+      "category": "Memory"
+    },
+    {
+      "question": "What is required to overload a method correctly?",
+      "options": [
+        "Different method name.",
+        "Same method name.",
+        "Different parameter list (type, number, or order).",
+        "Different return type alone."
+      ],
+      "correct": [1, 2],
+      "correctArray": [1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Overloading requires the same name but different parameters. Changing only the return type is a compile error.",
+      "category": "Polymorphism"
+    },
+    {
+      "question": "Select all features of an 'Abstract Class':",
+      "options": [
+        "Cannot be instantiated directly.",
+        "Can contain abstract methods.",
+        "Can contain concrete methods.",
+        "Variables are always public static final."
+      ],
+      "correct": [0, 1, 2],
+      "correctArray": [0, 1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Variables in abstract classes can have any access modifier and state. Only Interfaces force variables to be public static final.",
+      "category": "Abstraction"
+    },
+    {
+      "question": "Which operators are used for logical conditions in Java?",
+      "options": [
+        "&&",
+        "||",
+        "!",
+        "<<"
+      ],
+      "correct": [0, 1, 2],
+      "correctArray": [0, 1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "<< is a bitwise left shift operator, not a boolean logical operator.",
+      "category": "Operators"
+    },
+    {
+      "question": "Select all true statements about the 'protected' access modifier:",
+      "options": [
+        "Accessible within the same package.",
+        "Accessible by subclasses in different packages.",
+        "Accessible by the world (all classes).",
+        "Accessible only within the same class."
+      ],
+      "correct": [0, 1],
+      "correctArray": [0, 1],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Protected = Same Package + Subclasses.",
+      "category": "Encapsulation"
+    },
+    {
+      "question": "Which of the following are valid components of a method signature?",
+      "options": [
+        "Method Name",
+        "Parameter Types",
+        "Parameter Order",
+        "Return Type"
+      ],
+      "correct": [0, 1, 2],
+      "correctArray": [0, 1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "The signature includes the name and the parameter types/order. Return type and thrown exceptions are NOT part of the signature.",
+      "category": "Methods"
+    },
+    {
+      "question": "Select all statements that match the 'Aggregation' relationship:",
+      "options": [
+        "It is a 'HAS-A' relationship.",
+        "It implies weak ownership.",
+        "If the container is destroyed, the contained objects persist.",
+        "It is implemented using the 'extends' keyword."
+      ],
+      "correct": [0, 1, 2],
+      "correctArray": [0, 1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Inheritance uses 'extends'. Aggregation is HAS-A where the lifecycle of the child is independent of the parent.",
+      "category": "Relationships"
+    },
+    {
+      "question": "Which of the following are valid Wrapper Classes?",
+      "options": [
+        "Boolean",
+        "Character",
+        "Int",
+        "Long"
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "The wrapper for int is 'Integer', not 'Int'.",
+      "category": "Java Fundamentals"
+    }
+  ]
+}
