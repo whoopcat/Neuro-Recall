@@ -1,0 +1,808 @@
+{
+  "name": "ICT1012 Operating Systems - Lab Quiz Bank (Lab1-w3 Syscall & Lab2-w5 Thread)",
+  "questions": [
+    {
+      "question": "In the handshake program, how many pipes are required to allow bidirectional communication between parent and child?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 1,
+      "explanation": "Two pipes are needed: one for parent→child and one for child→parent, enabling full-duplex communication.",
+      "category": "Lab1-w3: Handshake",
+      "type": "mcq"
+    },
+    {
+      "question": "After fork(), which end of the parent-to-child pipe (p1) should the CHILD close?",
+      "options": [
+        "p1[0] (read end)",
+        "p1[1] (write end)",
+        "Both ends",
+        "Neither end"
+      ],
+      "correct": 1,
+      "explanation": "The child only reads from the parent-to-child pipe, so it should close the write end p1[1] to avoid accidental writes.",
+      "category": "Lab1-w3: Handshake",
+      "type": "mcq"
+    },
+    {
+      "question": "What is the correct output format when the child receives a byte in the handshake program?",
+      "options": [
+        "<pid>: received <x> from child",
+        "<pid>: received <x> from parent",
+        "received <x> from parent <pid>",
+        "child <pid>: got <x>"
+      ],
+      "correct": 1,
+      "explanation": "The spec requires the child to print \"<pid>: received <x> from parent\" where <pid> is the child's process ID.",
+      "category": "Lab1-w3: Handshake",
+      "type": "mcq"
+    },
+    {
+      "question": "Which xv6 system call is used to get the current process ID?",
+      "options": [
+        "pid()",
+        "getpid()",
+        "mypid()",
+        "procid()"
+      ],
+      "correct": 1,
+      "explanation": "getpid() is the xv6 system call that returns the current process's PID, declared in user/user.h.",
+      "category": "Lab1-w3: Handshake",
+      "type": "mcq"
+    },
+    {
+      "question": "After the parent writes a byte to the child and receives one back, what system call should the parent use to wait for the child to finish?",
+      "options": [
+        "sleep(0)",
+        "pause()",
+        "wait(0)",
+        "join(0)"
+      ],
+      "correct": 2,
+      "explanation": "wait(0) is used by the parent to wait for the child process to exit, preventing zombie processes.",
+      "category": "Lab1-w3: Handshake",
+      "type": "mcq"
+    },
+    {
+      "question": "What grading command is used to test only the handshake program?",
+      "options": [
+        "./grade-lab-util handshake",
+        "./grade-lab-syscall handshake",
+        "./grade-lab-thread handshake",
+        "make test-handshake"
+      ],
+      "correct": 1,
+      "explanation": "The handshake task is part of the syscall lab, so ./grade-lab-syscall handshake is the correct grading command.",
+      "category": "Lab1-w3: Handshake",
+      "type": "mcq"
+    },
+    {
+      "question": "In the handshake program, which end of the child-to-parent pipe (p2) should the PARENT close after fork()?",
+      "options": [
+        "p2[0] (read end)",
+        "p2[1] (write end)",
+        "Both ends",
+        "Neither"
+      ],
+      "correct": 1,
+      "explanation": "The parent only reads from the child-to-parent pipe p2, so it should close the write end p2[1].",
+      "category": "Lab1-w3: Handshake",
+      "type": "mcq"
+    },
+    {
+      "question": "What intentional bug is introduced in xv6 for the sniffer task?",
+      "options": [
+        "fork() returns wrong PID",
+        "memset() calls that zero newly-allocated pages are removed",
+        "pipe() does not block on read",
+        "exec() does not clear registers"
+      ],
+      "correct": 1,
+      "explanation": "Three memset() calls (in uvmalloc and kalloc) that zero memory pages are omitted, meaning newly allocated memory retains its previous contents.",
+      "category": "Lab1-w3: Sniffer",
+      "type": "mcq"
+    },
+    {
+      "question": "Which system call does the sniffer program use to obtain memory that may contain the secret?",
+      "options": [
+        "malloc()",
+        "mmap()",
+        "sbrk()",
+        "calloc()"
+      ],
+      "correct": 2,
+      "explanation": "sbrk() is the xv6 syscall to grow the process's heap. Because pages aren't zeroed, allocated pages may contain data from previously freed processes.",
+      "category": "Lab1-w3: Sniffer",
+      "type": "mcq"
+    },
+    {
+      "question": "What does the secret.c program do when it runs?",
+      "options": [
+        "Encrypts a file on disk",
+        "Writes a secret string in memory then exits (freeing the memory)",
+        "Sends a secret over a pipe",
+        "Creates a hidden file in the filesystem"
+      ],
+      "correct": 1,
+      "explanation": "secret.c writes a secret string in its memory and then exits, which frees the pages. These unzeroed pages can then be allocated by sniffer.",
+      "category": "Lab1-w3: Sniffer",
+      "type": "mcq"
+    },
+    {
+      "question": "Why does the sniffer exploit work even though secret.c has already exited?",
+      "options": [
+        "xv6 uses persistent memory",
+        "The freed pages are not zeroed before being reallocated",
+        "The secret is written to a file",
+        "xv6 shares memory between all processes"
+      ],
+      "correct": 1,
+      "explanation": "Because the memset zeroing calls are removed, freed pages retain their old data. When sniffer calls sbrk(), it may receive these same pages with the secret still in them.",
+      "category": "Lab1-w3: Sniffer",
+      "type": "mcq"
+    },
+    {
+      "question": "Which files must be added to UPROGS in Makefile for the sniffer task?",
+      "options": [
+        "Only $U/_sniffer",
+        "Only $U/_secret",
+        "Both $U/_secret and $U/_sniffer",
+        "$U/_sniffer and $U/_handshake"
+      ],
+      "correct": 2,
+      "explanation": "Both secret and sniffer programs must be compiled. secret writes the secret, sniffer finds it. Both need to be in UPROGS.",
+      "category": "Lab1-w3: Sniffer",
+      "type": "mcq"
+    },
+    {
+      "question": "What argument does the monitor system call take?",
+      "options": [
+        "A string syscall name",
+        "An integer mask whose bits specify which syscalls to monitor",
+        "A pointer to a callback function",
+        "A process ID to monitor"
+      ],
+      "correct": 1,
+      "explanation": "monitor(mask) takes an integer mask. Each bit corresponds to a syscall number. If the bit is set, that syscall is monitored.",
+      "category": "Lab1-w3: Monitor",
+      "type": "mcq"
+    },
+    {
+      "question": "To monitor only the read system call (SYS_read = 5), what mask value should be passed to monitor()?",
+      "options": [
+        "5",
+        "16",
+        "32",
+        "64"
+      ],
+      "correct": 2,
+      "explanation": "1 << SYS_read = 1 << 5 = 32. The mask uses bit positions, not the syscall number directly.",
+      "category": "Lab1-w3: Monitor",
+      "type": "mcq"
+    },
+    {
+      "question": "What is the correct output format when a monitored syscall returns?",
+      "options": [
+        "syscall <name> pid=<pid> ret=<val>",
+        "<pid>: syscall <name> -> <return_value>",
+        "monitor: <pid> called <name>, returned <val>",
+        "<name>(<pid>) = <return_value>"
+      ],
+      "correct": 1,
+      "explanation": "The required format is \"<pid>: syscall <name> -> <return_value>\" e.g. \"3: syscall read -> 1023\".",
+      "category": "Lab1-w3: Monitor",
+      "type": "mcq"
+    },
+    {
+      "question": "Where is the monitor_mask field added in xv6 to track monitoring state per-process?",
+      "options": [
+        "kernel/syscall.h",
+        "kernel/proc.h (inside struct proc)",
+        "user/user.h",
+        "kernel/vm.c"
+      ],
+      "correct": 1,
+      "explanation": "uint32 monitor_mask is added to struct proc in kernel/proc.h so each process has its own monitoring mask.",
+      "category": "Lab1-w3: Monitor",
+      "type": "mcq"
+    },
+    {
+      "question": "How does the monitor mask propagate to child processes?",
+      "options": [
+        "Children always inherit all monitoring",
+        "Children never inherit monitoring",
+        "The mask is copied from parent to child in kfork(): np->monitor_mask = p->monitor_mask",
+        "Children inherit only if they call monitor() themselves"
+      ],
+      "correct": 2,
+      "explanation": "In kfork() (kernel/proc.c), adding np->monitor_mask = p->monitor_mask copies the mask from the parent to the newly created child process.",
+      "category": "Lab1-w3: Monitor",
+      "type": "mcq"
+    },
+    {
+      "question": "How many files must be modified/created to add a new syscall like monitor to xv6?",
+      "options": [
+        "2",
+        "4",
+        "6",
+        "8"
+      ],
+      "correct": 2,
+      "explanation": "Six files: kernel/syscall.h (number), kernel/proc.h (field), kernel/sysproc.c (implementation), kernel/syscall.c (registration), user/user.h (prototype), user/usys.pl (stub), plus Makefile = at least 6-7 changes.",
+      "category": "Lab1-w3: Monitor",
+      "type": "mcq"
+    },
+    {
+      "question": "What is the value of the mask to trace ALL 31 low-bit syscalls simultaneously?",
+      "options": [
+        "0xFFFFFFFF",
+        "0x7FFFFFFF",
+        "0x80000000",
+        "31"
+      ],
+      "correct": 1,
+      "explanation": "0x7FFFFFFF = 2147483647 has all 31 low bits set, tracing all defined syscalls.",
+      "category": "Lab1-w3: Monitor",
+      "type": "mcq"
+    },
+    {
+      "question": "In kernel/syscall.c, where should the monitoring print statement be placed?",
+      "options": [
+        "Before the syscall executes",
+        "After the syscall executes and returns, inside the syscall() function",
+        "In each individual sys_xxx function",
+        "In the trap handler before syscall() is called"
+      ],
+      "correct": 1,
+      "explanation": "The monitor print is added inside syscall() after p->trapframe->a0 = syscalls[num]() so it can access the return value.",
+      "category": "Lab1-w3: Monitor",
+      "type": "mcq"
+    },
+    {
+      "question": "Which file contains the user-space prototype declarations for xv6 system calls?",
+      "options": [
+        "kernel/syscall.h",
+        "user/usys.pl",
+        "user/user.h",
+        "kernel/sysproc.c"
+      ],
+      "correct": 2,
+      "explanation": "user/user.h contains prototypes like int fork(), int monitor(int), etc. that user programs include.",
+      "category": "Lab1-w3: Monitor",
+      "type": "mcq"
+    },
+    {
+      "question": "What does user/usys.pl generate?",
+      "options": [
+        "The syscall number definitions",
+        "The actual assembly stubs in user/usys.S using RISC-V ecall instructions",
+        "The kernel dispatch table",
+        "The proc structure definitions"
+      ],
+      "correct": 1,
+      "explanation": "usys.pl is a Perl script that generates user/usys.S — assembly stubs that use the RISC-V ecall instruction to transition from user-space to kernel.",
+      "category": "Lab1-w3: Monitor",
+      "type": "mcq"
+    },
+    {
+      "question": "In the uthread context switch, which register stores the address where the thread will RESUME execution?",
+      "options": [
+        "sp (stack pointer)",
+        "ra (return address)",
+        "s0/fp (frame pointer)",
+        "a0 (argument register)"
+      ],
+      "correct": 1,
+      "explanation": "The ra (return address) register stores the memory address where the thread resumes. When ret executes, the CPU jumps to the address in ra.",
+      "category": "Lab2-w5: uthread",
+      "type": "mcq"
+    },
+    {
+      "question": "Why must the stack pointer (sp) be initialized to the END (highest address) of the stack array in thread_create?",
+      "options": [
+        "xv6 requires it for security",
+        "The stack grows from higher addresses to lower addresses (downward)",
+        "The stack grows upward in RISC-V",
+        "The first byte of the array is reserved for the thread ID"
+      ],
+      "correct": 1,
+      "explanation": "Stacks grow downward (from high to low address). The sp must start at the highest address (end of the array) so pushes decrement it into the allocated space.",
+      "category": "Lab2-w5: uthread",
+      "type": "mcq"
+    },
+    {
+      "question": "In thread_create, what value should the ra register in thread_context be set to?",
+      "options": [
+        "The address of thread_schedule",
+        "The address of the function the thread should run (func pointer)",
+        "NULL (0)",
+        "The address of thread_yield"
+      ],
+      "correct": 1,
+      "explanation": "ra must be set to func (the thread function pointer) so that when thread_switch returns with ret, the CPU jumps directly into the thread's function.",
+      "category": "Lab2-w5: uthread",
+      "type": "mcq"
+    },
+    {
+      "question": "In uthread_switch.S, what does the 'sd' (Store Doubleword) instruction do?",
+      "options": [
+        "Loads a 64-bit value from memory into a register",
+        "Takes a 64-bit register value and stores it into memory",
+        "Doubles the value in a register",
+        "Signals a context switch to the OS"
+      ],
+      "correct": 1,
+      "explanation": "sd (Store Doubleword) stores a 64-bit value from a CPU register into memory. E.g., sd ra, 0(a0) writes the RA register to address a0+0.",
+      "category": "Lab2-w5: uthread",
+      "type": "mcq"
+    },
+    {
+      "question": "What is the role of the 'ret' instruction at the end of thread_switch?",
+      "options": [
+        "Returns to the code that called thread_switch",
+        "Jumps to the address in ra, which is the new thread's next instruction",
+        "Exits the process",
+        "Triggers a hardware interrupt"
+      ],
+      "correct": 1,
+      "explanation": "After loading the new thread's ra from its saved context, ret jumps to that address — either the start of the thread function (new thread) or where it last yielded.",
+      "category": "Lab2-w5: uthread",
+      "type": "mcq"
+    },
+    {
+      "question": "How many registers are saved/restored in the uthread context switch?",
+      "options": [
+        "2 (ra, sp only)",
+        "14 (ra, sp, s0-s11)",
+        "32 (all RISC-V registers)",
+        "7 (a0-a6)"
+      ],
+      "correct": 1,
+      "explanation": "The thread_context saves ra, sp, s0/fp, and s1-s11 — that's 14 registers total (the callee-saved registers per RISC-V ABI).",
+      "category": "Lab2-w5: uthread",
+      "type": "mcq"
+    },
+    {
+      "question": "What is the correct offset for storing sp in the thread_context structure (assuming ra is at offset 0)?",
+      "options": [
+        "4",
+        "8",
+        "16",
+        "64"
+      ],
+      "correct": 1,
+      "explanation": "Each uint64 is 8 bytes. ra is at offset 0, so sp is at offset 8: sd sp, 8(a0).",
+      "category": "Lab2-w5: uthread",
+      "type": "mcq"
+    },
+    {
+      "question": "Which function in uthread.c is responsible for searching for a RUNNABLE thread and triggering the context switch?",
+      "options": [
+        "thread_init",
+        "thread_create",
+        "thread_schedule",
+        "thread_yield"
+      ],
+      "correct": 2,
+      "explanation": "thread_schedule searches the thread table for a RUNNABLE thread and calls thread_switch to execute the context switch.",
+      "category": "Lab2-w5: uthread",
+      "type": "mcq"
+    },
+    {
+      "question": "How many buckets does the hash table have in the ph (parallel hash) program?",
+      "options": [
+        "3",
+        "5",
+        "10",
+        "100"
+      ],
+      "correct": 1,
+      "explanation": "NBUCKET = 5. Keys are mapped to buckets using key % 5.",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "How many total keys are used in the ph program?",
+      "options": [
+        "1,000",
+        "10,000",
+        "100,000",
+        "1,000,000"
+      ],
+      "correct": 2,
+      "explanation": "NKEYS = 100,000. These keys are split equally among threads for insertion.",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "What is the root cause of missing keys when ph-without-locks runs with 2 threads?",
+      "options": [
+        "The hash function is wrong",
+        "Threads overwrite each other's linked list next pointers (race condition on put())",
+        "The hash table is too small",
+        "Thread scheduling causes some puts to be skipped"
+      ],
+      "correct": 1,
+      "explanation": "Multiple threads calling put() simultaneously update the same linked list without synchronization. One thread can overwrite another's next pointer, causing keys to be lost.",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "Why does the get() phase NOT require mutex locks in this implementation?",
+      "options": [
+        "get() uses atomic instructions",
+        "get() runs before all puts are done",
+        "get() runs after all puts complete AND it only reads without modifying data",
+        "The hash table is read-only by design"
+      ],
+      "correct": 2,
+      "explanation": "Gets happen after all puts finish (phase separation), and reads don't modify shared state, so there's no risk of data corruption during gets.",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "What is 'per-bucket locking' and why is it preferred over a single global lock?",
+      "options": [
+        "It uses one lock for the whole table — safer but faster",
+        "Each bucket has its own mutex, allowing threads to work in parallel on different buckets",
+        "It locks individual keys rather than buckets",
+        "It uses read-write locks instead of mutexes"
+      ],
+      "correct": 1,
+      "explanation": "Per-bucket locking assigns a separate mutex to each of the 5 buckets. Threads accessing different buckets don't block each other, enabling parallel speedup while preventing data loss.",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "Which pthread call initializes a mutex lock?",
+      "options": [
+        "pthread_mutex_create(&lock)",
+        "pthread_mutex_init(&lock, NULL)",
+        "pthread_mutex_new(&lock)",
+        "pthread_lock_init(&lock)"
+      ],
+      "correct": 1,
+      "explanation": "pthread_mutex_init(&lock, NULL) initializes a pthread mutex. The second argument is for attributes (NULL for default).",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "When using per-bucket locking, where should pthread_mutex_destroy() be called?",
+      "options": [
+        "Inside each thread's put() function",
+        "In the main thread after all worker threads have finished (joined)",
+        "When the hash table is created",
+        "Inside the get() function"
+      ],
+      "correct": 1,
+      "explanation": "Locks should be destroyed in main() after all threads are joined (pthread_join), ensuring no thread is still using the locks when they are destroyed.",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "If 2 threads are used in the ph program, how many total get() operations are performed?",
+      "options": [
+        "100,000",
+        "150,000",
+        "200,000",
+        "400,000"
+      ],
+      "correct": 2,
+      "explanation": "Each thread iterates through all 100,000 keys during the get phase. With 2 threads, that's 2 × 100,000 = 200,000 total get operations.",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "What ph_fast test checks for in the grading script?",
+      "options": [
+        "0 missing keys with 1 thread",
+        "0 missing keys AND greater than 1.25x speedup with 2 threads vs 1 thread",
+        "Less than 100 missing keys with 2 threads",
+        "Completion in under 5 seconds"
+      ],
+      "correct": 1,
+      "explanation": "ph_fast verifies both correctness (0 missing keys) AND performance (multi-thread speedup > 1.25x), ensuring per-bucket parallelism is actually implemented.",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "Why does the ph hash table task run on a real Linux/macOS host rather than inside xv6/qemu?",
+      "options": [
+        "xv6 does not support pthreads",
+        "xv6 only runs on ARM",
+        "Real Linux provides multicore hardware and pthreads for observing true parallelism and race conditions",
+        "xv6 already has a built-in hash table"
+      ],
+      "correct": 2,
+      "explanation": "xv6 in qemu is often single-CPU and lacks pthreads. Real Linux with multiple cores allows threads to run truly in parallel, demonstrating actual race conditions and speedup.",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "What command is used to submit lab work to Gradescope?",
+      "options": [
+        "make submit",
+        "make grade then upload to Gradescope manually using the generated lab.zip from make zipball",
+        "git push gradescope",
+        "./submit.sh"
+      ],
+      "correct": 1,
+      "explanation": "Run 'make grade' to verify all tests pass, then 'make zipball' to create lab.zip, then upload lab.zip to the Gradescope assignment.",
+      "category": "General",
+      "type": "mcq"
+    },
+    {
+      "question": "What xv6 shell key sequence exits the QEMU xv6 emulator?",
+      "options": [
+        "Ctrl+C then X",
+        "Ctrl+A followed by X",
+        "Ctrl+D",
+        "Ctrl+Z then kill"
+      ],
+      "correct": 1,
+      "explanation": "Press Ctrl+A, then release, then press X to exit the QEMU emulator running xv6.",
+      "category": "General",
+      "type": "mcq"
+    },
+    {
+      "question": "Why should 'make clean && make qemu' be run when testing xv6 programs?",
+      "options": [
+        "To update the Linux kernel",
+        "Because xv6 filesystem changes persist across qemu runs; clean ensures a fresh state",
+        "To recompile the host OS",
+        "make clean is only needed for the first run"
+      ],
+      "correct": 1,
+      "explanation": "The xv6 filesystem image persists between qemu runs. Running make clean removes old build artifacts and ensures a fresh filesystem for testing.",
+      "category": "General",
+      "type": "mcq"
+    },
+    {
+      "question": "What is a race condition in the context of the hash table lab?",
+      "options": [
+        "A competition between threads to finish fastest",
+        "A non-deterministic bug where output depends on the timing of thread execution",
+        "When two threads access different buckets simultaneously",
+        "A deadlock caused by improper lock ordering"
+      ],
+      "correct": 1,
+      "explanation": "A race condition occurs when the program's output depends on the non-deterministic scheduling of threads. In the hash table, two threads updating the same bucket can corrupt the linked list.",
+      "category": "Lab2-w5: Hash Table",
+      "type": "mcq"
+    },
+    {
+      "question": "Which of the following system calls are used in the handshake program? (Select ALL that apply)",
+      "options": [
+        "pipe()",
+        "fork()",
+        "write()",
+        "read()",
+        "getpid()",
+        "exec()",
+        "wait()"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "handshake uses pipe() to create pipes, fork() to create the child, write()/read() to send/receive bytes, getpid() for the PID in output, and wait() for the parent to wait on the child. exec() is NOT used.",
+      "category": "Lab1-w3: Handshake"
+    },
+    {
+      "question": "Which files must be modified or created to add a new syscall (e.g., 'monitor') to xv6? (Select ALL that apply)",
+      "options": [
+        "kernel/syscall.h",
+        "kernel/proc.h",
+        "kernel/sysproc.c",
+        "kernel/syscall.c",
+        "user/user.h",
+        "user/usys.pl",
+        "Makefile",
+        "kernel/vm.c"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "All 7 files need changes: syscall.h (add #define), proc.h (add field), sysproc.c (implement), syscall.c (register + names array + monitoring logic), user.h (prototype), usys.pl (entry), Makefile (UPROGS). kernel/vm.c is NOT modified for adding a syscall.",
+      "category": "Lab1-w3: Monitor"
+    },
+    {
+      "question": "Which registers are saved and restored during a uthread context switch? (Select ALL that apply)",
+      "options": [
+        "ra",
+        "sp",
+        "s0/fp",
+        "s1",
+        "s11",
+        "a0",
+        "a1",
+        "t0"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "The callee-saved registers per RISC-V ABI are: ra, sp, s0 (fp), s1 through s11. Argument registers (a0-a7) and temp registers (t0-t6) are caller-saved and NOT preserved by thread_switch.",
+      "category": "Lab2-w5: uthread"
+    },
+    {
+      "question": "Which of the following are TRUE about pipe usage in xv6? (Select ALL that apply)",
+      "options": [
+        "Unused pipe ends should always be closed",
+        "A pipe created with pipe(p) gives p[0] as read end and p[1] as write end",
+        "Failing to close unused ends can cause processes to hang",
+        "A single pipe supports full-duplex (bidirectional) communication",
+        "Reading from an empty pipe with no writers open returns 0 (EOF)"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Options 0, 1, 2, 4 are correct. A single pipe is unidirectional (half-duplex), not full-duplex — so option 3 is FALSE. Two pipes are needed for bidirectional communication.",
+      "category": "Lab1-w3: Handshake"
+    },
+    {
+      "question": "Which statements about the sniffer exploit are correct? (Select ALL that apply)",
+      "options": [
+        "It exploits the removal of memset() zeroing calls in uvmalloc and kalloc",
+        "sbrk() is used to allocate memory that may contain leftover data",
+        "The attack would fail if pages were properly zeroed on allocation",
+        "sniffer.c must NOT modify secret.c or the xv6 kernel",
+        "The secret persists on disk between reboots"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Options 0-3 are correct. The exploit relies on missing zeroing, uses sbrk(), would fail with proper zeroing, and must not modify secret.c. Option 4 is FALSE — the secret is in RAM, not on disk, and is gone after a reboot.",
+      "category": "Lab1-w3: Sniffer"
+    },
+    {
+      "question": "Which of the following pthread calls are needed to implement per-bucket mutex locking in the hash table? (Select ALL that apply)",
+      "options": [
+        "pthread_mutex_t lock[NBUCKET]",
+        "pthread_mutex_init(&lock[i], NULL)",
+        "pthread_mutex_lock(&lock[bucket])",
+        "pthread_mutex_unlock(&lock[bucket])",
+        "pthread_mutex_destroy(&lock[i])",
+        "pthread_mutex_trylock(&lock[bucket])"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "You need to declare an array of mutexes, initialize them, lock before accessing a bucket, unlock after, and destroy when done. pthread_mutex_trylock is not required for this implementation.",
+      "category": "Lab2-w5: Hash Table"
+    },
+    {
+      "question": "Which of the following correctly describe xv6 process isolation properties? (Select ALL that apply)",
+      "options": [
+        "User programs cannot directly call kernel functions",
+        "User programs cannot directly call functions in other user programs",
+        "All interactions between user programs and the kernel happen through system calls",
+        "Bugs in syscall implementation can break isolation boundaries",
+        "User programs can directly access kernel memory via pointers"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "xv6 isolates user programs from the kernel and from each other. All kernel access is via syscalls. Kernel bugs (like the missing memset) can indeed break isolation. User programs CANNOT directly access kernel memory.",
+      "category": "Lab1-w3: Sniffer"
+    },
+    {
+      "question": "Which of the following are advantages of per-bucket locking over a single global table lock? (Select ALL that apply)",
+      "options": [
+        "Threads accessing different buckets can run in parallel",
+        "Eliminates all race conditions with zero performance cost",
+        "Reduces lock contention compared to a global lock",
+        "Allows higher throughput (puts/second) with multiple threads",
+        "Threads still block each other when accessing the SAME bucket"
+      ],
+      "correct": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "correctArray": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Per-bucket locking allows parallelism across buckets (0), reduces contention (2), improves throughput (3), and still correctly serializes access to the same bucket (4). It does NOT eliminate ALL race conditions with zero cost — there is still some overhead (option 1 is false).",
+      "category": "Lab2-w5: Hash Table"
+    }
+  ]
+}
