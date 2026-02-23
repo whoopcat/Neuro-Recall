@@ -1,588 +1,792 @@
 {
-  "name": "ICT1012 Operating Systems - Lab Quiz Bank (Lab1-w3 Syscall & Lab2-w5 Thread)",
+  "name": "ICT1012 Operating Systems - Threads & Scheduling Theory",
   "questions": [
     {
-      "question": "In the handshake program, how many pipes are required to allow bidirectional communication between parent and child?",
+      "question": "What is a thread?",
       "options": [
-        "1",
-        "2",
-        "3",
-        "4"
+        "A separate process with its own address space",
+        "A unit of CPU utilization that shares the address space of its parent process",
+        "A kernel data structure for managing files",
+        "A hardware component that handles I/O"
       ],
       "correct": 1,
-      "explanation": "Two pipes are needed: one for parent→child and one for child→parent, enabling full-duplex communication.",
-      "category": "Lab1-w3: Handshake",
+      "explanation": "A thread is the smallest unit of CPU execution. Unlike processes, threads within the same process share code, data, and heap memory, but each has its own stack, PC, and registers.",
+      "category": "Threads: Basics",
       "type": "mcq"
     },
     {
-      "question": "After fork(), which end of the parent-to-child pipe (p1) should the CHILD close?",
+      "question": "Which of the following resources are shared between threads of the same process?",
       "options": [
-        "p1[0] (read end)",
-        "p1[1] (write end)",
-        "Both ends",
-        "Neither end"
-      ],
-      "correct": 1,
-      "explanation": "The child only reads from the parent-to-child pipe, so it should close the write end p1[1] to avoid accidental writes.",
-      "category": "Lab1-w3: Handshake",
-      "type": "mcq"
-    },
-    {
-      "question": "What is the correct output format when the child receives a byte in the handshake program?",
-      "options": [
-        "<pid>: received <x> from child",
-        "<pid>: received <x> from parent",
-        "received <x> from parent <pid>",
-        "child <pid>: got <x>"
-      ],
-      "correct": 1,
-      "explanation": "The spec requires the child to print \"<pid>: received <x> from parent\" where <pid> is the child's process ID.",
-      "category": "Lab1-w3: Handshake",
-      "type": "mcq"
-    },
-    {
-      "question": "Which xv6 system call is used to get the current process ID?",
-      "options": [
-        "pid()",
-        "getpid()",
-        "mypid()",
-        "procid()"
-      ],
-      "correct": 1,
-      "explanation": "getpid() is the xv6 system call that returns the current process's PID, declared in user/user.h.",
-      "category": "Lab1-w3: Handshake",
-      "type": "mcq"
-    },
-    {
-      "question": "After the parent writes a byte to the child and receives one back, what system call should the parent use to wait for the child to finish?",
-      "options": [
-        "sleep(0)",
-        "pause()",
-        "wait(0)",
-        "join(0)"
+        "Stack and registers",
+        "Program counter and stack pointer",
+        "Heap, code segment, and global variables",
+        "Stack and program counter"
       ],
       "correct": 2,
-      "explanation": "wait(0) is used by the parent to wait for the child process to exit, preventing zombie processes.",
-      "category": "Lab1-w3: Handshake",
+      "explanation": "Threads within the same process share the heap, code (text) segment, and global data. Each thread has its own private stack, program counter, and register set.",
+      "category": "Threads: Basics",
       "type": "mcq"
     },
     {
-      "question": "What grading command is used to test only the handshake program?",
+      "question": "What is the main advantage of using threads over processes for concurrent tasks?",
       "options": [
-        "./grade-lab-util handshake",
-        "./grade-lab-syscall handshake",
-        "./grade-lab-thread handshake",
-        "make test-handshake"
+        "Threads provide stronger security isolation",
+        "Thread creation and context switching is faster because they share memory",
+        "Threads can run on more CPU cores than processes",
+        "Threads eliminate the need for synchronization"
       ],
       "correct": 1,
-      "explanation": "The handshake task is part of the syscall lab, so ./grade-lab-syscall handshake is the correct grading command.",
-      "category": "Lab1-w3: Handshake",
+      "explanation": "Thread creation is cheaper than process creation because there's no need to copy the address space. Context switching between threads is also faster since the memory mapping doesn't change.",
+      "category": "Threads: Basics",
       "type": "mcq"
     },
     {
-      "question": "In the handshake program, which end of the child-to-parent pipe (p2) should the PARENT close after fork()?",
+      "question": "What is a 'user-level thread' as opposed to a 'kernel-level thread'?",
       "options": [
-        "p2[0] (read end)",
-        "p2[1] (write end)",
-        "Both ends",
-        "Neither"
+        "A thread managed entirely in user space by a library, invisible to the OS kernel",
+        "A thread that only runs user applications",
+        "A thread with lower privileges than kernel threads",
+        "A thread that cannot be preempted"
       ],
-      "correct": 1,
-      "explanation": "The parent only reads from the child-to-parent pipe p2, so it should close the write end p2[1].",
-      "category": "Lab1-w3: Handshake",
+      "correct": 0,
+      "explanation": "User-level threads are managed by a user-space threading library. The kernel sees only one process. This makes creation/switching very fast, but a blocking system call blocks ALL threads in the process.",
+      "category": "Threads: Types",
       "type": "mcq"
     },
     {
-      "question": "What intentional bug is introduced in xv6 for the sniffer task?",
+      "question": "What is the main disadvantage of user-level threads compared to kernel-level threads?",
       "options": [
-        "fork() returns wrong PID",
-        "memset() calls that zero newly-allocated pages are removed",
-        "pipe() does not block on read",
-        "exec() does not clear registers"
-      ],
-      "correct": 1,
-      "explanation": "Three memset() calls (in uvmalloc and kalloc) that zero memory pages are omitted, meaning newly allocated memory retains its previous contents.",
-      "category": "Lab1-w3: Sniffer",
-      "type": "mcq"
-    },
-    {
-      "question": "Which system call does the sniffer program use to obtain memory that may contain the secret?",
-      "options": [
-        "malloc()",
-        "mmap()",
-        "sbrk()",
-        "calloc()"
+        "They are slower to create",
+        "They cannot share memory",
+        "A blocking system call by one thread blocks the entire process",
+        "They require more memory per thread"
       ],
       "correct": 2,
-      "explanation": "sbrk() is the xv6 syscall to grow the process's heap. Because pages aren't zeroed, allocated pages may contain data from previously freed processes.",
-      "category": "Lab1-w3: Sniffer",
+      "explanation": "Since the kernel is unaware of user-level threads, if one thread makes a blocking syscall (e.g., I/O), the kernel blocks the entire process, stalling all other threads within it.",
+      "category": "Threads: Types",
       "type": "mcq"
     },
     {
-      "question": "What does the secret.c program do when it runs?",
+      "question": "In a many-to-one threading model, multiple user threads are mapped to:",
       "options": [
-        "Encrypts a file on disk",
-        "Writes a secret string in memory then exits (freeing the memory)",
-        "Sends a secret over a pipe",
-        "Creates a hidden file in the filesystem"
+        "Multiple kernel threads",
+        "One kernel thread",
+        "One CPU core each",
+        "A pool of kernel threads"
       ],
       "correct": 1,
-      "explanation": "secret.c writes a secret string in its memory and then exits, which frees the pages. These unzeroed pages can then be allocated by sniffer.",
-      "category": "Lab1-w3: Sniffer",
+      "explanation": "The many-to-one model maps all user threads to a single kernel thread. Only one thread can run at a time and a blocking call blocks all threads. Examples include early Java green threads.",
+      "category": "Threads: Models",
       "type": "mcq"
     },
     {
-      "question": "Why does the sniffer exploit work even though secret.c has already exited?",
+      "question": "Which threading model maps each user-level thread to exactly one kernel thread?",
       "options": [
-        "xv6 uses persistent memory",
-        "The freed pages are not zeroed before being reallocated",
-        "The secret is written to a file",
-        "xv6 shares memory between all processes"
+        "Many-to-One",
+        "One-to-One",
+        "Many-to-Many",
+        "Two-Level"
       ],
       "correct": 1,
-      "explanation": "Because the memset zeroing calls are removed, freed pages retain their old data. When sniffer calls sbrk(), it may receive these same pages with the secret still in them.",
-      "category": "Lab1-w3: Sniffer",
+      "explanation": "The one-to-one model maps each user thread to a kernel thread, enabling true parallelism on multicore systems. Linux pthreads use this model. Downside: creating many threads is expensive.",
+      "category": "Threads: Models",
       "type": "mcq"
     },
     {
-      "question": "Which files must be added to UPROGS in Makefile for the sniffer task?",
+      "question": "What does a context switch involve when switching between two threads of the SAME process?",
       "options": [
-        "Only $U/_sniffer",
-        "Only $U/_secret",
-        "Both $U/_secret and $U/_sniffer",
-        "$U/_sniffer and $U/_handshake"
-      ],
-      "correct": 2,
-      "explanation": "Both secret and sniffer programs must be compiled. secret writes the secret, sniffer finds it. Both need to be in UPROGS.",
-      "category": "Lab1-w3: Sniffer",
-      "type": "mcq"
-    },
-    {
-      "question": "What argument does the monitor system call take?",
-      "options": [
-        "A string syscall name",
-        "An integer mask whose bits specify which syscalls to monitor",
-        "A pointer to a callback function",
-        "A process ID to monitor"
+        "Saving and restoring the entire virtual address space",
+        "Saving and restoring registers (PC, SP, and callee-saved registers) only",
+        "Flushing the TLB (Translation Lookaside Buffer)",
+        "Saving file descriptor tables"
       ],
       "correct": 1,
-      "explanation": "monitor(mask) takes an integer mask. Each bit corresponds to a syscall number. If the bit is set, that syscall is monitored.",
-      "category": "Lab1-w3: Monitor",
+      "explanation": "Intra-process thread switches only need to save/restore register state (PC, SP, and callee-saved registers). The address space (page table) is NOT changed since threads share it, making it faster than a process switch.",
+      "category": "Threads: Context Switch",
       "type": "mcq"
     },
     {
-      "question": "To monitor only the read system call (SYS_read = 5), what mask value should be passed to monitor()?",
+      "question": "Why is the stack pointer (SP) the most critical register to save and restore during a context switch?",
       "options": [
-        "5",
-        "16",
-        "32",
-        "64"
-      ],
-      "correct": 2,
-      "explanation": "1 << SYS_read = 1 << 5 = 32. The mask uses bit positions, not the syscall number directly.",
-      "category": "Lab1-w3: Monitor",
-      "type": "mcq"
-    },
-    {
-      "question": "What is the correct output format when a monitored syscall returns?",
-      "options": [
-        "syscall <name> pid=<pid> ret=<val>",
-        "<pid>: syscall <name> -> <return_value>",
-        "monitor: <pid> called <name>, returned <val>",
-        "<name>(<pid>) = <return_value>"
+        "It holds the current instruction being executed",
+        "It points to the thread's private stack, ensuring the thread accesses its own local variables",
+        "It contains the thread ID",
+        "It determines the thread's priority"
       ],
       "correct": 1,
-      "explanation": "The required format is \"<pid>: syscall <name> -> <return_value>\" e.g. \"3: syscall read -> 1023\".",
-      "category": "Lab1-w3: Monitor",
+      "explanation": "Each thread has its own private stack. If the wrong SP is loaded, the CPU would access another thread's stack, causing corruption. Restoring the SP is essentially what switches the execution context to the new thread.",
+      "category": "Threads: Context Switch",
       "type": "mcq"
     },
     {
-      "question": "Where is the monitor_mask field added in xv6 to track monitoring state per-process?",
+      "question": "Which direction does the call stack grow in most architectures (including RISC-V and x86)?",
       "options": [
-        "kernel/syscall.h",
-        "kernel/proc.h (inside struct proc)",
-        "user/user.h",
-        "kernel/vm.c"
+        "Upward (from lower to higher addresses)",
+        "Downward (from higher to lower addresses)",
+        "In both directions simultaneously",
+        "It depends on the thread priority"
       ],
       "correct": 1,
-      "explanation": "uint32 monitor_mask is added to struct proc in kernel/proc.h so each process has its own monitoring mask.",
-      "category": "Lab1-w3: Monitor",
+      "explanation": "Stacks grow downward. When a function is called, the stack pointer decreases (moves to a lower address). This is why initializing SP to the end of a stack array (highest address) is correct.",
+      "category": "Threads: Stack",
       "type": "mcq"
     },
     {
-      "question": "How does the monitor mask propagate to child processes?",
+      "question": "What is a race condition?",
       "options": [
-        "Children always inherit all monitoring",
-        "Children never inherit monitoring",
-        "The mask is copied from parent to child in kfork(): np->monitor_mask = p->monitor_mask",
-        "Children inherit only if they call monitor() themselves"
-      ],
-      "correct": 2,
-      "explanation": "In kfork() (kernel/proc.c), adding np->monitor_mask = p->monitor_mask copies the mask from the parent to the newly created child process.",
-      "category": "Lab1-w3: Monitor",
-      "type": "mcq"
-    },
-    {
-      "question": "How many files must be modified/created to add a new syscall like monitor to xv6?",
-      "options": [
-        "2",
-        "4",
-        "6",
-        "8"
-      ],
-      "correct": 2,
-      "explanation": "Six files: kernel/syscall.h (number), kernel/proc.h (field), kernel/sysproc.c (implementation), kernel/syscall.c (registration), user/user.h (prototype), user/usys.pl (stub), plus Makefile = at least 6-7 changes.",
-      "category": "Lab1-w3: Monitor",
-      "type": "mcq"
-    },
-    {
-      "question": "What is the value of the mask to trace ALL 31 low-bit syscalls simultaneously?",
-      "options": [
-        "0xFFFFFFFF",
-        "0x7FFFFFFF",
-        "0x80000000",
-        "31"
+        "When two threads race to complete a task faster",
+        "A situation where program behavior depends on the unpredictable timing/ordering of thread execution",
+        "When the CPU scheduler gives too much time to one thread",
+        "A deadlock involving exactly two threads"
       ],
       "correct": 1,
-      "explanation": "0x7FFFFFFF = 2147483647 has all 31 low bits set, tracing all defined syscalls.",
-      "category": "Lab1-w3: Monitor",
+      "explanation": "A race condition occurs when multiple threads access shared data concurrently and the final result depends on which thread runs first. The outcome is non-deterministic.",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "In kernel/syscall.c, where should the monitoring print statement be placed?",
+      "question": "What is a critical section?",
       "options": [
-        "Before the syscall executes",
-        "After the syscall executes and returns, inside the syscall() function",
-        "In each individual sys_xxx function",
-        "In the trap handler before syscall() is called"
+        "The most important function in a program",
+        "A segment of code that accesses shared resources and must not be executed by more than one thread at a time",
+        "A section of memory reserved for the kernel",
+        "Code that handles hardware interrupts"
       ],
       "correct": 1,
-      "explanation": "The monitor print is added inside syscall() after p->trapframe->a0 = syscalls[num]() so it can access the return value.",
-      "category": "Lab1-w3: Monitor",
+      "explanation": "A critical section is code that accesses shared mutable state. It must be protected so only one thread executes it at a time to prevent race conditions.",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "Which file contains the user-space prototype declarations for xv6 system calls?",
+      "question": "What are the THREE requirements for a correct critical section solution?",
       "options": [
-        "kernel/syscall.h",
-        "user/usys.pl",
-        "user/user.h",
-        "kernel/sysproc.c"
-      ],
-      "correct": 2,
-      "explanation": "user/user.h contains prototypes like int fork(), int monitor(int), etc. that user programs include.",
-      "category": "Lab1-w3: Monitor",
-      "type": "mcq"
-    },
-    {
-      "question": "What does user/usys.pl generate?",
-      "options": [
-        "The syscall number definitions",
-        "The actual assembly stubs in user/usys.S using RISC-V ecall instructions",
-        "The kernel dispatch table",
-        "The proc structure definitions"
+        "Speed, Fairness, Simplicity",
+        "Mutual Exclusion, Progress, Bounded Waiting",
+        "Atomicity, Consistency, Isolation",
+        "Liveness, Safety, Fairness"
       ],
       "correct": 1,
-      "explanation": "usys.pl is a Perl script that generates user/usys.S — assembly stubs that use the RISC-V ecall instruction to transition from user-space to kernel.",
-      "category": "Lab1-w3: Monitor",
+      "explanation": "The three requirements are: (1) Mutual Exclusion — only one thread in the critical section at a time; (2) Progress — a thread wanting to enter will eventually do so; (3) Bounded Waiting — no thread waits forever (no starvation).",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "In the uthread context switch, which register stores the address where the thread will RESUME execution?",
+      "question": "What is a mutex (mutual exclusion lock)?",
       "options": [
-        "sp (stack pointer)",
-        "ra (return address)",
-        "s0/fp (frame pointer)",
-        "a0 (argument register)"
+        "A hardware component that prevents memory access",
+        "A synchronization primitive that allows only one thread to hold the lock at a time",
+        "A scheduling algorithm for fair thread execution",
+        "A type of semaphore with a value greater than 1"
       ],
       "correct": 1,
-      "explanation": "The ra (return address) register stores the memory address where the thread resumes. When ret executes, the CPU jumps to the address in ra.",
-      "category": "Lab2-w5: uthread",
+      "explanation": "A mutex is a lock with two states: locked and unlocked. Only one thread can hold it at a time. Other threads trying to acquire it block until it's released, ensuring mutual exclusion.",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "Why must the stack pointer (sp) be initialized to the END (highest address) of the stack array in thread_create?",
+      "question": "What is the difference between a mutex and a binary semaphore?",
       "options": [
-        "xv6 requires it for security",
-        "The stack grows from higher addresses to lower addresses (downward)",
-        "The stack grows upward in RISC-V",
-        "The first byte of the array is reserved for the thread ID"
+        "A mutex can have values 0 or 1; a semaphore can only be 0",
+        "A mutex has ownership (only the locking thread can unlock it); a semaphore does not",
+        "A semaphore is faster than a mutex",
+        "There is no difference; they are identical"
       ],
       "correct": 1,
-      "explanation": "Stacks grow downward (from high to low address). The sp must start at the highest address (end of the array) so pushes decrement it into the allocated space.",
-      "category": "Lab2-w5: uthread",
+      "explanation": "A key distinction: a mutex has ownership — only the thread that locked it can unlock it. A binary semaphore has no ownership and can be signaled by any thread, making it suitable for signaling/synchronization patterns.",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "In thread_create, what value should the ra register in thread_context be set to?",
+      "question": "What is a deadlock?",
       "options": [
-        "The address of thread_schedule",
-        "The address of the function the thread should run (func pointer)",
-        "NULL (0)",
-        "The address of thread_yield"
+        "When a thread runs forever without yielding",
+        "When two or more threads are each waiting for a resource held by the other, causing all to block indefinitely",
+        "When the scheduler stops running a thread permanently",
+        "When a mutex is unlocked by the wrong thread"
       ],
       "correct": 1,
-      "explanation": "ra must be set to func (the thread function pointer) so that when thread_switch returns with ret, the CPU jumps directly into the thread's function.",
-      "category": "Lab2-w5: uthread",
+      "explanation": "A deadlock is a cycle of waiting: Thread A holds resource 1 and waits for resource 2; Thread B holds resource 2 and waits for resource 1. Neither can proceed.",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "In uthread_switch.S, what does the 'sd' (Store Doubleword) instruction do?",
+      "question": "Which of the four Coffman conditions must ALL be present for a deadlock to occur?",
       "options": [
-        "Loads a 64-bit value from memory into a register",
-        "Takes a 64-bit register value and stores it into memory",
-        "Doubles the value in a register",
-        "Signals a context switch to the OS"
+        "Mutual exclusion, hold-and-wait, no preemption, circular wait",
+        "Starvation, priority inversion, hold-and-wait, circular wait",
+        "Mutual exclusion, preemption, bounded waiting, circular wait",
+        "Livelock, starvation, priority inversion, circular wait"
+      ],
+      "correct": 0,
+      "explanation": "Deadlock requires all four Coffman conditions simultaneously: (1) Mutual exclusion, (2) Hold and wait, (3) No preemption, (4) Circular wait. Breaking any one condition prevents deadlock.",
+      "category": "Synchronization",
+      "type": "mcq"
+    },
+    {
+      "question": "What is 'lock granularity' and why does it matter?",
+      "options": [
+        "How quickly a lock can be acquired",
+        "The size of the data protected by a lock; finer granularity means less contention but more complexity",
+        "The number of threads that can hold the lock simultaneously",
+        "Whether a lock is fair or unfair"
       ],
       "correct": 1,
-      "explanation": "sd (Store Doubleword) stores a 64-bit value from a CPU register into memory. E.g., sd ra, 0(a0) writes the RA register to address a0+0.",
-      "category": "Lab2-w5: uthread",
+      "explanation": "Coarse-grained locking (one lock for everything) is simple but creates bottlenecks. Fine-grained locking (e.g., per-bucket locks) allows more parallelism but requires careful design to avoid deadlocks.",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "What is the role of the 'ret' instruction at the end of thread_switch?",
+      "question": "What is a spinlock?",
       "options": [
-        "Returns to the code that called thread_switch",
-        "Jumps to the address in ra, which is the new thread's next instruction",
-        "Exits the process",
-        "Triggers a hardware interrupt"
+        "A lock that puts the waiting thread to sleep",
+        "A lock where the waiting thread continuously checks (busy-waits) for the lock to become free",
+        "A lock that rotates ownership among threads fairly",
+        "A lock used only in user-space programs"
       ],
       "correct": 1,
-      "explanation": "After loading the new thread's ra from its saved context, ret jumps to that address — either the start of the thread function (new thread) or where it last yielded.",
-      "category": "Lab2-w5: uthread",
+      "explanation": "A spinlock busy-waits in a loop checking the lock. It wastes CPU cycles but avoids the overhead of sleeping/waking. It's efficient when the critical section is very short and wait times are minimal.",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "How many registers are saved/restored in the uthread context switch?",
+      "question": "What is a semaphore and what integer value does it hold?",
       "options": [
-        "2 (ra, sp only)",
-        "14 (ra, sp, s0-s11)",
-        "32 (all RISC-V registers)",
-        "7 (a0-a6)"
+        "A semaphore holds a negative integer representing thread count",
+        "A semaphore is a non-negative integer variable with atomic wait (P) and signal (V) operations",
+        "A semaphore can only be 0 or 1",
+        "A semaphore holds the thread ID of the current owner"
       ],
       "correct": 1,
-      "explanation": "The thread_context saves ra, sp, s0/fp, and s1-s11 — that's 14 registers total (the callee-saved registers per RISC-V ABI).",
-      "category": "Lab2-w5: uthread",
+      "explanation": "A semaphore is a non-negative integer. wait()/P() decrements it (blocking if it would go negative). signal()/V() increments it (waking a blocked thread if any). A binary semaphore (0/1) acts like a mutex.",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "What is the correct offset for storing sp in the thread_context structure (assuming ra is at offset 0)?",
+      "question": "What is the 'producer-consumer' problem?",
       "options": [
-        "4",
-        "8",
-        "16",
-        "64"
+        "A scheduling problem where producers get more CPU time than consumers",
+        "A synchronization problem where producer threads add to a bounded buffer and consumer threads remove from it, requiring coordination",
+        "A deadlock scenario involving two types of threads",
+        "A memory allocation strategy for multithreaded programs"
       ],
       "correct": 1,
-      "explanation": "Each uint64 is 8 bytes. ra is at offset 0, so sp is at offset 8: sd sp, 8(a0).",
-      "category": "Lab2-w5: uthread",
+      "explanation": "The producer-consumer (bounded buffer) problem: producers must not add when the buffer is full; consumers must not remove when empty; only one thread should access the buffer at a time. It's a classic synchronization challenge.",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "Which function in uthread.c is responsible for searching for a RUNNABLE thread and triggering the context switch?",
+      "question": "What is a condition variable used for?",
       "options": [
-        "thread_init",
-        "thread_create",
-        "thread_schedule",
-        "thread_yield"
-      ],
-      "correct": 2,
-      "explanation": "thread_schedule searches the thread table for a RUNNABLE thread and calls thread_switch to execute the context switch.",
-      "category": "Lab2-w5: uthread",
-      "type": "mcq"
-    },
-    {
-      "question": "How many buckets does the hash table have in the ph (parallel hash) program?",
-      "options": [
-        "3",
-        "5",
-        "10",
-        "100"
+        "Storing a boolean condition shared between threads",
+        "Allowing threads to block and wait until a specific condition becomes true, then be woken up",
+        "Counting the number of threads waiting for a resource",
+        "Replacing mutexes for faster synchronization"
       ],
       "correct": 1,
-      "explanation": "NBUCKET = 5. Keys are mapped to buckets using key % 5.",
-      "category": "Lab2-w5: Hash Table",
+      "explanation": "A condition variable lets a thread atomically release a mutex and sleep until another thread signals the condition (e.g., 'buffer is not empty'). Used together with mutexes for complex synchronization like producer-consumer.",
+      "category": "Synchronization",
       "type": "mcq"
     },
     {
-      "question": "How many total keys are used in the ph program?",
+      "question": "What is CPU scheduling?",
       "options": [
-        "1,000",
-        "10,000",
-        "100,000",
-        "1,000,000"
-      ],
-      "correct": 2,
-      "explanation": "NKEYS = 100,000. These keys are split equally among threads for insertion.",
-      "category": "Lab2-w5: Hash Table",
-      "type": "mcq"
-    },
-    {
-      "question": "What is the root cause of missing keys when ph-without-locks runs with 2 threads?",
-      "options": [
-        "The hash function is wrong",
-        "Threads overwrite each other's linked list next pointers (race condition on put())",
-        "The hash table is too small",
-        "Thread scheduling causes some puts to be skipped"
+        "Deciding how to physically allocate CPU hardware to machines",
+        "The OS mechanism for deciding which ready process/thread gets the CPU next and for how long",
+        "Overclocking the CPU for better performance",
+        "Managing CPU cache allocation between processes"
       ],
       "correct": 1,
-      "explanation": "Multiple threads calling put() simultaneously update the same linked list without synchronization. One thread can overwrite another's next pointer, causing keys to be lost.",
-      "category": "Lab2-w5: Hash Table",
+      "explanation": "CPU scheduling is the OS policy and mechanism that determines which process/thread from the ready queue runs on the CPU next, aiming to maximize utilization, throughput, and fairness.",
+      "category": "Scheduling: Basics",
       "type": "mcq"
     },
     {
-      "question": "Why does the get() phase NOT require mutex locks in this implementation?",
+      "question": "What is the difference between preemptive and non-preemptive scheduling?",
       "options": [
-        "get() uses atomic instructions",
-        "get() runs before all puts are done",
-        "get() runs after all puts complete AND it only reads without modifying data",
-        "The hash table is read-only by design"
-      ],
-      "correct": 2,
-      "explanation": "Gets happen after all puts finish (phase separation), and reads don't modify shared state, so there's no risk of data corruption during gets.",
-      "category": "Lab2-w5: Hash Table",
-      "type": "mcq"
-    },
-    {
-      "question": "What is 'per-bucket locking' and why is it preferred over a single global lock?",
-      "options": [
-        "It uses one lock for the whole table — safer but faster",
-        "Each bucket has its own mutex, allowing threads to work in parallel on different buckets",
-        "It locks individual keys rather than buckets",
-        "It uses read-write locks instead of mutexes"
+        "Preemptive scheduling only runs I/O-bound processes; non-preemptive runs CPU-bound ones",
+        "Preemptive scheduling can forcibly take the CPU from a running process; non-preemptive waits for the process to voluntarily yield",
+        "Preemptive scheduling uses priority; non-preemptive does not",
+        "Non-preemptive scheduling is faster but less fair"
       ],
       "correct": 1,
-      "explanation": "Per-bucket locking assigns a separate mutex to each of the 5 buckets. Threads accessing different buckets don't block each other, enabling parallel speedup while preventing data loss.",
-      "category": "Lab2-w5: Hash Table",
+      "explanation": "Preemptive schedulers can interrupt a running process (e.g., when a higher-priority process arrives or a time quantum expires). Non-preemptive schedulers only switch when the running process blocks, terminates, or voluntarily yields.",
+      "category": "Scheduling: Basics",
       "type": "mcq"
     },
     {
-      "question": "Which pthread call initializes a mutex lock?",
+      "question": "What is 'CPU burst' in scheduling terminology?",
       "options": [
-        "pthread_mutex_create(&lock)",
-        "pthread_mutex_init(&lock, NULL)",
-        "pthread_mutex_new(&lock)",
-        "pthread_lock_init(&lock)"
+        "The maximum speed the CPU can run",
+        "A period of continuous CPU execution before a process makes an I/O request",
+        "The time it takes to context switch",
+        "The number of processes in the ready queue"
       ],
       "correct": 1,
-      "explanation": "pthread_mutex_init(&lock, NULL) initializes a pthread mutex. The second argument is for attributes (NULL for default).",
-      "category": "Lab2-w5: Hash Table",
+      "explanation": "A CPU burst is a period where the process runs on the CPU without blocking. It alternates with I/O bursts. CPU-bound processes have long CPU bursts; I/O-bound processes have short ones.",
+      "category": "Scheduling: Basics",
       "type": "mcq"
     },
     {
-      "question": "When using per-bucket locking, where should pthread_mutex_destroy() be called?",
+      "question": "What is the First-Come, First-Served (FCFS) scheduling algorithm?",
       "options": [
-        "Inside each thread's put() function",
-        "In the main thread after all worker threads have finished (joined)",
-        "When the hash table is created",
-        "Inside the get() function"
+        "Processes are scheduled in order of their priority",
+        "Processes are scheduled in the order they arrive in the ready queue (non-preemptive)",
+        "The process with the shortest next CPU burst runs first",
+        "Processes share CPU time equally in a round-robin fashion"
       ],
       "correct": 1,
-      "explanation": "Locks should be destroyed in main() after all threads are joined (pthread_join), ensuring no thread is still using the locks when they are destroyed.",
-      "category": "Lab2-w5: Hash Table",
+      "explanation": "FCFS is the simplest scheduling algorithm. Processes are served in arrival order. It's non-preemptive, simple to implement, but can cause the 'convoy effect' where short jobs wait behind long ones.",
+      "category": "Scheduling: Algorithms",
       "type": "mcq"
     },
     {
-      "question": "If 2 threads are used in the ph program, how many total get() operations are performed?",
+      "question": "What is the 'convoy effect' in FCFS scheduling?",
       "options": [
-        "100,000",
-        "150,000",
-        "200,000",
-        "400,000"
-      ],
-      "correct": 2,
-      "explanation": "Each thread iterates through all 100,000 keys during the get phase. With 2 threads, that's 2 × 100,000 = 200,000 total get operations.",
-      "category": "Lab2-w5: Hash Table",
-      "type": "mcq"
-    },
-    {
-      "question": "What ph_fast test checks for in the grading script?",
-      "options": [
-        "0 missing keys with 1 thread",
-        "0 missing keys AND greater than 1.25x speedup with 2 threads vs 1 thread",
-        "Less than 100 missing keys with 2 threads",
-        "Completion in under 5 seconds"
+        "When multiple processes arrive at the same time",
+        "When many short processes are stuck waiting behind one long CPU-bound process, degrading overall throughput",
+        "When the CPU is idle because all processes are in I/O",
+        "When the scheduler switches context too frequently"
       ],
       "correct": 1,
-      "explanation": "ph_fast verifies both correctness (0 missing keys) AND performance (multi-thread speedup > 1.25x), ensuring per-bucket parallelism is actually implemented.",
-      "category": "Lab2-w5: Hash Table",
+      "explanation": "The convoy effect occurs in FCFS when a long CPU-bound process holds the CPU while many shorter processes (and I/O devices) sit idle waiting. This leads to poor CPU and I/O utilization.",
+      "category": "Scheduling: Algorithms",
       "type": "mcq"
     },
     {
-      "question": "Why does the ph hash table task run on a real Linux/macOS host rather than inside xv6/qemu?",
+      "question": "What does Shortest Job First (SJF) scheduling optimize?",
       "options": [
-        "xv6 does not support pthreads",
-        "xv6 only runs on ARM",
-        "Real Linux provides multicore hardware and pthreads for observing true parallelism and race conditions",
-        "xv6 already has a built-in hash table"
-      ],
-      "correct": 2,
-      "explanation": "xv6 in qemu is often single-CPU and lacks pthreads. Real Linux with multiple cores allows threads to run truly in parallel, demonstrating actual race conditions and speedup.",
-      "category": "Lab2-w5: Hash Table",
-      "type": "mcq"
-    },
-    {
-      "question": "What command is used to submit lab work to Gradescope?",
-      "options": [
-        "make submit",
-        "make grade then upload to Gradescope manually using the generated lab.zip from make zipball",
-        "git push gradescope",
-        "./submit.sh"
+        "CPU utilization",
+        "Average waiting time",
+        "Response time for interactive processes",
+        "Fairness between processes"
       ],
       "correct": 1,
-      "explanation": "Run 'make grade' to verify all tests pass, then 'make zipball' to create lab.zip, then upload lab.zip to the Gradescope assignment.",
-      "category": "General",
+      "explanation": "SJF minimizes average waiting time — it is provably optimal for this metric. By running the shortest job first, the total time other jobs spend waiting is minimized.",
+      "category": "Scheduling: Algorithms",
       "type": "mcq"
     },
     {
-      "question": "What xv6 shell key sequence exits the QEMU xv6 emulator?",
+      "question": "What is the main practical limitation of Shortest Job First (SJF) scheduling?",
       "options": [
-        "Ctrl+C then X",
-        "Ctrl+A followed by X",
-        "Ctrl+D",
-        "Ctrl+Z then kill"
+        "It requires preemption to work",
+        "The length of the next CPU burst cannot be known in advance and must be estimated",
+        "It can only be used with a single CPU",
+        "It requires all processes to have the same priority"
       ],
       "correct": 1,
-      "explanation": "Press Ctrl+A, then release, then press X to exit the QEMU emulator running xv6.",
-      "category": "General",
+      "explanation": "SJF requires knowing the next CPU burst duration, which is not known ahead of time. In practice, it is estimated using exponential averaging of past CPU bursts.",
+      "category": "Scheduling: Algorithms",
       "type": "mcq"
     },
     {
-      "question": "Why should 'make clean && make qemu' be run when testing xv6 programs?",
+      "question": "What is the formula for exponential averaging used to predict the next CPU burst in SJF?",
       "options": [
-        "To update the Linux kernel",
-        "Because xv6 filesystem changes persist across qemu runs; clean ensures a fresh state",
-        "To recompile the host OS",
-        "make clean is only needed for the first run"
+        "τ(n+1) = α × t(n) + (1 - α) × τ(n)",
+        "τ(n+1) = t(n) / n",
+        "τ(n+1) = max(t(n), τ(n))",
+        "τ(n+1) = t(n) + τ(n) / 2"
+      ],
+      "correct": 0,
+      "explanation": "τ(n+1) = α × t(n) + (1 - α) × τ(n), where t(n) is the actual last burst and τ(n) is the previous estimate. α (0 ≤ α ≤ 1) controls how much weight to give recent vs. historical data.",
+      "category": "Scheduling: Algorithms",
+      "type": "mcq"
+    },
+    {
+      "question": "What is Round-Robin (RR) scheduling?",
+      "options": [
+        "Each process gets the CPU until it blocks or terminates",
+        "Each process gets a fixed time quantum; if it doesn't finish, it's preempted and moved to the back of the ready queue",
+        "Processes are sorted by priority and the highest runs until completion",
+        "The CPU alternates between exactly two processes"
       ],
       "correct": 1,
-      "explanation": "The xv6 filesystem image persists between qemu runs. Running make clean removes old build artifacts and ensures a fresh filesystem for testing.",
-      "category": "General",
+      "explanation": "RR gives each process a time quantum (e.g., 10-100ms). If the process doesn't finish in its quantum, it's preempted and re-queued. This provides fairness and good response time for interactive systems.",
+      "category": "Scheduling: Algorithms",
       "type": "mcq"
     },
     {
-      "question": "What is a race condition in the context of the hash table lab?",
+      "question": "What happens to average turnaround time if the Round-Robin time quantum is set very LARGE?",
       "options": [
-        "A competition between threads to finish fastest",
-        "A non-deterministic bug where output depends on the timing of thread execution",
-        "When two threads access different buckets simultaneously",
-        "A deadlock caused by improper lock ordering"
+        "It approaches the performance of FCFS",
+        "It approaches the performance of SJF",
+        "Average waiting time decreases",
+        "Response time improves dramatically"
+      ],
+      "correct": 0,
+      "explanation": "As the time quantum approaches infinity, RR degenerates to FCFS — each process runs to completion before the next one starts. A large quantum reduces preemption but hurts interactivity.",
+      "category": "Scheduling: Algorithms",
+      "type": "mcq"
+    },
+    {
+      "question": "What happens to context switch overhead if the Round-Robin time quantum is set very SMALL?",
+      "options": [
+        "Context switch overhead decreases",
+        "Context switch overhead dominates, reducing useful CPU work",
+        "Throughput improves because more processes get CPU time",
+        "There is no effect on overhead"
       ],
       "correct": 1,
-      "explanation": "A race condition occurs when the program's output depends on the non-deterministic scheduling of threads. In the hash table, two threads updating the same bucket can corrupt the linked list.",
-      "category": "Lab2-w5: Hash Table",
+      "explanation": "A very small quantum means the CPU spends most of its time saving/restoring context (context switching) rather than doing useful work. The rule of thumb: ~80% of CPU bursts should be shorter than the quantum.",
+      "category": "Scheduling: Algorithms",
       "type": "mcq"
     },
     {
-      "question": "Which of the following system calls are used in the handshake program? (Select ALL that apply)",
+      "question": "What is Priority Scheduling?",
       "options": [
-        "pipe()",
-        "fork()",
-        "write()",
-        "read()",
-        "getpid()",
-        "exec()",
-        "wait()"
+        "All processes receive equal CPU time",
+        "Each process has a priority number; the CPU is allocated to the process with the highest priority",
+        "Processes are ordered by arrival time",
+        "Priority is determined by memory usage"
+      ],
+      "correct": 1,
+      "explanation": "Each process is assigned a priority. The CPU is given to the highest-priority ready process. Ties can be broken by FCFS or RR. It can be preemptive or non-preemptive.",
+      "category": "Scheduling: Algorithms",
+      "type": "mcq"
+    },
+    {
+      "question": "What is 'starvation' in the context of priority scheduling, and how is it solved?",
+      "options": [
+        "A process that uses too much CPU; solved by limiting CPU time",
+        "Low-priority processes may never execute if high-priority processes keep arriving; solved by 'aging' (gradually increasing a waiting process's priority)",
+        "A process that holds too many resources; solved by resource preemption",
+        "The CPU sitting idle; solved by increasing the number of processes"
+      ],
+      "correct": 1,
+      "explanation": "Starvation: low-priority processes may wait indefinitely. Aging is the solution — the priority of a waiting process is gradually increased over time, ensuring it eventually gets the CPU.",
+      "category": "Scheduling: Algorithms",
+      "type": "mcq"
+    },
+    {
+      "question": "What is Multilevel Queue Scheduling?",
+      "options": [
+        "A single queue sorted by multiple criteria simultaneously",
+        "The ready queue is divided into separate queues (e.g., foreground/background), each with its own scheduling algorithm",
+        "Multiple CPUs each with their own queue",
+        "A queue that grows in multiple directions"
+      ],
+      "correct": 1,
+      "explanation": "Multilevel Queue splits processes into categories (e.g., real-time, interactive, batch) each assigned to its own queue with its own algorithm. Processes are permanently assigned to a queue.",
+      "category": "Scheduling: Algorithms",
+      "type": "mcq"
+    },
+    {
+      "question": "How does Multilevel Feedback Queue (MLFQ) differ from Multilevel Queue?",
+      "options": [
+        "MLFQ has fewer queues",
+        "In MLFQ, processes can move between queues based on their behavior (CPU vs. I/O bound)",
+        "MLFQ uses a different CPU architecture",
+        "MLFQ always uses Round-Robin for all queues"
+      ],
+      "correct": 1,
+      "explanation": "MLFQ allows processes to move between queues dynamically. A process that uses its full quantum is demoted (likely CPU-bound); one that voluntarily gives up the CPU is promoted (likely I/O-bound). This adapts to process behavior.",
+      "category": "Scheduling: Algorithms",
+      "type": "mcq"
+    },
+    {
+      "question": "What is 'turnaround time' as a scheduling metric?",
+      "options": [
+        "The time from when a process is submitted to when it completes",
+        "The time a process spends waiting in the ready queue",
+        "The time between when a process becomes ready and when it first gets the CPU",
+        "The total time the CPU is busy"
+      ],
+      "correct": 0,
+      "explanation": "Turnaround time = Completion time − Arrival time. It includes waiting time, execution time, and I/O time. It measures how long it takes a process to complete from submission.",
+      "category": "Scheduling: Metrics",
+      "type": "mcq"
+    },
+    {
+      "question": "What is 'response time' as a scheduling metric and why is it important for interactive systems?",
+      "options": [
+        "The total time to complete a process",
+        "The time from when a request is submitted to when the FIRST response is produced",
+        "The time the CPU spends idle",
+        "The time between consecutive context switches"
+      ],
+      "correct": 1,
+      "explanation": "Response time is the time from submission of a request to the first response (not completion). It's critical for interactive systems (GUI, terminals) where users expect immediate feedback.",
+      "category": "Scheduling: Metrics",
+      "type": "mcq"
+    },
+    {
+      "question": "What is CPU utilization and what is an ideal target?",
+      "options": [
+        "The percentage of processes that complete successfully; target: 100%",
+        "The percentage of time the CPU is busy doing useful work; target: 40-90% in real systems",
+        "The number of processes per second; target: as high as possible",
+        "The ratio of I/O time to CPU time; target: 1:1"
+      ],
+      "correct": 1,
+      "explanation": "CPU utilization measures how busy the CPU is. In practice, targeting 40% for lightly loaded systems and up to 90% for heavily loaded ones. 100% utilization with no idle time is theoretically possible but leaves no room for overhead.",
+      "category": "Scheduling: Metrics",
+      "type": "mcq"
+    },
+    {
+      "question": "What is the key insight behind the MLFQ heuristic 'if a process uses its entire time quantum, demote it'?",
+      "options": [
+        "CPU-intensive processes should be punished",
+        "Processes that fully use their quantum are likely CPU-bound, so they should wait longer to give interactive (I/O-bound) processes better response times",
+        "Using the full quantum wastes CPU cycles",
+        "Demoted processes get a longer quantum in lower queues"
+      ],
+      "correct": 1,
+      "explanation": "CPU-bound processes tend to use their full quantum. By demoting them, MLFQ gives priority to I/O-bound processes that voluntarily yield, improving overall interactivity without sacrificing throughput.",
+      "category": "Scheduling: Algorithms",
+      "type": "mcq"
+    },
+    {
+      "question": "What problem does 'priority inversion' describe?",
+      "options": [
+        "A high-priority process accidentally running at low priority",
+        "A high-priority process is indirectly blocked by a low-priority process that holds a needed resource",
+        "Priorities being assigned in the wrong order",
+        "A process changing its own priority illegally"
+      ],
+      "correct": 1,
+      "explanation": "Priority inversion: a high-priority process (H) waits for a resource held by a low-priority process (L). A medium-priority process (M) preempts L, causing H to wait even longer. The Mars Pathfinder mission experienced this bug.",
+      "category": "Scheduling: Problems",
+      "type": "mcq"
+    },
+    {
+      "question": "What is 'priority inheritance' and how does it solve priority inversion?",
+      "options": [
+        "Child processes inherit their parent's priority",
+        "A low-priority process temporarily inherits the priority of the high-priority process waiting for its resource, preventing medium-priority processes from preempting it",
+        "All processes inherit the system's base priority",
+        "High-priority processes donate their priority to waiting processes permanently"
+      ],
+      "correct": 1,
+      "explanation": "Priority inheritance: when a high-priority process H waits for a lock held by low-priority process L, L temporarily runs at H's priority. This prevents medium-priority processes from delaying L's completion.",
+      "category": "Scheduling: Problems",
+      "type": "mcq"
+    },
+    {
+      "question": "What is the difference between a process and a thread in terms of OS overhead?",
+      "options": [
+        "There is no difference in overhead",
+        "Creating a process is heavier (copies address space, file descriptors); creating a thread is lighter (shares these with parent)",
+        "Creating a thread requires more memory than a process",
+        "Processes are always faster than threads"
+      ],
+      "correct": 1,
+      "explanation": "Process creation involves duplicating the address space (fork), setting up new page tables, copying file descriptors, etc. Thread creation only allocates a new stack and register state within the existing address space — significantly cheaper.",
+      "category": "Threads: Basics",
+      "type": "mcq"
+    },
+    {
+      "question": "What is a 'thread pool' and what problem does it solve?",
+      "options": [
+        "A memory pool used by threads for allocation",
+        "A fixed set of pre-created threads that pick up work tasks, avoiding the overhead of creating/destroying threads per request",
+        "A collection of threads blocked on the same condition variable",
+        "A set of threads that share the same priority"
+      ],
+      "correct": 1,
+      "explanation": "Thread pools pre-create a fixed number of threads. Incoming tasks are queued and picked up by available threads. This avoids the overhead of constant thread creation/destruction and controls the degree of concurrency.",
+      "category": "Threads: Basics",
+      "type": "mcq"
+    },
+    {
+      "question": "What does it mean for an operation to be 'atomic'?",
+      "options": [
+        "The operation runs very quickly",
+        "The operation completes entirely or not at all — it cannot be interrupted mid-way by another thread",
+        "The operation uses atomic hardware instructions only",
+        "The operation affects only a single memory location"
+      ],
+      "correct": 1,
+      "explanation": "Atomic means indivisible. From other threads' perspectives, the operation either hasn't started or has fully completed — there's no visible intermediate state. This is key for building correct synchronization primitives.",
+      "category": "Synchronization",
+      "type": "mcq"
+    },
+    {
+      "question": "What is the POSIX 'pthreads' library used for?",
+      "options": [
+        "A standard for file I/O operations on POSIX systems",
+        "A standardized C API for creating and synchronizing threads on POSIX-compliant systems (Linux, macOS)",
+        "A library for inter-process communication",
+        "A networking library for socket programming"
+      ],
+      "correct": 1,
+      "explanation": "POSIX Threads (pthreads) is a standard API for multithreaded programming. It provides thread creation (pthread_create), synchronization (mutex, condition variables), and joining (pthread_join) functions, used on Linux/macOS.",
+      "category": "Threads: Basics",
+      "type": "mcq"
+    },
+    {
+      "question": "What does 'throughput' mean as a scheduling metric?",
+      "options": [
+        "The speed of the CPU clock",
+        "The number of processes that complete per unit time",
+        "The percentage of time the CPU is busy",
+        "The time a process waits in the ready queue"
+      ],
+      "correct": 1,
+      "explanation": "Throughput measures how many processes complete in a given time period. Maximizing throughput means completing more work overall, which is important for batch-processing systems.",
+      "category": "Scheduling: Metrics",
+      "type": "mcq"
+    },
+    {
+      "question": "What is 'waiting time' as a scheduling metric?",
+      "options": [
+        "Total time from submission to completion",
+        "The total time a process spends in the ready queue waiting for the CPU",
+        "Time spent waiting for I/O operations",
+        "Time between two consecutive CPU bursts"
+      ],
+      "correct": 1,
+      "explanation": "Waiting time is the sum of time a process spends in the ready queue (not running, not doing I/O). Minimizing average waiting time is the goal of SJF.",
+      "category": "Scheduling: Metrics",
+      "type": "mcq"
+    },
+    {
+      "question": "In the context of multicore systems, what is 'load balancing' in scheduling?",
+      "options": [
+        "Ensuring all processes have equal priority",
+        "Distributing processes/threads across all available CPU cores to prevent some cores from being idle while others are overloaded",
+        "Limiting the number of threads per process",
+        "Balancing CPU burst lengths across processes"
+      ],
+      "correct": 1,
+      "explanation": "Load balancing in multiprocessor scheduling ensures work is evenly distributed across cores. Techniques include push migration (overloaded core pushes tasks) and pull migration (idle core pulls tasks from busy ones).",
+      "category": "Scheduling: Multicore",
+      "type": "mcq"
+    },
+    {
+      "question": "What is 'processor affinity' in multicore scheduling?",
+      "options": [
+        "A CPU's preference for certain process types",
+        "The tendency to keep a process/thread on the same CPU core to exploit warm cache data",
+        "The binding of a process to a specific memory bank",
+        "How much a process 'likes' its assigned priority"
+      ],
+      "correct": 1,
+      "explanation": "Processor affinity means a process tends to run on the same core where it last ran. Migrating to a different core invalidates the cache. Hard affinity pins a process to a core; soft affinity prefers it but allows migration.",
+      "category": "Scheduling: Multicore",
+      "type": "mcq"
+    },
+    {
+      "question": "Which resources does a thread own PRIVATELY (not shared with other threads in the same process)?",
+      "options": [
+        "Stack",
+        "Program Counter (PC)",
+        "Register set",
+        "Heap memory",
+        "Global variables",
+        "Open file descriptors",
+        "Thread ID"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        6
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        6
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Each thread has its own: stack, program counter, register set, and thread ID. These are NOT shared. Heap, global variables, and file descriptors ARE shared among all threads in the process.",
+      "category": "Threads: Basics"
+    },
+    {
+      "question": "Which of the following are TRUE about Round-Robin (RR) scheduling?",
+      "options": [
+        "It is preemptive",
+        "It guarantees no starvation",
+        "A very small time quantum leads to excessive context switching overhead",
+        "A very large time quantum degenerates to FCFS behavior",
+        "It always produces the minimum average waiting time",
+        "It is well-suited for interactive systems"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        3,
+        5
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        3,
+        5
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "RR is preemptive (0), prevents starvation since every process gets the CPU in rotation (1), suffers overhead with tiny quanta (2), approaches FCFS with huge quanta (3), and is good for interactivity (5). It does NOT guarantee minimum average waiting time — SJF does (5 is false).",
+      "category": "Scheduling: Algorithms"
+    },
+    {
+      "question": "Which of the four Coffman conditions must ALL be present for a deadlock to occur?",
+      "options": [
+        "Mutual Exclusion",
+        "Hold and Wait",
+        "No Preemption of resources",
+        "Circular Wait",
+        "Starvation",
+        "Priority Inversion"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "The four Coffman conditions are: Mutual Exclusion, Hold and Wait, No Preemption, and Circular Wait. Starvation and Priority Inversion are separate OS problems, not deadlock conditions.",
+      "category": "Synchronization"
+    },
+    {
+      "question": "Which of the following correctly describe differences between user-level threads and kernel-level threads?",
+      "options": [
+        "User-level thread creation is faster because it doesn't require a kernel call",
+        "Kernel-level threads can run on multiple cores simultaneously",
+        "A blocking syscall by one user-level thread blocks all threads in the process",
+        "Kernel-level threads are invisible to the OS scheduler",
+        "User-level threads cannot take advantage of multiple CPU cores on their own",
+        "Context switching between kernel threads requires kernel intervention"
+      ],
+      "correct": [
+        0,
+        1,
+        2,
+        4,
+        5
+      ],
+      "correctArray": [
+        0,
+        1,
+        2,
+        4,
+        5
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "True statements: ULTs are faster to create (0), KLTs run in parallel on multicore (1), blocking syscall halts all ULTs (2), ULTs can't exploit multicore without mapping to kernel threads (4), switching KLTs needs kernel (5). Option 3 is false — kernel threads ARE visible to the OS scheduler.",
+      "category": "Threads: Types"
+    },
+    {
+      "question": "Which of the following are valid scheduling goals/criteria that a scheduler might try to optimize?",
+      "options": [
+        "Maximize CPU utilization",
+        "Maximize throughput",
+        "Minimize turnaround time",
+        "Minimize waiting time",
+        "Minimize response time",
+        "Maximize the number of context switches",
+        "Maximize fairness"
       ],
       "correct": [
         0,
@@ -602,83 +806,74 @@
       ],
       "isMultiselect": true,
       "type": "multiselect",
-      "explanation": "handshake uses pipe() to create pipes, fork() to create the child, write()/read() to send/receive bytes, getpid() for the PID in output, and wait() for the parent to wait on the child. exec() is NOT used.",
-      "category": "Lab1-w3: Handshake"
+      "explanation": "Valid scheduling goals are: maximize CPU utilization and throughput; minimize turnaround, waiting, and response times; ensure fairness. Maximizing context switches (option 5) is never a goal — context switching is overhead to be minimized.",
+      "category": "Scheduling: Metrics"
     },
     {
-      "question": "Which files must be modified or created to add a new syscall (e.g., 'monitor') to xv6? (Select ALL that apply)",
+      "question": "Which of the following are TRUE about context switching?",
       "options": [
-        "kernel/syscall.h",
-        "kernel/proc.h",
-        "kernel/sysproc.c",
-        "kernel/syscall.c",
-        "user/user.h",
-        "user/usys.pl",
-        "Makefile",
-        "kernel/vm.c"
+        "It involves saving the current process/thread state to its PCB/TCB",
+        "It is useful work performed by the CPU",
+        "Frequent context switches reduce overall system throughput",
+        "Context switching between threads of the SAME process is cheaper than switching between processes",
+        "The TLB must be flushed when switching between threads of the same process",
+        "Context switch time is pure overhead"
+      ],
+      "correct": [
+        0,
+        2,
+        3,
+        5
+      ],
+      "correctArray": [
+        0,
+        2,
+        3,
+        5
+      ],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "True: saves state (0), frequent switches hurt throughput (2), intra-process thread switches are cheaper since the address space doesn't change (3), context switch time is overhead (5). False: context switching is NOT useful work (1); the TLB does NOT need flushing for same-process thread switches since they share page tables (4).",
+      "category": "Threads: Context Switch"
+    },
+    {
+      "question": "Which synchronization problems are associated with using a SINGLE global lock to protect an entire shared hash table with multiple threads?",
+      "options": [
+        "Loss of parallelism — threads can't access different parts of the table concurrently",
+        "Deadlock if the same thread tries to acquire the lock twice",
+        "High lock contention as all threads compete for the same lock",
+        "Race conditions on individual buckets",
+        "Reduced throughput compared to per-bucket locking",
+        "Priority inversion could occur if threads have different priorities"
       ],
       "correct": [
         0,
         1,
         2,
-        3,
         4,
-        5,
-        6
+        5
       ],
       "correctArray": [
         0,
         1,
         2,
-        3,
         4,
-        5,
-        6
+        5
       ],
       "isMultiselect": true,
       "type": "multiselect",
-      "explanation": "All 7 files need changes: syscall.h (add #define), proc.h (add field), sysproc.c (implement), syscall.c (register + names array + monitoring logic), user.h (prototype), usys.pl (entry), Makefile (UPROGS). kernel/vm.c is NOT modified for adding a syscall.",
-      "category": "Lab1-w3: Monitor"
+      "explanation": "A single global lock causes: no parallelism (0), potential self-deadlock if re-entered (1), high contention (2), lower throughput vs. per-bucket (4), and possible priority inversion (5). Option 3 is false — a properly used global lock PREVENTS race conditions on individual buckets.",
+      "category": "Synchronization"
     },
     {
-      "question": "Which registers are saved and restored during a uthread context switch? (Select ALL that apply)",
+      "question": "Which of the following are properties of a correct critical section solution?",
       "options": [
-        "ra",
-        "sp",
-        "s0/fp",
-        "s1",
-        "s11",
-        "a0",
-        "a1",
-        "t0"
-      ],
-      "correct": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
-      "correctArray": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
-      "isMultiselect": true,
-      "type": "multiselect",
-      "explanation": "The callee-saved registers per RISC-V ABI are: ra, sp, s0 (fp), s1 through s11. Argument registers (a0-a7) and temp registers (t0-t6) are caller-saved and NOT preserved by thread_switch.",
-      "category": "Lab2-w5: uthread"
-    },
-    {
-      "question": "Which of the following are TRUE about pipe usage in xv6? (Select ALL that apply)",
-      "options": [
-        "Unused pipe ends should always be closed",
-        "A pipe created with pipe(p) gives p[0] as read end and p[1] as write end",
-        "Failing to close unused ends can cause processes to hang",
-        "A single pipe supports full-duplex (bidirectional) communication",
-        "Reading from an empty pipe with no writers open returns 0 (EOF)"
+        "Mutual Exclusion — only one process can be in its critical section at a time",
+        "Progress — if no process is in the critical section, a requesting process must eventually enter",
+        "Bounded Waiting — there is a bound on how many times others can enter before a waiting process gets in",
+        "Fairness — all processes enter the critical section exactly the same number of times",
+        "No starvation — guaranteed by Bounded Waiting",
+        "Speed — the critical section must execute within a fixed time limit"
       ],
       "correct": [
         0,
@@ -694,115 +889,8 @@
       ],
       "isMultiselect": true,
       "type": "multiselect",
-      "explanation": "Options 0, 1, 2, 4 are correct. A single pipe is unidirectional (half-duplex), not full-duplex — so option 3 is FALSE. Two pipes are needed for bidirectional communication.",
-      "category": "Lab1-w3: Handshake"
-    },
-    {
-      "question": "Which statements about the sniffer exploit are correct? (Select ALL that apply)",
-      "options": [
-        "It exploits the removal of memset() zeroing calls in uvmalloc and kalloc",
-        "sbrk() is used to allocate memory that may contain leftover data",
-        "The attack would fail if pages were properly zeroed on allocation",
-        "sniffer.c must NOT modify secret.c or the xv6 kernel",
-        "The secret persists on disk between reboots"
-      ],
-      "correct": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "correctArray": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "isMultiselect": true,
-      "type": "multiselect",
-      "explanation": "Options 0-3 are correct. The exploit relies on missing zeroing, uses sbrk(), would fail with proper zeroing, and must not modify secret.c. Option 4 is FALSE — the secret is in RAM, not on disk, and is gone after a reboot.",
-      "category": "Lab1-w3: Sniffer"
-    },
-    {
-      "question": "Which of the following pthread calls are needed to implement per-bucket mutex locking in the hash table? (Select ALL that apply)",
-      "options": [
-        "pthread_mutex_t lock[NBUCKET]",
-        "pthread_mutex_init(&lock[i], NULL)",
-        "pthread_mutex_lock(&lock[bucket])",
-        "pthread_mutex_unlock(&lock[bucket])",
-        "pthread_mutex_destroy(&lock[i])",
-        "pthread_mutex_trylock(&lock[bucket])"
-      ],
-      "correct": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
-      "correctArray": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
-      "isMultiselect": true,
-      "type": "multiselect",
-      "explanation": "You need to declare an array of mutexes, initialize them, lock before accessing a bucket, unlock after, and destroy when done. pthread_mutex_trylock is not required for this implementation.",
-      "category": "Lab2-w5: Hash Table"
-    },
-    {
-      "question": "Which of the following correctly describe xv6 process isolation properties? (Select ALL that apply)",
-      "options": [
-        "User programs cannot directly call kernel functions",
-        "User programs cannot directly call functions in other user programs",
-        "All interactions between user programs and the kernel happen through system calls",
-        "Bugs in syscall implementation can break isolation boundaries",
-        "User programs can directly access kernel memory via pointers"
-      ],
-      "correct": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "correctArray": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "isMultiselect": true,
-      "type": "multiselect",
-      "explanation": "xv6 isolates user programs from the kernel and from each other. All kernel access is via syscalls. Kernel bugs (like the missing memset) can indeed break isolation. User programs CANNOT directly access kernel memory.",
-      "category": "Lab1-w3: Sniffer"
-    },
-    {
-      "question": "Which of the following are advantages of per-bucket locking over a single global table lock? (Select ALL that apply)",
-      "options": [
-        "Threads accessing different buckets can run in parallel",
-        "Eliminates all race conditions with zero performance cost",
-        "Reduces lock contention compared to a global lock",
-        "Allows higher throughput (puts/second) with multiple threads",
-        "Threads still block each other when accessing the SAME bucket"
-      ],
-      "correct": [
-        0,
-        2,
-        3,
-        4
-      ],
-      "correctArray": [
-        0,
-        2,
-        3,
-        4
-      ],
-      "isMultiselect": true,
-      "type": "multiselect",
-      "explanation": "Per-bucket locking allows parallelism across buckets (0), reduces contention (2), improves throughput (3), and still correctly serializes access to the same bucket (4). It does NOT eliminate ALL race conditions with zero cost — there is still some overhead (option 1 is false).",
-      "category": "Lab2-w5: Hash Table"
+      "explanation": "The three formal requirements are Mutual Exclusion (0), Progress (1), and Bounded Waiting (2). Bounded Waiting implies no starvation (4). Equal entry count (3) is NOT required, and speed (5) is not a correctness requirement.",
+      "category": "Synchronization"
     }
   ]
 }
