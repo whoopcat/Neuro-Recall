@@ -1,0 +1,550 @@
+{
+  "name": "INF1009 Quiz 2 — OOP, Design Patterns, C++, Architecture",
+  "description": "Hard-difficulty mixed quiz covering Weeks 8–10 content. Includes abstract classes, SOLID, design patterns, generics, layered architecture, C/C++/Java differences, and problem solving.",
+  "totalQuestions": 35,
+  "questions": [
+
+    {
+      "question": "Which statements are TRUE about abstract classes in Java?",
+      "options": [
+        "An abstract class can have a constructor.",
+        "You can instantiate an abstract class directly using 'new'.",
+        "An abstract class can contain both abstract and fully-implemented (concrete) methods.",
+        "A subclass of an abstract class must implement ALL abstract methods, unless the subclass is also abstract.",
+        "An abstract class cannot have instance variables."
+      ],
+      "correct": [0, 2, 3],
+      "correctArray": [0, 2, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Abstract classes CAN have constructors (called by subclasses via super()), instance variables, and concrete methods. You CANNOT instantiate them directly — that is the entire point. A concrete subclass must implement all inherited abstract methods; if it doesn't, it must also be declared abstract.",
+      "category": "Abstract Classes"
+    },
+
+    {
+      "question": "Consider the following class hierarchy from your project engine. Which statements correctly describe the relationship?",
+      "code": "abstract class Entity {\n    protected float x, y;\n    public abstract void update();\n    public void render() { /* default render */ }\n}\n\nclass Player extends Entity {\n    public void update() { /* player logic */ }\n}\n\nclass Enemy extends Entity {\n    public void update() { /* enemy logic */ }\n    public void render() { /* custom render */ }\n}",
+      "language": "java",
+      "options": [
+        "Player inherits the concrete render() from Entity and uses it as-is.",
+        "Enemy overrides render(), so it does NOT use Entity's render() unless explicitly called via super.render().",
+        "Entity is a valid type for a variable that can hold either a Player or Enemy object.",
+        "This code will fail to compile because Player does not override render()."
+      ],
+      "correct": [0, 1, 2],
+      "correctArray": [0, 1, 2],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Player inherits render() from Entity and uses it unchanged (A). Enemy overrides render(), replacing it — super.render() would be needed to call the parent version (B). Entity is an abstract reference type, so 'Entity e = new Player()' is valid polymorphism (C). Overriding render() is optional for concrete subclasses — only abstract methods are mandatory (D is false).",
+      "category": "Inheritance & Polymorphism"
+    },
+
+    {
+      "question": "Which of the following correctly distinguishes Aggregation from Composition?",
+      "options": [
+        "In Aggregation, the child object can exist independently of the parent. In Composition, the child's lifecycle is tied to the parent.",
+        "In Composition, the child object can exist independently of the parent. In Aggregation, the child cannot.",
+        "Both Aggregation and Composition are forms of IS-A relationships.",
+        "Aggregation is implemented using inheritance; Composition is implemented using interfaces."
+      ],
+      "correct": 0,
+      "explanation": "Aggregation = 'weak' has-a. The child (e.g. a Player) can exist without the Manager. Composition = 'strong' has-a. The child (e.g. a Heart) only makes sense inside the owner (Body) and ceases to exist when the owner does. Both are HAS-A, NOT IS-A. Neither is implemented using inheritance or interfaces.",
+      "category": "Relationships"
+    },
+
+    {
+      "question": "Select ALL true statements about the SOLID principles.",
+      "options": [
+        "The Single Responsibility Principle states a class should have only one reason to change.",
+        "The Open/Closed Principle means a class should be open for modification but closed for extension.",
+        "The Liskov Substitution Principle means subclasses should be replaceable for their base class without breaking the program.",
+        "The Interface Segregation Principle advises splitting large interfaces so classes aren't forced to implement methods they don't need.",
+        "The Dependency Inversion Principle says high-level modules should depend on concrete implementations, not abstractions."
+      ],
+      "correct": [0, 2, 3],
+      "correctArray": [0, 2, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "A is correct (SRP). B is INVERTED — OCP says open for EXTENSION, closed for MODIFICATION. C is correct (LSP). D is correct (ISP). E is INVERTED — DIP says high-level modules should depend on ABSTRACTIONS (interfaces), not concrete implementations. Knowing these exactly is critical for the quiz.",
+      "category": "SOLID"
+    },
+
+    {
+      "question": "An InputManager class in your engine handles keyboard AND mouse AND gamepad input, AND also writes input logs to a file. Which SOLID principle(s) does this violate?",
+      "options": [
+        "Single Responsibility Principle — it has too many reasons to change.",
+        "Open/Closed Principle — it cannot be extended without modification.",
+        "Liskov Substitution Principle — subclasses cannot substitute it.",
+        "Interface Segregation Principle — consumers are forced to depend on methods they don't use."
+      ],
+      "correct": [0, 3],
+      "correctArray": [0, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "SRP is clearly violated — logging input is a separate responsibility from handling input. ISP is also arguably violated because a class that only needs mouse input is forced to depend on keyboard, gamepad, and logging functionality. OCP and LSP violations are not directly described by the scenario given.",
+      "category": "SOLID"
+    },
+
+    {
+      "question": "In the Singleton pattern, which of the following are essential implementation requirements?",
+      "options": [
+        "The constructor must be private.",
+        "A public static method (commonly getInstance()) must return the single instance.",
+        "The class must extend an abstract class.",
+        "A private static variable holds the single instance of the class.",
+        "The Singleton class must implement an interface."
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "The three pillars of Singleton are: (1) private constructor to prevent external instantiation, (2) private static field to hold the one instance, (3) public static accessor method (getInstance()). Extending abstract classes or implementing interfaces are not required — though they are compatible with Singleton.",
+      "category": "Design Patterns — Singleton"
+    },
+
+    {
+      "question": "What is the key architectural difference between the Factory pattern and the Abstract Factory pattern?",
+      "options": [
+        "Factory creates a single type of product via one factory class. Abstract Factory creates families of related products via multiple concrete factory classes.",
+        "Abstract Factory is simpler than Factory because it removes the need for a factory class altogether.",
+        "Factory uses generics; Abstract Factory does not.",
+        "Abstract Factory is a Behavioural pattern; Factory is a Creational pattern."
+      ],
+      "correct": 0,
+      "explanation": "Factory: one factory (ShapeFactory) creates variants of one product type (Circle, Square, Rectangle). Abstract Factory: a FactoryProducer chooses between families of factories (ShapeFactory vs RoundedShapeFactory), each creating their own set of products. Both are Creational patterns. Neither inherently requires generics.",
+      "category": "Design Patterns — Factory"
+    },
+
+    {
+      "question": "Which of the following are classified as Creational design patterns in the Gang of Four (GOF)?",
+      "options": [
+        "Singleton",
+        "Observer",
+        "Abstract Factory",
+        "Facade",
+        "Builder",
+        "Prototype"
+      ],
+      "correct": [0, 2, 4, 5],
+      "correctArray": [0, 2, 4, 5],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "The 5 Creational patterns are: Singleton, Factory, Abstract Factory, Builder, Prototype. Observer is Behavioural. Facade is Structural. Knowing all 23 patterns by name and category is required for the quiz.",
+      "category": "Design Patterns — Categories"
+    },
+
+    {
+      "question": "Classify each design pattern correctly. Which of the following are Structural patterns?",
+      "options": [
+        "Adapter",
+        "Mediator",
+        "Decorator",
+        "Strategy",
+        "Composite",
+        "Chain of Responsibility"
+      ],
+      "correct": [0, 2, 4],
+      "correctArray": [0, 2, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Structural patterns: Adapter, Composite, Proxy, Flyweight, Facade, Bridge, Decorator (7 total). Mediator, Strategy, and Chain of Responsibility are Behavioural patterns. A common exam trap is mixing Structural and Behavioural patterns.",
+      "category": "Design Patterns — Categories"
+    },
+
+    {
+      "question": "Given the following Generic class, what will happen at compile time?",
+      "code": "public class Box<T> {\n    private T value;\n    public Box(T value) { this.value = value; }\n    public T getValue() { return value; }\n}\n\n// Usage:\nBox<String> b = new Box<>(42);",
+      "language": "java",
+      "options": [
+        "It compiles and runs, converting 42 to the String '42' automatically.",
+        "It causes a compile-time error because 42 (Integer) is not a String.",
+        "It compiles but throws a ClassCastException at runtime.",
+        "It compiles because Java uses type erasure, removing generic information at runtime."
+      ],
+      "correct": 1,
+      "explanation": "Generics enforce type safety at COMPILE TIME. Box<String> expects a String, so passing 42 (an Integer literal, auto-boxed to Integer) causes a compile error. This is the exact benefit of generics over raw types — errors are caught early, not at runtime.",
+      "category": "Generics"
+    },
+
+    {
+      "question": "Which statements about bounded generics are TRUE?",
+      "code": "public <T extends Number> double sum(List<T> list) {\n    double total = 0;\n    for (T item : list) total += item.doubleValue();\n    return total;\n}",
+      "language": "java",
+      "options": [
+        "This method will accept a List<Integer> as an argument.",
+        "This method will accept a List<String> as an argument.",
+        "The 'extends' keyword here means T must be a subclass of Number OR implement the Number interface.",
+        "Removing '<T extends Number>' and replacing T with Number would have identical behaviour.",
+        "This method will accept a List<Double> as an argument."
+      ],
+      "correct": [0, 2, 4],
+      "correctArray": [0, 2, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "T extends Number means T must BE a Number or a subclass (Integer, Double, Long etc.) — so List<Integer> and List<Double> are valid (A, E). String is not a Number subclass, so List<String> fails (B is false). In generics, 'extends' covers both class inheritance AND interface implementation (C). Replacing T with Number would lose the ability to return T and would not allow generics on the method signature (D is false).",
+      "category": "Generics"
+    },
+
+    {
+      "question": "In your INF1009 engine design, the EntityManager holds a List<Entity> and calls update() on each. Which design principle does this BEST demonstrate?",
+      "options": [
+        "Encapsulation — hiding the internal list from external access.",
+        "Polymorphism — calling the same method name on different subclass objects, each executing their own version.",
+        "Inheritance — EntityManager extends Entity.",
+        "The Singleton pattern — only one EntityManager exists."
+      ],
+      "correct": 1,
+      "explanation": "When EntityManager loops through List<Entity> and calls update(), each element (Player, Enemy, etc.) executes ITS OWN override of update(). This is runtime polymorphism in action — the correct method is resolved at runtime based on the actual object type, not the reference type (Entity).",
+      "category": "Polymorphism & Architecture"
+    },
+
+    {
+      "question": "Which statements about the Manager class pattern (as taught in INF1009) are TRUE?",
+      "options": [
+        "The Manager class IS responsible for doing the work on behalf of the objects it manages.",
+        "The Manager has-a list of objects to manage.",
+        "Objects under the Manager must still do their own work or delegate to components.",
+        "Objects are always statically assigned to their Manager at compile time and cannot change.",
+        "The Manager invokes methods on its objects polymorphically."
+      ],
+      "correct": [1, 2, 4],
+      "correctArray": [1, 2, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "The Manager has-a list (B), calls methods polymorphically (E), and does NOT do the work itself — the objects do (A is false, C is correct). Objects CAN be added/removed dynamically at runtime, e.g. spawning bullets (D is false). This is a key distinction tested in the exam.",
+      "category": "Architecture — Manager Pattern"
+    },
+
+    {
+      "question": "In the two-layer architecture taught in INF1009, which statement is MOST accurate?",
+      "options": [
+        "The Application Layer should directly access and modify the Engine Layer's internal class variables.",
+        "The Engine Layer should contain game-specific logic like 'Player jumped over a car'.",
+        "The Engine Layer is abstract and reusable across multiple games; the Application Layer contains game-specific concrete implementations.",
+        "The Application Layer sits below the Engine Layer and handles low-level rendering."
+      ],
+      "correct": 2,
+      "explanation": "The Engine Layer (abstract) provides reusable managers and interfaces. The Application Layer (concrete) contains your actual game objects. The Engine Layer must NOT know about the concrete layer — it works through abstractions/interfaces. The Application Layer sits ON TOP of the engine.",
+      "category": "Layered Architecture"
+    },
+
+    {
+      "question": "A developer places Player.java, Enemy.java, and Boss.java inside the Engine Layer package. What principle does this violate?",
+      "options": [
+        "Single Responsibility Principle",
+        "The principle of layered architecture — concrete game entities belong in the Application Layer, not the Engine Layer.",
+        "The Factory pattern — factories should create objects, not store them.",
+        "Liskov Substitution Principle — Boss cannot substitute Enemy."
+      ],
+      "correct": 1,
+      "explanation": "Player, Enemy, and Boss are concrete, game-specific classes. They belong in the Application (Concrete) Layer. Placing them in the Engine Layer breaks the architecture — the engine becomes tightly coupled to a specific game, destroying its reusability. The engine should only know about abstract types (IEntity, AbstractScene).",
+      "category": "Layered Architecture"
+    },
+
+    {
+      "question": "Which of the following correctly identify differences between C and C++?",
+      "options": [
+        "C uses scanf() and printf() for I/O; C++ uses cin and cout.",
+        "C supports object-oriented programming natively; C++ adds procedural programming on top.",
+        "C has no support for namespaces; C++ has built-in namespace support.",
+        "C++ can use C-style char arrays for strings, but also has its own string object.",
+        "Both C and C++ support exception handling via try-catch."
+      ],
+      "correct": [0, 2, 3],
+      "correctArray": [0, 2, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "A is correct (I/O difference). B is INVERTED — C is procedural only; C++ adds OOP on top of C's procedural base. C is correct (namespace support). D is correct — C++ is backward compatible with C strings. E is false — C has NO exception handling; only C++ (and Java) has try-catch.",
+      "category": "C vs C++ vs Java"
+    },
+
+    {
+      "question": "Which features exist in C++ but NOT in Java?",
+      "options": [
+        "Pointers with direct memory address manipulation (*ptr, &var).",
+        "The reference type (&) for pass-by-reference parameters.",
+        "Struct and union data types.",
+        "Interfaces (pure abstract classes).",
+        "The Destructor (explicit object destruction without garbage collection).",
+        "Operator overloading (defining behaviour for +, =, - on custom types)."
+      ],
+      "correct": [0, 1, 2, 4, 5],
+      "correctArray": [0, 1, 2, 4, 5],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Java has automatic garbage collection and no pointer arithmetic. C++ has: pointers (*), reference types (&), structs, unions, destructors (explicit cleanup), and operator overloading. Java DOES have interfaces (D is false — it exists in both). The C++ equivalent of interfaces is pure abstract classes (all methods = 0).",
+      "category": "C++ vs Java"
+    },
+
+    {
+      "question": "What does the following C++ code do?",
+      "code": "void doubleIt(int &refVar) {\n    refVar *= 2;\n}\n\nint main() {\n    int x = 4;\n    doubleIt(x);\n    cout << x; // What is printed?\n}",
+      "language": "cpp",
+      "options": [
+        "Prints 4, because C++ passes by value by default and the original is unchanged.",
+        "Prints 8, because the & makes refVar an alias for x — modifying refVar modifies x directly.",
+        "Causes a compile error because you cannot pass an int to a reference parameter.",
+        "Prints 0, because reference variables are initialised to 0."
+      ],
+      "correct": 1,
+      "explanation": "The & in the parameter declaration makes refVar a reference to x — not a copy. Any changes to refVar are changes to x itself. This is pass-by-reference in C++. The output is 8. In Java, primitives are always pass-by-value, so this behaviour is unique to C/C++.",
+      "category": "C++ Reference Types"
+    },
+
+    {
+      "question": "Examine this C++ pointer code. Which statements are TRUE?",
+      "code": "int value = 10;\nint *ptr = &value;\n*ptr = 20;\ncout << value;",
+      "language": "cpp",
+      "options": [
+        "ptr stores the memory address of value.",
+        "*ptr = 20 changes the value stored AT the address ptr points to, making value equal to 20.",
+        "The output of cout << value is 10 because pointers work on copies.",
+        "& in '&value' means bitwise AND here.",
+        "After *ptr = 20, both value and *ptr equal 20."
+      ],
+      "correct": [0, 1, 4],
+      "correctArray": [0, 1, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "ptr = &value stores value's address (A). *ptr dereferences the pointer — writing to *ptr writes to value (B, E). The output is 20, not 10 (C is false). & in '&value' is the address-of operator, not bitwise AND (D is false). Key mnemonic: *ptr = dereference (get/set the value), ptr = the address, &var = address of var.",
+      "category": "C++ Pointers"
+    },
+
+    {
+      "question": "In C++, in which section of a class declaration should 'using namespace std;' NEVER appear?",
+      "options": [
+        "Inside the .cpp source file, after the #include directives.",
+        "Inside the .h header file.",
+        "Inside the main() function body.",
+        "Inside any function body in the .cpp file."
+      ],
+      "correct": 1,
+      "explanation": "Placing 'using namespace std;' in a .h header file pollutes the namespace of EVERY file that includes that header — creating hidden, hard-to-debug name conflicts across the entire project. It should only appear in .cpp files, never in headers. This is a best practice explicitly covered in the lab.",
+      "category": "C++ Best Practices"
+    },
+
+    {
+      "question": "What are 'The Big 3' in C++, and why are they significant?",
+      "options": [
+        "Constructor, Destructor, and Copy Constructor — they manage an object's full lifecycle including explicit memory cleanup.",
+        "Destructor, Copy Constructor, and Assignment Operator — needed for correct behaviour when objects manage dynamic memory, unlike Java's automatic garbage collection.",
+        "Pointer, Reference, and Struct — the three C++-only data constructs.",
+        "public, private, and protected — the three access modifiers unique to C++."
+      ],
+      "correct": 1,
+      "explanation": "The Big 3 in C++ are: Destructor (~Class), Copy Constructor (initialise from another object), and Assignment Operator (operator=). They become essential when a class manages dynamic memory (heap allocated with 'new'). Java handles this automatically with garbage collection. If you define one of The Big 3, you almost certainly need all three.",
+      "category": "C++ Dynamic Memory"
+    },
+
+    {
+      "question": "Which C++ I/O stream manipulators persist across multiple output statements (i.e., affect ALL subsequent output until changed)?",
+      "options": [
+        "setw(n) — applies only to the NEXT value output.",
+        "fixed — applies to all subsequent floating-point output.",
+        "setprecision(n) — applies to all subsequent floating-point output.",
+        "endl — applies to all subsequent output.",
+        "showpoint — applies to all subsequent floating-point output."
+      ],
+      "correct": [1, 2, 4],
+      "correctArray": [1, 2, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "setw(n) applies ONLY to the immediately next value — it resets after each use (A is false, so it's excluded). fixed, setprecision(n), and showpoint are 'sticky' — they persist until explicitly changed. endl is just a newline + flush, it doesn't persist (D is false).",
+      "category": "C++ I/O Manipulators"
+    },
+
+    {
+      "question": "In Lab 06, the BinManager stores ValveBin and GearBin objects as members. In the addParts() method, the code uses static_cast<ValveBin*>(pBin). Why is this cast necessary?",
+      "code": "InventoryBin* pBin = nullptr;\nswitch (binNumber) {\n    case 1:\n        pBin = static_cast<ValveBin*>(pBin);\n        pBin = &bin1;\n        break;\n}",
+      "language": "cpp",
+      "options": [
+        "Because pBin is declared as InventoryBin*, and we need to treat it as a ValveBin* to access ValveBin-specific members.",
+        "Because static_cast is required to allocate memory for the object.",
+        "Because ValveBin does not inherit from InventoryBin.",
+        "To prevent the destructor from being called on the wrong type."
+      ],
+      "correct": 0,
+      "explanation": "pBin is typed as InventoryBin* (the parent). To access methods or members specific to ValveBin (a subclass), we must downcast using static_cast<ValveBin*>. The lecture notes say to 'try to avoid down-casting by design' — but when necessary, static_cast is the C++ mechanism. This is the opposite of polymorphism (upcasting), which is done automatically.",
+      "category": "C++ Polymorphism & Casting"
+    },
+
+    {
+      "question": "A C++ class GearBin inherits from InventoryBin and overrides print(). Which code correctly calls the parent's print() from inside GearBin's print()?",
+      "options": [
+        "super.print();",
+        "InventoryBin::print();",
+        "parent->print();",
+        "this.print();"
+      ],
+      "correct": 1,
+      "explanation": "In C++, to explicitly call a parent class method, use the scope resolution operator: InventoryBin::print(). Java uses super.print(). There is no 'super' keyword in C++. 'parent->print()' and 'this.print()' are not valid C++ constructs for this purpose.",
+      "category": "C++ Inheritance"
+    },
+
+    {
+      "question": "Select ALL true statements about how C++ header files (.h) and source files (.cpp) should be structured.",
+      "options": [
+        "Class declarations (method signatures, member variables) belong in the .h file.",
+        "Method implementations (the actual code bodies) belong in the .cpp file.",
+        "'using namespace std;' should appear in the .h file so all files that include it get it automatically.",
+        "The .cpp file should #include its own corresponding .h file.",
+        "All implementation MUST go in the .cpp file — no code is ever allowed in a .h file."
+      ],
+      "correct": [0, 1, 3],
+      "correctArray": [0, 1, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Declarations in .h (A), implementations in .cpp (B), and .cpp includes its own .h (D) are all correct. 'using namespace std;' in a header is a major anti-pattern as it pollutes every file that includes the header (C is false). Some implementation IS allowed in headers (e.g. inline functions, templates), so E is also false.",
+      "category": "C++ File Structure"
+    },
+
+    {
+      "question": "Which statement BEST explains why the engine layer in your INF1009 project should not contain direct references to concrete classes like Player or Enemy?",
+      "options": [
+        "Because Java does not allow concrete classes in packages named 'engine'.",
+        "Because if the engine knows about concrete classes, it becomes tightly coupled to a specific game and loses its reusability across different projects.",
+        "Because Player and Enemy classes consume too much memory to be stored in the engine layer.",
+        "Because the Singleton pattern requires all objects to be in the same package."
+      ],
+      "correct": 1,
+      "explanation": "Architectural separation of concerns: the engine is meant to be a reusable, generic foundation. If it references Player or Enemy, it can only ever be used for that one game. By depending on abstractions (IEntity, AbstractScene), the engine works for ANY game built on top of it. This directly relates to the Dependency Inversion Principle (SOLID-D) and the Open/Closed Principle.",
+      "category": "Layered Architecture"
+    },
+
+    {
+      "question": "In the context of the Design Thinking process, a student says 'My first idea is to just put a quiz in the game to teach road safety.' Based on the lecture content, what is the MOST appropriate critique of this approach?",
+      "options": [
+        "Quizzes are not allowed in educational games by SIT policy.",
+        "The student has skipped the Empathize and Define phases. Also, 'educational' games should aim for stealth learning, not an embedded quiz — which is exactly what shouldn't be done.",
+        "The idea is valid because quizzes are an accepted form of game-based learning.",
+        "The student should code the quiz first, then empathize with users later during testing."
+      ],
+      "correct": 1,
+      "explanation": "The lecture explicitly states: 'educational in games shouldn't be quiz/information sheet to read'. The game-based learning holy grail is stealth learning — embedding learning into the game mechanics naturally. The student has also likely jumped to ideation without empathizing and defining the problem — violating Design Thinking process. Additionally, first ideas are usually the worst.",
+      "category": "Problem Solving & Design Thinking"
+    },
+
+    {
+      "question": "Which of the following correctly lists ALL five phases of Design Thinking in the correct order?",
+      "options": [
+        "Define → Empathize → Ideate → Test → Prototype",
+        "Empathize → Define → Ideate → Prototype → Test",
+        "Identify → Analyse → Evaluate → Create → Question",
+        "Prototype → Test → Empathize → Define → Ideate"
+      ],
+      "correct": 1,
+      "explanation": "Design Thinking phases: Empathize → Define → Ideate → Prototype → Test. Option C describes the Critical Thinking phases (Clarify, Question, Identify, Analyse, Evaluate, Create) — a common mix-up. The quiz tests both, so know them separately.",
+      "category": "Design Thinking"
+    },
+
+    {
+      "question": "A student writes a GameEngine class that handles input, renders graphics, plays audio, manages entities, AND saves the game state to a file. Which SOLID principles does this MOST directly violate?",
+      "options": [
+        "Single Responsibility Principle — the class has at least five distinct reasons to change.",
+        "Open/Closed Principle — it is not possible to extend the class.",
+        "Interface Segregation Principle — external classes are forced to depend on the entire GameEngine when they only need, say, audio.",
+        "Liskov Substitution Principle — GameEngine cannot be substituted by its subclasses.",
+        "Dependency Inversion Principle — high-level modules depend on low-level concrete details."
+      ],
+      "correct": [0, 2, 4],
+      "correctArray": [0, 2, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "SRP is violated — five responsibilities means five reasons to change (A). ISP is violated — a class that only wants audio must still depend on and import the entire GameEngine (C). DIP is violated — the game logic directly depends on the concrete GameEngine instead of abstractions like IAudioManager, IInputManager (E). OCP and LSP violations are not directly implied by this description alone.",
+      "category": "SOLID"
+    },
+
+    {
+      "question": "In the AbstractFactory pattern as shown in the lecture, what is the role of the FactoryProducer?",
+      "options": [
+        "FactoryProducer creates the final product objects (shapes) directly.",
+        "FactoryProducer decides which concrete AbstractFactory implementation to return, based on a parameter.",
+        "FactoryProducer is the abstract interface that ShapeFactory and RoundedShapeFactory implement.",
+        "FactoryProducer stores all created objects in a static list for reuse."
+      ],
+      "correct": 1,
+      "explanation": "In the Abstract Factory pattern from the lecture: AbstractFactory (interface) → implemented by ShapeFactory and RoundedShapeFactory. FactoryProducer is a helper class that accepts a parameter (e.g. 'rounded' or 'normal') and returns the appropriate AbstractFactory implementation. The client then uses that factory to create its products. The FactoryProducer does NOT create products itself.",
+      "category": "Design Patterns — Abstract Factory"
+    },
+
+    {
+      "question": "Which of the following are TRUE about Generics combined with Factory patterns in Java?",
+      "code": "public class EntityManager<T> {\n    private Map<Class<?>, EntityFactory<T>> factories = new HashMap<>();\n\n    public <E extends T> void registerFactory(Class<E> type, EntityFactory<E> factory) {\n        factories.put(type, (EntityFactory<T>) factory);\n    }\n\n    public <E extends T> E createEntity(Class<E> type) {\n        return (E) factories.get(type).create();\n    }\n}",
+      "language": "java",
+      "options": [
+        "This allows creating entities by passing the class type (e.g. Player.class) without needing a switch/if-else block.",
+        "The use of generics here eliminates the need for any casting at the call site.",
+        "factories.get(type).create() would throw a NullPointerException if the factory was never registered for that type.",
+        "This pattern tightly couples EntityManager to specific entity types like Player and Enemy.",
+        "T acts as a type bound ensuring only subtypes of T can be registered and created."
+      ],
+      "correct": [0, 1, 2, 4],
+      "correctArray": [0, 1, 2, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "A — correct, you call createEntity(Player.class) with no switch statement. B — correct, the generic return type E means 'Player player = manager.createEntity(Player.class)' needs no cast. C — correct, if no factory is registered, get() returns null and .create() throws NPE. D — WRONG, the whole point is that EntityManager only knows about T (an abstraction), not specific types. E — correct, <E extends T> ensures only valid subtypes are registered.",
+      "category": "Generics & Factory"
+    },
+
+    {
+      "question": "Select all TRUE statements about C++ Structs.",
+      "options": [
+        "A struct can be passed to a function by value or by reference.",
+        "A struct in C++ is identical to a class except that its members default to public access.",
+        "A struct variable can be initialised with a brace-enclosed list: Student s = {11465, \"Joan\", 2, 3.75};",
+        "Structs support inheritance in C++.",
+        "A struct cannot contain methods — only data variables."
+      ],
+      "correct": [0, 1, 2, 3],
+      "correctArray": [0, 1, 2, 3],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "Structs can be passed by value or reference (A). The ONLY difference between struct and class in C++ is default access: struct defaults to public, class defaults to private (B). Brace-initialisation is valid for structs (C). Structs DO support inheritance in C++ (D). Structs CAN contain methods in C++ — this was a C limitation, not C++ (E is false).",
+      "category": "C++ Structs"
+    },
+
+    {
+      "question": "A class Square extends Rectangle. Rectangle has setWidth(int w) and setHeight(int h). Square overrides these to always set both dimensions to the same value. This is an example of violating which principle, and why?",
+      "options": [
+        "Single Responsibility Principle — Square does too many things.",
+        "Liskov Substitution Principle — a Square cannot fully substitute a Rectangle because setting only the width on a Rectangle should leave height unchanged, but Square changes both.",
+        "Open/Closed Principle — Rectangle was modified instead of extended.",
+        "Interface Segregation Principle — Square is forced to implement methods it doesn't need."
+      ],
+      "correct": 1,
+      "explanation": "This is the classic LSP violation example. If code expects a Rectangle and receives a Square, calling setWidth(5) followed by setHeight(10) would give area 50 for Rectangle, but area 100 for Square (because setHeight also changed width to 10). The subclass changed the expected behaviour, breaking the contract. Wherever a Rectangle is expected, a Square cannot safely substitute it.",
+      "category": "SOLID — Liskov"
+    },
+
+    {
+      "question": "A developer wants to create a C++ Vector of InventoryBin pointers so that both GearBin and ValveBin objects can be stored and iterated polymorphically. Which declaration achieves this?",
+      "options": [
+        "vector<InventoryBin> bins;",
+        "vector<InventoryBin*> bins;",
+        "vector<GearBin, ValveBin> bins;",
+        "InventoryBin bins[];"
+      ],
+      "correct": 1,
+      "explanation": "To achieve runtime polymorphism in C++ with a container, you must store POINTERS (or references) to the base class: vector<InventoryBin*>. Storing by value (option A) would cause object slicing — the subclass-specific data is lost when copied into the base class size slot. Option C is not valid C++ syntax. Option D is a raw array, not a vector, and does not support polymorphism without pointers.",
+      "category": "C++ Polymorphism & Vectors"
+    },
+
+    {
+      "question": "Which of the following correctly describes what the 'virtual' keyword does in C++?",
+      "options": [
+        "It prevents a method from being overridden in subclasses.",
+        "It enables runtime polymorphism by telling the compiler to use the vtable (virtual function table) to resolve the correct method at runtime.",
+        "It makes a method abstract — subclasses MUST override it or they cannot compile.",
+        "It is identical to Java's 'abstract' keyword.",
+        "Without 'virtual', calling a method through a base class pointer will always call the BASE class version, even if the object is actually a subclass."
+      ],
+      "correct": [1, 4],
+      "correctArray": [1, 4],
+      "isMultiselect": true,
+      "type": "multiselect",
+      "explanation": "virtual enables runtime polymorphism via vtable (B). Without virtual, C++ uses static (compile-time) dispatch — a base class pointer calls the base class method regardless of actual runtime type (E). Making a method pure virtual (= 0) makes it abstract and forces subclasses to implement it — but just 'virtual' alone does NOT require override (C is false). Java methods are virtual by default; C++ requires explicit declaration (D is false).",
+      "category": "C++ Virtual Methods"
+    }
+
+  ]
+}
